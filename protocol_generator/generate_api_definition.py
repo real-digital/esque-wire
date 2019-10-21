@@ -3,12 +3,11 @@
 import logging
 import pathlib
 import subprocess
-from typing import List
-
-import requests
 import sys
-import tempfile
 import tarfile
+import tempfile
+from typing import List
+from urllib.request import urlretrieve
 
 log = logging.getLogger(__name__)
 
@@ -55,14 +54,9 @@ def download_jython():
     download_file(url, local_file)
 
 
-def download_file(url: str, local_file: pathlib.Path):
+def download_file(url, local_file: pathlib.Path):
     log.info(f"Downloading from {url} to {local_file}.")
-    with requests.get(url, stream=True) as r:
-        r.raise_for_status()
-        with local_file.open("wb") as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                if chunk:  # filter out keep-alive chunks
-                    f.write(chunk)
+    urlretrieve(url, local_file)
 
 
 def download_kafka():
