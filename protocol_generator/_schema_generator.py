@@ -162,6 +162,119 @@ def append_primitive_type_data(field_dict, type_):
             {"type": "null"}
         ]
 
+REQUEST = "request"
+RESPONSE = "response"
+DIRECTIONS = [REQUEST, RESPONSE]
+
+BASE_DEFINITIONS = {
+    "kafka_boolean":{
+        "kafka_type": "BOOLEAN",
+        "type": "boolean",
+    },
+    "kafka_int8":{
+        "kafka_type": "INT8",
+        "type": "integer",
+        "minimum": -(2 ** 7),
+        "maximum": 2 ** 7 - 1,
+    },
+    "kafka_int16":{
+        "kafka_type": "INT16",
+        "type": "integer",
+        "minimum": -(2 ** 15),
+        "maximum": 2 ** 15 - 1,
+    },
+    "kafka_int32":{
+        "kafka_type": "INT32",
+        "type": "integer",
+        "minimum": -(2 ** 31),
+        "maximum": 2 ** 31 - 1,
+    },
+    "kafka_int64":{
+        "kafka_type": "INT64",
+        "type": "integer",
+        "minimum": -(2 ** 63),
+        "maximum": 2 ** 63 - 1,
+    },
+    "kafka_uint32":{
+        "kafka_type": "UINT32",
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 2 ** 32 - 1,
+    },
+    "kafka_varint":{
+        "kafka_type": "VARINT",
+        "type": "integer",
+        "minimum": -(2 ** 31),
+        "maximum": 2 ** 31 - 1,
+    },
+    "kafka_varlong":{
+        "kafka_type": "VARLONG",
+        "type": "integer",
+        "minimum": -(2 ** 63),
+        "maximum": 2 ** 63 - 1,
+    },
+    "kafka_string":{
+        "kafka_type": "STRING",
+        "type": "string",
+    },
+    "kafka_nullable_string":{
+        "kafka_type": "NULLABLE_STRING",
+        "type": ["string", "null"],
+    },
+    "kafka_bytes":{
+        "kafka_type": "BYTES",
+        "type": "string",
+        "contentEncoding": "base64",
+    },
+    "kafka_nullable_bytes":{
+        "kafka_type": "NULLABLE_BYTES",
+        "oneOf": [
+            {"type": "string", "contentEncoding": "base64"},
+            {"type": "null"}
+        ]
+    },
+    "kafka_records":{
+        "kafka_type": "RECORDS",
+        "oneOf": [
+            {"type": "string", "contentEncoding": "base64"},
+            {"type": "null"}
+        ]
+    }
+}
+
+
+class KafkaApi(object):
+    def __init__(self, java_api_key_obj):
+        self.java_api_key_object = java_api_key_obj
+        self.api_key = java_api_key_obj.id
+        self.api_name = str(java_api_key_obj)
+        self.api_versions = {
+            i: ApiVersion(self, i, req_schema, res_schema)
+            for i, (req_schema, res_schema) in enumerate(zip(java_api_key_obj.requestSchemas, java_api_key_obj.responseSchemas))
+        }
+
+
+class ApiVersion(object):
+    def __init__(self, kafka_api, api_version, java_request_schema, java_response_schema):
+        self.kafka_api = kafka_api
+        self.api_version = api_version
+        self.java_request_schema = java_request_schema
+        self.java_response_schema = java_response_schema
+        self.request_schema = SchemaObject(REQUEST, kafka_api, api_version, java_request_schema)
+        self.respose_schema = SchemaObject(RESPONSE, kafka_api, api_version, java_response_schema)
+        self.directions = {
+            REQUEST: self.request_schema,
+            RESPONSE: self.respose_schema
+        }
+
+
+class SchemaObject(OrderedDict):
+    def __init__(self, direction, kafka_api, api_version, java_schema):
+        super().__init__()
+        self["$schema"] = "http://json-schema.org/draft-07/schema#"
+        self["$comment"] = "{} schema for Kafka API {} version {}".format(direction, kafka_api.name, api_version)
+        self["definitions"] = BASE_DEFINITIONS.copy()
+
 
 if __name__ == '__main__':
     main()
