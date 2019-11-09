@@ -1,4 +1,4 @@
-from enum import IntEnum
+from enum import IntEnum, Flag
 from typing import Optional
 
 from dataclasses import dataclass

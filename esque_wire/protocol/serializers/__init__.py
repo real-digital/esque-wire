@@ -1,4 +1,4 @@
-from .generic import ArraySerializer, DictSerializer, DummySerializer, EnumSerializer, NamedTupleSerializer
+from .generic import ArraySerializer, DictSerializer, DummySerializer, EnumSerializer, DataClassSerializer
 from .primitive import (
     BaseSerializer,
     GenericSerializer,
@@ -39,7 +39,7 @@ __all__ = [
     "varLongSerializer",
     "get_serializer",
     "PrimitiveType",
-    "NamedTupleSerializer",
+    "DataClassSerializer",
     "ArraySerializer",
     "DictSerializer",
     "EnumSerializer",
