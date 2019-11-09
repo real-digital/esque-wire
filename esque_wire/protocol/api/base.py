@@ -7,7 +7,7 @@ from ..constants import ErrorCode
 from ..serializers import (
     BaseSerializer,
     EnumSerializer,
-    NamedTupleSerializer,
+    DataClassSerializer,
     Schema,
     int16Serializer,
     int32Serializer,
@@ -83,7 +83,7 @@ requestHeaderSchema: Schema = [
     ("client_id", nullableStringSerializer),
 ]
 
-requestHeaderSerializer: BaseSerializer[RequestHeader] = NamedTupleSerializer(RequestHeader, requestHeaderSchema)
+requestHeaderSerializer: BaseSerializer[RequestHeader] = DataClassSerializer(RequestHeader, requestHeaderSchema)
 
 
 @dataclass
@@ -93,7 +93,7 @@ class ResponseHeader:
 
 responseHeaderSchema: Schema = [("correlation_id", int32Serializer)]
 
-responseHeaderSerializer: BaseSerializer[ResponseHeader] = NamedTupleSerializer(ResponseHeader, responseHeaderSchema)
+responseHeaderSerializer: BaseSerializer[ResponseHeader] = DataClassSerializer(ResponseHeader, responseHeaderSchema)
 
 
 @dataclass

@@ -1,0 +1,37 @@
+{% block imports %}
+from typing import Dict, List, Optional
+
+from dataclasses import dataclass
+
+from esque_wire.protocol.api.base import ApiKey, {{ direction.name.title() }}Data
+{% endblock %}
+
+{% block content %}
+{% for struct in latest_schema.structs_ordered %}
+
+@dataclass
+{% if loop.last -%}
+class {{ struct.name }}({{ direction.name.title() }}Data):
+{%- else -%}
+class {{ struct.name }}:
+{%- endif %}
+    """
+    {%- for field in struct.fields %}
+    :param {{ field.name }}: {{ ("" ~ field.doc) | wordwrap(119-13-len(field.name)) | indent(13+len(field.name)) }}
+    :type {{ field.name }}: {{ field.type_hint }}
+    {%- endfor %}
+    """
+    {% for field in struct.fields %}
+    {{ field.name }}: {{ field.type_hint }}
+    {%- endfor %}
+    {%- if loop.last %}
+
+    @staticmethod
+    def api_key() -> int:
+        """
+        :return: `{{ current_api.api_key }}`, the api key for this API.
+        """
+        return ApiKey.{{ current_api.api_name }}
+    {%- endif %}
+{% endfor %}
+{% endblock %}

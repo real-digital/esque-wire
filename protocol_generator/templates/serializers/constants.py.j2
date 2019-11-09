@@ -1,0 +1,16 @@
+{% extends "base_module.py.j2" %}
+{% block imports %}
+from .generic import EnumSerializer
+from .primitive import int8Serializer, int16Serializer
+from ..constants import (
+    {%- for name in constants.keys() %}
+    {{ name }},
+    {%- endfor %}
+)
+{% endblock %}
+
+{% block content %}
+    {%- for name, constant in constants.items() %}
+{{ name | lower_first}}Serializer = EnumSerializer({{ name }}, {{ constant.primitive_type | primitive_serializer }})
+    {%- endfor %}
+{% endblock %}

@@ -6,15 +6,22 @@ import os
 from collections import OrderedDict
 from org.apache.kafka.common.protocol import ApiKeys
 from org.apache.kafka.common.protocol.types import Type, Schema, ArrayOf
+from org.apache.kafka.common.protocol import Errors
+from org.apache.kafka.common.errors import RetriableException
+from org.apache.kafka.common.resource import ResourceType, PatternType
+from org.apache.kafka.common.acl import AclOperation, AclPermissionType
 
 
 def main():
-    api_definition = [
-        api_key_to_dict(api_key) for api_key in ApiKeys.values()
-    ]
+    dump_api_definitions()
+    dump_constants()
+
+
+def dump_api_definitions():
+    api_definition = [api_key_to_dict(api_key) for api_key in ApiKeys.values()]
     dir = os.path.dirname(os.path.abspath(__file__))
     path = os.path.join(dir, "api_definition.json")
-    with open(path, 'w') as o:
+    with open(path, "w") as o:
         json.dump(api_definition, o, indent=2)
 
 
@@ -22,6 +29,7 @@ def api_key_to_dict(api_key):
     api_dict = OrderedDict()
     api_dict["api_key"] = api_key.id
     api_dict["api_name"] = str(api_key)
+    api_dict["cluster_action"] = api_key.clusterAction
     api_dict["request_schemas"] = [create_type_data(schema) for schema in api_key.requestSchemas]
     api_dict["response_schemas"] = [create_type_data(schema) for schema in api_key.responseSchemas]
     return api_dict
@@ -55,6 +63,69 @@ def create_type_data(type_):
         raise ValueError("Unkown type %s" % type_)
     return field_dict
 
-if __name__ == '__main__':
-    main()
 
+def dump_constants():
+    constants = collect_constants()
+    dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(dir, "constant_definition.json")
+    with open(path, "w") as o:
+        json.dump(constants, o, indent=2)
+
+
+def collect_constants():
+    constants = {
+        "ApiKey": get_api_key_constants(),
+        "ErrorCode": get_error_code_constants(),
+        "ResourceType": get_resource_type_constants(),
+        "ResourcePatternType": get_resource_pattern_type_constants(),
+        "AclOperation": get_acl_operation_constants(),
+        "AclPermissionType": get_acl_permission_type_constants(),
+    }
+    return constants
+
+
+def get_api_key_constants():
+    return {
+        "enum": [{"name": str(api_key), "value": api_key.id} for api_key in ApiKeys.values()],
+        "primitive_type": "INT16"
+    }
+
+
+def get_error_code_constants():
+    data = {"enum": [], "meta": [], "primitive_type": "INT16"}
+    for err in Errors.values():
+        data["enum"].append({"name": str(err), "value": err.code()})
+        meta = OrderedDict([("value", err.code()), ("retryable", False), ("default_message", "")])
+        exc = err.exception()
+        if exc is not None:
+            meta["retryable"] = isinstance(exc, RetriableException)
+            meta["default_message"] = exc.getMessage()
+        data["meta"].append(meta)
+    return data
+
+
+def get_resource_type_constants():
+    return get_enum_name_and_code(ResourceType, "INT8")
+
+
+def get_enum_name_and_code(enum, primitive_type):
+    return {
+        "primitive_type": primitive_type,
+        "enum": [{"name": str(elem), "value": elem.code()} for elem in enum.values()]
+    }
+
+
+def get_resource_pattern_type_constants():
+    return get_enum_name_and_code(PatternType, "INT8")
+
+
+def get_acl_operation_constants():
+    return get_enum_name_and_code(AclOperation, "INT8")
+
+
+def get_acl_permission_type_constants():
+    return get_enum_name_and_code(AclPermissionType, "INT8")
+
+
+if __name__ == "__main__":
+    main()

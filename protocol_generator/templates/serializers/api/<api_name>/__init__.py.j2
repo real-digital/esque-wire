@@ -1,0 +1,5 @@
+{% extends "base_module.py.j2" %}
+{% block imports %}
+from .request import {{ serializer_dict_name(current_api.latest_schema_pair[Direction.REQUEST].schema) }}
+from .response import {{ serializer_dict_name(current_api.latest_schema_pair[Direction.RESPONSE].schema) }}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base_module.py.j2" %}
+
+{% block imports %}
+from ....structs import (
+    {% for struct_name in (latest_schema.structs | sort) %}
+    {{ struct_name }},
+    {% endfor %}
+)
+from esque_wire.protocol.serializers import (
+    ArraySerializer,
+    booleanSerializer,
+    bytesSerializer,
+    DataClassSerializer,
+    DummySerializer,
+    int8Serializer,
+    int16Serializer,
+    int32Serializer,
+    int64Serializer,
+    nullableBytesSerializer,
+    nullableStringSerializer,
+    Schema,
+    stringSerializer,
+    uint32Serializer,
+    varIntSerializer,
+    varLongSerializer,
+)
+{% endblock %}
+
+{% block content %}
+{%- for latest_struct in latest_schema.structs_ordered %}
+
+{{ schema_dict_name(latest_struct) }}: Dict[int, Schema] = {
+    {%- for api_schema in all_versions %}
+        {%- if latest_struct.name in api_schema.structs %}
+            {%- set current_struct = api_schema.structs[latest_struct.name] %}
+    {{ api_schema.api_version }}: {{ create_schema(latest_struct, current_struct, api_schema.api_version) }},
+        {%- endif %}
+    {%- endfor %}
+}
+
+
+{{ serializer_dict_name(latest_struct) }}: Dict[int, DataClassSerializer[{{ latest_struct.name }}]] = {
+    version: DataClassSerializer({{ latest_struct.name }}, schema) for version, schema
+    in {{ schema_dict_name(latest_struct) }}.items()
+}
+{% endfor %}
+{% endblock %}

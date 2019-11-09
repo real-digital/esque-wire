@@ -1,0 +1,36 @@
+{% extends "base_module.py.j2" %}
+{% block imports %}
+from enum import Enum
+{% endblock %}
+
+
+{% block content %}
+{%- for name, constant in constants.items() %}
+{% if 'meta' in constant %}
+_{{ name }}_METADATA = {
+    {% for entry in constant.meta %}
+    {{ entry.value }}: ({%- for key, value in entry.items() -%}
+        {%- if key != "value" -%}
+        {{ value | repr }}{{ ", " }}
+        {%- endif -%}
+        {%- endfor -%}),
+    {%- endfor %}
+}
+{% endif %}
+
+class {{ name }}(Enum):
+    {%- for entry in constant.enum %}
+    {{ entry.name }} = {{ entry.value }}
+    {%- endfor %}
+    {%- if 'meta' in constant %}
+    def __init__(self, value):
+        super().__init__(value)
+        {{ constant.meta[0].keys() | join(", ") }} = _{{ name }}_METADATA[value]
+        {% for key in constant.meta[0].keys() %}
+        {% if key != "value" %}
+        self.{{ key }} = {{ key }}
+        {% endif %}
+        {% endfor %}
+    {% endif -%}
+{% endfor %}
+{% endblock %}
