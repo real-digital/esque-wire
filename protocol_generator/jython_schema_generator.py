@@ -22,45 +22,38 @@ def api_key_to_dict(api_key):
     api_dict = OrderedDict()
     api_dict["api_key"] = api_key.id
     api_dict["api_name"] = str(api_key)
-    api_dict["request_schemas"] = [resolve_schema(schema) for schema in api_key.requestSchemas]
-    api_dict["response_schemas"] = [resolve_schema(schema) for schema in api_key.responseSchemas]
+    api_dict["request_schemas"] = [create_type_data(schema) for schema in api_key.requestSchemas]
+    api_dict["response_schemas"] = [create_type_data(schema) for schema in api_key.responseSchemas]
     return api_dict
 
 
-def resolve_schema(schema):
-    schema_fields = OrderedDict()
-    for field in map(get_def, schema.fields()):
-        schema_fields[field.name] = resolve_field(field)
-    return schema_fields
-
-def get_def(bound_field):
-    return bound_field.def
-
-
 def resolve_field(field):
-    field_dict = OrderedDict()
+    field_dict = create_type_data(field.type)
     field_dict["name"] = field.name
     field_dict["doc"] = field.docString
     field_dict["default"] = field.defaultValue
     field_dict["has_default"] = field.hasDefaultValue
-    append_type_data(field_dict, field.type)
+
     return field_dict
 
 
-def append_type_data(field_dict, type_):
+def create_type_data(type_):
+    field_dict = OrderedDict()
     if isinstance(type_, Schema):
-        field_dict["type"] = "struct"
-        field_dict["fields"] = resolve_schema(type_)
+        field_dict["type"] = "STRUCT"
+        schema_fields = []
+        for field in type_.fields():
+            schema_fields.append(resolve_field(getattr(field, "def")))
+        field_dict["fields"] = schema_fields
     elif isinstance(type_, ArrayOf):
-        field_dict["type"] = "array"
-        type_dict = OrderedDict()
-        append_type_data(type_dict, type_.type())
+        field_dict["type"] = "ARRAY"
+        type_dict = create_type_data(type_.type())
         field_dict["element_type"] = type_dict
     elif isinstance(type_, Type.DocumentedType):
         field_dict["type"] = type_.typeName()
     else:
         raise ValueError("Unkown type %s" % type_)
-
+    return field_dict
 
 if __name__ == '__main__':
     main()
