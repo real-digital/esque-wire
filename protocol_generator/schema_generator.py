@@ -5,9 +5,11 @@ import pathlib
 import sys
 import textwrap
 from typing import Any, Dict, Iterable, List, Set, Tuple, Optional, TypeVar
+import subprocess
 
 import inflection
 import jinja2
+from jinja2 import StrictUndefined
 
 if sys.version_info < (3, 6):
     raise RuntimeError("This script needs at least python3.6 to run.")
@@ -120,6 +122,9 @@ class StructTypeDef(TypeDef):
     fields: List["Field"]
     name: str = "<noname>"
     field_names: List[str] = dataclasses.field(init=False, default_factory=list)
+
+    def __post_init__(self):
+        self.field_names.extend(f.name for f in self.fields)
 
     @staticmethod
     def from_dict(data: Dict) -> "StructTypeDef":
@@ -333,13 +338,13 @@ class Templater:
         self.current_target_path.parent.mkdir(parents=True, exist_ok=True)
 
         latest_schema = current_api.latest_schema_pair[direction]
-        all_schemas = [api_schema[direction] for api_schema in current_api.api_versions.values()]
+        all_versions = [api_schema[direction] for api_schema in current_api.api_versions.values()]
         self.current_target_path.write_text(
             self.template.render(
                 all_apis=all_apis,
                 current_api=current_api,
                 latest_schema=latest_schema,
-                all_schemas=all_schemas,
+                all_versions=all_versions,
                 direction=direction,
                 constants=constants
             )
@@ -383,7 +388,7 @@ def render_long_text(text, wrap_at=100, **kwargs) -> str:
 
 def render(all_apis: List[Api], constants: Dict) -> None:
     loader = jinja2.FileSystemLoader(str(TEMPLATE_PATH))
-    env = jinja2.Environment(autoescape=False, loader=loader)
+    env = jinja2.Environment(autoescape=False, loader=loader, undefined=StrictUndefined)
     env.globals["Direction"] = Direction
     env.globals["FieldType"] = FieldType
     env.globals["len"] = len
@@ -405,6 +410,12 @@ def render(all_apis: List[Api], constants: Dict) -> None:
         for direction in Direction:
             for templater in templaters:
                 templater.render(all_apis, current_api, direction, constants)
+
+    #run_black()
+
+
+def run_black():
+    subprocess.check_call(["black", str(BASE_PATH)])
 
 
 if __name__ == "__main__":
