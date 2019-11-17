@@ -1,9 +1,0 @@
-{% extends "base_module.py.j2" %}
-{% block imports %}
-{%- for api in all_apis %}
-from .{{ api.api_name.lower() }} import (
-    {{ api.latest_schema_pair[Direction.REQUEST].schema.name }},
-    {{ api.latest_schema_pair[Direction.RESPONSE].schema.name }},
-)
-{%- endfor %}
-{% endblock %}

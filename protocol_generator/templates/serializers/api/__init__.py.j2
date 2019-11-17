@@ -1,9 +1,8 @@
 {% extends "base_module.py.j2" %}
 {% block imports %}
 {%- for api in all_apis %}
-from .{{ api.api_name.lower() }} import (
-    {{ api.latest_schema_pair[Direction.REQUEST].schema.serializer_dict_name() }},
-    {{ api.latest_schema_pair[Direction.RESPONSE].schema.serializer_dict_name() }},
-)
+    {%- for direction in Direction %}
+from .{{ api.api_name.lower() }}_{{ direction.name.lower() }} import {{ api.latest_schema_pair[direction].schema.serializer_dict_name() }}
+    {%- endfor %}
 {%- endfor %}
 {% endblock %}

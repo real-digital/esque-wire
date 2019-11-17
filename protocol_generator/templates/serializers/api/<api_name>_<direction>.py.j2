@@ -1,0 +1,44 @@
+{% extends "base_module.py.j2" %}
+
+{%- macro create_schema(latest_struct, current_struct, api_version) -%}
+[
+    {%- for field in current_struct.fields %}
+        ({{ field.rendered_name }}, {{ field.type_def.serializer_variable_name(api_version) }}),
+    {%- endfor %}
+    ]
+{%- endmacro -%}
+
+{% block imports %}
+from typing import Dict
+from esque_wire.protocol.structs.{{ current_api.api_name.lower() }}_{{ direction.name.lower() }} import (
+    {%- for struct_name in (latest_schema.structs | sort) %}
+    {{ struct_name }},
+    {%- endfor %}
+)
+
+from esque_wire.protocol.serializers import (
+    {%- for serializer in current_api.get_serializer_imports(direction) %}
+    {{ serializer }},
+    {%- endfor %}
+)
+{% endblock %}
+
+{% block content %}
+{%- for latest_struct in latest_schema.structs_ordered %}
+
+{{ latest_struct.schema_dict_name(include_type=True) }} = {
+    {%- for api_schema in all_versions %}
+        {%- if latest_struct.name in api_schema.structs %}
+            {%- set current_struct = api_schema.structs[latest_struct.name] %}
+    {{ api_schema.api_version }}: {{ create_schema(latest_struct, current_struct, api_schema.api_version) }},
+        {%- endif %}
+    {%- endfor %}
+}
+
+
+{{ latest_struct.serializer_dict_name(include_type=True) }} = {
+    version: {{ latest_struct.serializer_definition(schema="schema") }} for version, schema
+    in {{ latest_struct.schema_dict_name() }}.items()
+}
+{% endfor %}
+{% endblock %}

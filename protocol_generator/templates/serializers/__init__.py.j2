@@ -1,5 +1,7 @@
 {% extends "base_module.py.j2" %}
-{% block content %}
+
+{% block imports %}
+from typing import Dict
 
 from .api import (
 {%- for api in all_apis %}
@@ -7,7 +9,12 @@ from .api import (
     {{ api.latest_schema_pair[Direction.RESPONSE].schema.serializer_dict_name() }},
 {%- endfor %}
 )
+from .primitive import BaseSerializer
+from ..constants import ApiKey
+from ..structs import RequestData, ResponseData
+{% endblock %}
 
+{% block content %}
 REQUEST_SERIALIZERS: Dict[ApiKey, Dict[int, BaseSerializer[RequestData]]] = {
 {%- for api in all_apis %}
     ApiKey.{{ api.api_name }}: {{ api.latest_schema_pair[Direction.REQUEST].schema.serializer_dict_name() }},

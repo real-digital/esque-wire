@@ -1,8 +1,8 @@
 {% extends "base_module.py.j2" %}
 {% block imports %}
-from .generic import EnumSerializer
-from .primitive import int8Serializer, int16Serializer
-from ..constants import (
+from esque_wire.protocol.serializers.generic import EnumSerializer
+from esque_wire.protocol.serializers.primitive import int8Serializer, int16Serializer
+from esque_wire.protocol.constants import (
     {%- for name in constants.keys() %}
     {{ name }},
     {%- endfor %}

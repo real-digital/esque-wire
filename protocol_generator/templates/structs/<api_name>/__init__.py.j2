@@ -1,5 +1,0 @@
-{% extends "base_module.py.j2" %}
-{% block imports %}
-from .request import {{ current_api.latest_schema_pair[Direction.REQUEST].schema.name }}
-from .response import {{ current_api.latest_schema_pair[Direction.RESPONSE].schema.name }}
-{% endblock %}

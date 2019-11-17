@@ -1,9 +1,11 @@
 from enum import Enum
-from typing import BinaryIO, Dict, Generic, List, Type, TypeVar, Optional
+from typing import BinaryIO, Dict, Tuple, List, Type, TypeVar, Optional
 
-from esque_wire.protocol.serializers.primitive import BaseSerializer, Schema, int16Serializer, int32Serializer
+from .base import BaseSerializer
+from .primitive import int32Serializer
 
 T = TypeVar("T")
+Schema = List[Tuple[Optional[str], "BaseSerializer"]]
 
 
 class DictSerializer(BaseSerializer[Dict]):
@@ -11,7 +13,9 @@ class DictSerializer(BaseSerializer[Dict]):
         self._schema = schema.copy()
 
     def encode(self, value: Dict) -> bytes:
-        return b"".join(serializer.encode(value[field]) for field, serializer in self._schema)
+        return b"".join(
+            serializer.encode(value[field]) for field, serializer in self._schema
+        )
 
     def read(self, buffer: BinaryIO) -> Dict:
         data = {}
@@ -31,7 +35,9 @@ class ArraySerializer(BaseSerializer[T]):
     def encode(self, elems: Optional[List[T]]) -> bytes:
         if elems is None:
             return int32Serializer.encode(-1)
-        return int32Serializer.encode(len(elems)) + b"".join(self._elem_serializer.encode(elem) for elem in elems)
+        return int32Serializer.encode(len(elems)) + b"".join(
+            self._elem_serializer.encode(elem) for elem in elems
+        )
 
     def read(self, buffer: BinaryIO) -> Optional[List[T]]:
         len_ = int32Serializer.read(buffer)
@@ -50,16 +56,27 @@ class DataClassSerializer(DictSerializer[T]):
         self.data_class: Type[T] = tuple_class
 
     def encode(self, value: T) -> bytes:
-        return b"".join(serializer.encode(getattr(value, field)) for field, serializer in self._schema)
+        return b"".join(
+            serializer.encode(getattr(value, field))
+            for field, serializer in self._schema
+        )
 
     def read(self, buffer: BinaryIO) -> T:
         data = super().read(buffer)
-        data.pop(None, None)  # None fields are supposed to be ignored, pop the field if one is there
+        data.pop(
+            None, None
+        )  # None fields are supposed to be ignored, pop the field if one is there
         return self.data_class(**data)
 
     @property
     def default(self) -> T:
-        return self.data_class(**{field: serializer.default for field, serializer in self._schema if field is not None})
+        return self.data_class(
+            **{
+                field: serializer.default
+                for field, serializer in self._schema
+                if field is not None
+            }
+        )
 
 
 E = TypeVar("E", bound=Enum)
@@ -80,7 +97,9 @@ class EnumSerializer(BaseSerializer[E]):
     def default(self) -> E:
         for member in self.enum_class:
             return member
-        raise RuntimeError(f"Cannot dermine default, Enum {self.enum_class.__name__} is empty!")
+        raise RuntimeError(
+            f"Cannot dermine default, Enum {self.enum_class.__name__} is empty!"
+        )
 
 
 class DummySerializer(BaseSerializer[T]):

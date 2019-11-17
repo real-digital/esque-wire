@@ -121,14 +121,22 @@ class BrokerConnection:
     def _query_api_versions(self) -> None:
         request = self.send(ApiVersionsRequestData())
         all_server_supported_versions = {
-            ApiKey(support_range.api_key): support_range for support_range in request.response_data.api_versions
+            ApiKey(support_range.api_key): support_range
+            for support_range in request.response_data.api_versions
         }
         server_api_keys = set(all_server_supported_versions)
         client_api_keys = set(SUPPORTED_API_VERSIONS)
         for api_key in server_api_keys | client_api_keys:
-            client_supported_version = SUPPORTED_API_VERSIONS.get(api_key, ApiVersions(api_key, -2, -1))
-            server_supported_version = all_server_supported_versions.get(api_key, ApiVersions(api_key, -4, -3))
-            effective_version = min(client_supported_version.max_version, server_supported_version.max_version)
+            client_supported_version = SUPPORTED_API_VERSIONS.get(
+                api_key, ApiVersions(api_key, -2, -1)
+            )
+            server_supported_version = all_server_supported_versions.get(
+                api_key, ApiVersions(api_key, -4, -3)
+            )
+            effective_version = min(
+                client_supported_version.max_version,
+                server_supported_version.max_version,
+            )
 
             # TODO messages say something like server only supports api ... up to version -4
             #  better say server doesn't support api ... PERIOD
@@ -171,31 +179,45 @@ class BrokerConnection:
             self.api_versions[api_key] = effective_version
 
     @overload
-    def send(self, data: ProduceRequestData) -> Request[ProduceRequestData, ProduceResponseData]:
+    def send(
+        self, data: ProduceRequestData
+    ) -> Request[ProduceRequestData, ProduceResponseData]:
         ...
 
     @overload
-    def send(self, data: FetchRequestData) -> Request[FetchRequestData, FetchResponseData]:
+    def send(
+        self, data: FetchRequestData
+    ) -> Request[FetchRequestData, FetchResponseData]:
         ...
 
     @overload
-    def send(self, data: ListOffsetsRequestData) -> Request[ListOffsetsRequestData, ListOffsetsResponseData]:
+    def send(
+        self, data: ListOffsetsRequestData
+    ) -> Request[ListOffsetsRequestData, ListOffsetsResponseData]:
         ...
 
     @overload
-    def send(self, data: MetadataRequestData) -> Request[MetadataRequestData, MetadataResponseData]:
+    def send(
+        self, data: MetadataRequestData
+    ) -> Request[MetadataRequestData, MetadataResponseData]:
         ...
 
     @overload
-    def send(self, data: LeaderAndIsrRequestData) -> Request[LeaderAndIsrRequestData, LeaderAndIsrResponseData]:
+    def send(
+        self, data: LeaderAndIsrRequestData
+    ) -> Request[LeaderAndIsrRequestData, LeaderAndIsrResponseData]:
         ...
 
     @overload
-    def send(self, data: StopReplicaRequestData) -> Request[StopReplicaRequestData, StopReplicaResponseData]:
+    def send(
+        self, data: StopReplicaRequestData
+    ) -> Request[StopReplicaRequestData, StopReplicaResponseData]:
         ...
 
     @overload
-    def send(self, data: UpdateMetadataRequestData) -> Request[UpdateMetadataRequestData, UpdateMetadataResponseData]:
+    def send(
+        self, data: UpdateMetadataRequestData
+    ) -> Request[UpdateMetadataRequestData, UpdateMetadataResponseData]:
         ...
 
     @overload
@@ -205,11 +227,15 @@ class BrokerConnection:
         ...
 
     @overload
-    def send(self, data: OffsetCommitRequestData) -> Request[OffsetCommitRequestData, OffsetCommitResponseData]:
+    def send(
+        self, data: OffsetCommitRequestData
+    ) -> Request[OffsetCommitRequestData, OffsetCommitResponseData]:
         ...
 
     @overload
-    def send(self, data: OffsetFetchRequestData) -> Request[OffsetFetchRequestData, OffsetFetchResponseData]:
+    def send(
+        self, data: OffsetFetchRequestData
+    ) -> Request[OffsetFetchRequestData, OffsetFetchResponseData]:
         ...
 
     @overload
@@ -219,51 +245,75 @@ class BrokerConnection:
         ...
 
     @overload
-    def send(self, data: JoinGroupRequestData) -> Request[JoinGroupRequestData, JoinGroupResponseData]:
+    def send(
+        self, data: JoinGroupRequestData
+    ) -> Request[JoinGroupRequestData, JoinGroupResponseData]:
         ...
 
     @overload
-    def send(self, data: HeartbeatRequestData) -> Request[HeartbeatRequestData, HeartbeatResponseData]:
+    def send(
+        self, data: HeartbeatRequestData
+    ) -> Request[HeartbeatRequestData, HeartbeatResponseData]:
         ...
 
     @overload
-    def send(self, data: LeaveGroupRequestData) -> Request[LeaveGroupRequestData, LeaveGroupResponseData]:
+    def send(
+        self, data: LeaveGroupRequestData
+    ) -> Request[LeaveGroupRequestData, LeaveGroupResponseData]:
         ...
 
     @overload
-    def send(self, data: SyncGroupRequestData) -> Request[SyncGroupRequestData, SyncGroupResponseData]:
+    def send(
+        self, data: SyncGroupRequestData
+    ) -> Request[SyncGroupRequestData, SyncGroupResponseData]:
         ...
 
     @overload
-    def send(self, data: DescribeGroupsRequestData) -> Request[DescribeGroupsRequestData, DescribeGroupsResponseData]:
+    def send(
+        self, data: DescribeGroupsRequestData
+    ) -> Request[DescribeGroupsRequestData, DescribeGroupsResponseData]:
         ...
 
     @overload
-    def send(self, data: ListGroupsRequestData) -> Request[ListGroupsRequestData, ListGroupsResponseData]:
+    def send(
+        self, data: ListGroupsRequestData
+    ) -> Request[ListGroupsRequestData, ListGroupsResponseData]:
         ...
 
     @overload
-    def send(self, data: SaslHandshakeRequestData) -> Request[SaslHandshakeRequestData, SaslHandshakeResponseData]:
+    def send(
+        self, data: SaslHandshakeRequestData
+    ) -> Request[SaslHandshakeRequestData, SaslHandshakeResponseData]:
         ...
 
     @overload
-    def send(self, data: ApiVersionsRequestData) -> Request[ApiVersionsRequestData, ApiVersionsResponseData]:
+    def send(
+        self, data: ApiVersionsRequestData
+    ) -> Request[ApiVersionsRequestData, ApiVersionsResponseData]:
         ...
 
     @overload
-    def send(self, data: CreateTopicsRequestData) -> Request[CreateTopicsRequestData, CreateTopicsResponseData]:
+    def send(
+        self, data: CreateTopicsRequestData
+    ) -> Request[CreateTopicsRequestData, CreateTopicsResponseData]:
         ...
 
     @overload
-    def send(self, data: DeleteTopicsRequestData) -> Request[DeleteTopicsRequestData, DeleteTopicsResponseData]:
+    def send(
+        self, data: DeleteTopicsRequestData
+    ) -> Request[DeleteTopicsRequestData, DeleteTopicsResponseData]:
         ...
 
     @overload
-    def send(self, data: DeleteRecordsRequestData) -> Request[DeleteRecordsRequestData, DeleteRecordsResponseData]:
+    def send(
+        self, data: DeleteRecordsRequestData
+    ) -> Request[DeleteRecordsRequestData, DeleteRecordsResponseData]:
         ...
 
     @overload
-    def send(self, data: InitProducerIdRequestData) -> Request[InitProducerIdRequestData, InitProducerIdResponseData]:
+    def send(
+        self, data: InitProducerIdRequestData
+    ) -> Request[InitProducerIdRequestData, InitProducerIdResponseData]:
         ...
 
     @overload
@@ -285,7 +335,9 @@ class BrokerConnection:
         ...
 
     @overload
-    def send(self, data: EndTxnRequestData) -> Request[EndTxnRequestData, EndTxnResponseData]:
+    def send(
+        self, data: EndTxnRequestData
+    ) -> Request[EndTxnRequestData, EndTxnResponseData]:
         ...
 
     @overload
@@ -301,15 +353,21 @@ class BrokerConnection:
         ...
 
     @overload
-    def send(self, data: DescribeAclsRequestData) -> Request[DescribeAclsRequestData, DescribeAclsResponseData]:
+    def send(
+        self, data: DescribeAclsRequestData
+    ) -> Request[DescribeAclsRequestData, DescribeAclsResponseData]:
         ...
 
     @overload
-    def send(self, data: CreateAclsRequestData) -> Request[CreateAclsRequestData, CreateAclsResponseData]:
+    def send(
+        self, data: CreateAclsRequestData
+    ) -> Request[CreateAclsRequestData, CreateAclsResponseData]:
         ...
 
     @overload
-    def send(self, data: DeleteAclsRequestData) -> Request[DeleteAclsRequestData, DeleteAclsResponseData]:
+    def send(
+        self, data: DeleteAclsRequestData
+    ) -> Request[DeleteAclsRequestData, DeleteAclsResponseData]:
         ...
 
     @overload
@@ -319,7 +377,9 @@ class BrokerConnection:
         ...
 
     @overload
-    def send(self, data: AlterConfigsRequestData) -> Request[AlterConfigsRequestData, AlterConfigsResponseData]:
+    def send(
+        self, data: AlterConfigsRequestData
+    ) -> Request[AlterConfigsRequestData, AlterConfigsResponseData]:
         ...
 
     @overload
@@ -367,11 +427,15 @@ class BrokerConnection:
     @overload
     def send(
         self, data: DescribeDelegationTokenRequestData
-    ) -> Request[DescribeDelegationTokenRequestData, DescribeDelegationTokenResponseData]:
+    ) -> Request[
+        DescribeDelegationTokenRequestData, DescribeDelegationTokenResponseData
+    ]:
         ...
 
     @overload
-    def send(self, data: DeleteGroupsRequestData) -> Request[DeleteGroupsRequestData, DeleteGroupsResponseData]:
+    def send(
+        self, data: DeleteGroupsRequestData
+    ) -> Request[DeleteGroupsRequestData, DeleteGroupsResponseData]:
         ...
 
     @overload
@@ -383,14 +447,18 @@ class BrokerConnection:
     @overload
     def send(
         self, data: IncrementalAlterConfigsRequestData
-    ) -> Request[IncrementalAlterConfigsRequestData, IncrementalAlterConfigsResponseData]:
+    ) -> Request[
+        IncrementalAlterConfigsRequestData, IncrementalAlterConfigsResponseData
+    ]:
         ...
 
     def send(self, request_data: RequestData) -> Request[RequestData, ResponseData]:
         return self.send_many([request_data])[0]
 
     def send_many(self, request_data_to_send: List[RequestData]) -> List[Request]:
-        requests_to_send = [self._request_from_data(data) for data in request_data_to_send]
+        requests_to_send = [
+            self._request_from_data(data) for data in request_data_to_send
+        ]
 
         received_requests: List[Request] = []
 
@@ -423,7 +491,12 @@ class BrokerConnection:
     def _request_from_data(self, request_data: RequestData) -> Request:
         api_key = request_data.api_key()
         api_version = self.api_versions[api_key]
-        return Request.from_request_data(request_data, api_version, next(self._correlation_id_counter), self.client_id)
+        return Request.from_request_data(
+            request_data,
+            api_version,
+            next(self._correlation_id_counter),
+            self.client_id,
+        )
 
     def close(self):
         self.kafka_io.close()
@@ -437,7 +510,9 @@ class BrokerConnection:
 
 class KafkaIO:
     def __init__(self, in_stream: BinaryIO, out_stream: BinaryIO):
-        self._in_flight: "queue.Queue[Request]" = queue.Queue(maxsize=10)  # TODO make this configurable
+        self._in_flight: "queue.Queue[Request]" = queue.Queue(
+            maxsize=10
+        )  # TODO make this configurable
         self._in_stream: BinaryIO = in_stream
         self._out_stream: BinaryIO = out_stream
 

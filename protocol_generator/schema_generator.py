@@ -18,8 +18,8 @@ import dataclasses
 
 API_INPUT_FILE = pathlib.Path(__file__).parent / "api_definition.json"
 CONSTANTS_INPUT_FILE = pathlib.Path(__file__).parent / "constant_definition.json"
-BASE_PATH = pathlib.Path(__file__).parent / "kafka_protocol"
-TEMPLATE_PATH = BASE_PATH.parent / "templates"
+TARGET_PATH = pathlib.Path(__file__).parent.parent / "esque_wire" / "protocol"
+TEMPLATE_PATH = pathlib.Path(__file__).parent / "templates"
 T = TypeVar("T")
 
 
@@ -454,7 +454,7 @@ class Templater:
 
     def __init__(self, env: jinja2.Environment, template_path: pathlib.Path):
         self.template = env.get_template(str(template_path.relative_to(TEMPLATE_PATH)))
-        path_template = str(BASE_PATH / template_path.relative_to(TEMPLATE_PATH))
+        path_template = str(TARGET_PATH / template_path.relative_to(TEMPLATE_PATH))
         self.path_template = path_template.replace("<", "{").replace(">", "}")[:-3]
         self.last_target_path = None
 
@@ -544,7 +544,7 @@ def render(all_apis: List[Api], constants: Dict) -> None:
 
 
 def run_black():
-    subprocess.check_call(["black", str(BASE_PATH)])
+    subprocess.check_call(["black", str(TARGET_PATH)])
 
 
 if __name__ == "__main__":
