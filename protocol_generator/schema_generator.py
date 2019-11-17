@@ -4,7 +4,7 @@ import json
 import pathlib
 import sys
 import textwrap
-from typing import Any, Dict, Iterable, List, Set, Tuple, Optional, TypeVar
+from typing import Any, Dict, Iterable, List, Set, Tuple, Optional, TypeVar, cast
 import subprocess
 
 import inflection
@@ -99,6 +99,16 @@ class TypeDef:
         else:
             raise ValueError(f"No type hint for {self.field_type}")
 
+    @property
+    def serializer_import_name(self) -> str:
+        return PRIMITIVE_SERIALIZERS[self.field_type]
+
+    def serializer_definition(self, version=0):
+        return PRIMITIVE_SERIALIZERS[self.field_type]
+
+    def serializer_variable_name(self, version=0):
+        return PRIMITIVE_SERIALIZERS[self.field_type]
+
 
 @dataclasses.dataclass
 class ArrayTypeDef(TypeDef):
@@ -115,6 +125,51 @@ class ArrayTypeDef(TypeDef):
     @property
     def type_hint(self) -> str:
         return f"List[{self.element_type.type_hint}]"
+
+    @property
+    def serializer_import_name(self) -> str:
+        return "ArraySerializer"
+
+    def serializer_definition(self, version=0):
+        return f"ArraySerializer({self.element_type.serializer_definition(version)})"
+
+    def serializer_variable_name(self, version=0):
+        return f"ArraySerializer({self.element_type.serializer_variable_name(version)})"
+
+
+@dataclasses.dataclass
+class DummyTypeDef(TypeDef):
+    element_type: TypeDef
+    default: Any
+    has_default: bool
+
+    def traverse_types(self) -> Iterable["TypeDef"]:
+        yield self
+        yield from self.element_type.traverse_types()
+
+    @property
+    def type_hint(self) -> str:
+        return self.element_type.type_hint
+
+    @property
+    def serializer_import_name(self) -> str:
+        return "DummySerializer"
+
+    def serializer_definition(self, version=0):
+        if self.has_default:
+            default_def = repr(self.default)
+        else:
+            default_def = self.element_type.serializer_definition()
+            default_def += '.default'
+        return f"DummySerializer({default_def})"
+
+    def serializer_variable_name(self, version=0):
+        if self.has_default:
+            default_def = repr(self.default)
+        else:
+            default_def = self.element_type.serializer_variable_name()
+            default_def += '.default'
+        return f"DummySerializer({default_def})"
 
 
 @dataclasses.dataclass
@@ -145,8 +200,51 @@ class StructTypeDef(TypeDef):
     def type_hint(self) -> str:
         return self.name
 
+    def schema_dict_name(self, include_type=False) -> str:
+        name = f"{lower_first(self.name)}Schemas"
+        if include_type:
+            name += ": Dict[int, Schema]"
+        return name
 
-SEEN = set()
+    def schema_variable_name(self, version=0) -> str:
+        return f"{self.schema_dict_name()}[{version}]"
+
+    def serializer_dict_name(self, include_type=False) -> str:
+        name = f"{ lower_first(self.name) }Serializers"
+        if include_type:
+            name += f": Dict[int, DataClassSerializer[{self.name}]]"
+        return name
+
+    def serializer_variable_name(self, version=0) -> str:
+        return f"{self.serializer_dict_name()}[{version}]"
+
+    @property
+    def serializer_import_name(self) -> str:
+        return "DataClassSerializer"
+
+    def serializer_definition(self, version=0, schema=None) -> str:
+        if schema is None:
+            schema = self.schema_variable_name(version)
+        return f"DataClassSerializer({self.name}, {schema})"
+
+    def make_compatible_to(self, other_struct: "StructTypeDef") -> None:
+        self._skip_extra_fields(other_struct)
+        self._add_missing_fields(other_struct)
+
+    def _skip_extra_fields(self, other_struct: "StructTypeDef") -> None:
+        for field in self.fields:
+            if field.name not in other_struct.field_names:
+                field.skip = True
+
+    def _add_missing_fields(self, other_struct: "StructTypeDef") -> None:
+        for field in other_struct.fields:
+            if field.name not in self.field_names:
+                dummy_type = DummyTypeDef(field_type=field.type_def.field_type,
+                                          element_type=field.type_def, default=field.default,
+                                          has_default=field.has_default)
+                dummy_field = dataclasses.replace(field, type_def=dummy_type)
+                self.fields.append(dummy_field)
+                self.field_names.append(field.name)
 
 
 @dataclasses.dataclass
@@ -156,6 +254,7 @@ class Field:
     default: Any
     has_default: bool
     type_def: TypeDef
+    skip: bool = False
 
     @classmethod
     def from_dict(cls, data: Dict) -> "Field":
@@ -165,6 +264,12 @@ class Field:
     @property
     def type_hint(self) -> str:
         return self.type_def.type_hint
+
+    @property
+    def rendered_name(self) -> str:
+        if self.skip:
+            return "None"
+        return repr(self.name)
 
 
 @dataclasses.dataclass
@@ -228,6 +333,11 @@ class ApiSchema:
             for dependencies in dependency_tree.values():
                 dependencies.discard(name)
 
+    def make_compatible_to(self, other_schema: "ApiSchema") -> None:
+        for struct_name, other_struct in other_schema.structs.items():
+            if struct_name in self.structs:
+                self.structs[struct_name].make_compatible_to(other_struct)
+
 
 @dataclasses.dataclass
 class Api:
@@ -245,6 +355,16 @@ class Api:
         self.max_supported_version = self.latest_version
         self.min_supported_version = min(self.api_versions)
         self.latest_schema_pair = self.api_versions[self.latest_version]
+        self._make_old_structs_compatible()
+
+    def _make_old_structs_compatible(self) -> None:
+        for direction in Direction:
+            new_schema = self.latest_schema_pair[direction]
+            for api_version, old_schema_pair in self.api_versions.items():
+                if api_version == self.latest_version:
+                    continue
+                old_schema = old_schema_pair[direction]
+                old_schema.make_compatible_to(new_schema)
 
     @classmethod
     def from_dict(cls, data: Dict) -> "Api":
@@ -265,6 +385,14 @@ class Api:
             }
             api_versions[api_version] = schema_pair
         return Api(api_key, api_name, data["cluster_action"], api_versions)
+
+    def get_serializer_imports(self, direction: Direction) -> List[str]:
+        serializers = {"Schema"}
+        for version_pair in self.api_versions.values():
+            schema = version_pair[direction]
+            for field_type in schema.schema.traverse_types():
+                serializers.add(field_type.serializer_import_name)
+        return sorted(serializers)
 
 
 def main():
@@ -392,6 +520,7 @@ def render(all_apis: List[Api], constants: Dict) -> None:
     env.globals["Direction"] = Direction
     env.globals["FieldType"] = FieldType
     env.globals["len"] = len
+    env.filters["camelize"] = set
     env.filters["is_string"] = is_string
     env.filters["lower_first"] = lower_first
     env.filters["repr"] = repr

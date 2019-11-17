@@ -2,8 +2,8 @@
 {% block imports %}
 {%- for api in all_apis %}
 from .{{ api.api_name.lower() }} import (
-    {{ serializer_dict_name(api.latest_schema_pair[Direction.REQUEST].schema) }},
-    {{ serializer_dict_name(api.latest_schema_pair[Direction.RESPONSE].schema) }},
+    {{ api.latest_schema_pair[Direction.REQUEST].schema.serializer_dict_name() }},
+    {{ api.latest_schema_pair[Direction.RESPONSE].schema.serializer_dict_name() }},
 )
 {%- endfor %}
 {% endblock %}

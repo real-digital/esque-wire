@@ -3,20 +3,20 @@
 
 from .api import (
 {%- for api in all_apis %}
-    {{ serializer_dict_name(api.latest_schema_pair[Direction.REQUEST].schema) }},
-    {{ serializer_dict_name(api.latest_schema_pair[Direction.RESPONSE].schema) }},
+    {{ api.latest_schema_pair[Direction.REQUEST].schema.serializer_dict_name() }},
+    {{ api.latest_schema_pair[Direction.RESPONSE].schema.serializer_dict_name() }},
 {%- endfor %}
 )
 
 REQUEST_SERIALIZERS: Dict[ApiKey, Dict[int, BaseSerializer[RequestData]]] = {
 {%- for api in all_apis %}
-    ApiKey.{{ api.api_name }}: {{ serializer_dict_name(api.latest_schema_pair[Direction.REQUEST].schema) }},
+    ApiKey.{{ api.api_name }}: {{ api.latest_schema_pair[Direction.REQUEST].schema.serializer_dict_name() }},
 {%- endfor %}
 }
 
 RESPONSE_SERIALIZERS: Dict[ApiKey, Dict[int, BaseSerializer[ResponseData]]] = {
 {%- for api in all_apis %}
-    ApiKey.{{ api.api_name }}: {{ serializer_dict_name(api.latest_schema_pair[Direction.RESPONSE].schema) }},
+    ApiKey.{{ api.api_name }}: {{ api.latest_schema_pair[Direction.RESPONSE].schema.serializer_dict_name() }},
 {%- endfor %}
 }
 {% endblock %}
