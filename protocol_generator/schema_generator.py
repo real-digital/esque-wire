@@ -3,7 +3,8 @@ import enum
 import json
 import pathlib
 import sys
-from typing import Any, Dict, Iterable, List, Set, Tuple, Optional
+import textwrap
+from typing import Any, Dict, Iterable, List, Set, Tuple, Optional, TypeVar
 
 import inflection
 import jinja2
@@ -17,6 +18,7 @@ API_INPUT_FILE = pathlib.Path(__file__).parent / "api_definition.json"
 CONSTANTS_INPUT_FILE = pathlib.Path(__file__).parent / "constant_definition.json"
 BASE_PATH = pathlib.Path(__file__).parent / "kafka_protocol"
 TEMPLATE_PATH = BASE_PATH.parent / "templates"
+T = TypeVar("T")
 
 
 class FieldType(str, enum.Enum):
@@ -315,6 +317,7 @@ class Templater:
     template: jinja2.Template
     path_template: str
     last_target_path: Optional[pathlib.Path]
+    current_target_path: Optional[pathlib.Path]
 
     def __init__(self, env: jinja2.Environment, template_path: pathlib.Path):
         self.template = env.get_template(str(template_path.relative_to(TEMPLATE_PATH)))
@@ -322,18 +325,16 @@ class Templater:
         self.path_template = path_template.replace("<", "{").replace(">", "}")[:-3]
         self.last_target_path = None
 
-    def render(self, all_apis: List[Api], current_api: Api, direction: Direction, constants: Dict):
-        new_target_path = pathlib.Path(
-            self.path_template.format(api_name=current_api.api_name.lower(), direction=direction.name.lower())
-        )
-        if new_target_path == self.last_target_path:
+    def render(self, all_apis: List[Api], current_api: Api, direction: Direction, constants: Dict) -> None:
+        self._determine_target_path(current_api, direction)
+        if not self._target_changed:
             return
-        self.last_target_path = new_target_path
-        new_target_path.parent.mkdir(parents=True, exist_ok=True)
+        self._update_last_path()
+        self.current_target_path.parent.mkdir(parents=True, exist_ok=True)
 
         latest_schema = current_api.latest_schema_pair[direction]
         all_schemas = [api_schema[direction] for api_schema in current_api.api_versions.values()]
-        new_target_path.write_text(
+        self.current_target_path.write_text(
             self.template.render(
                 all_apis=all_apis,
                 current_api=current_api,
@@ -344,6 +345,41 @@ class Templater:
             )
         )
 
+    def _determine_target_path(self, current_api: Api, direction: Direction) -> None:
+        self.current_target_path = pathlib.Path(
+            self.path_template.format(api_name=current_api.api_name.lower(), direction=direction.name.lower())
+        )
+
+    @property
+    def _target_changed(self) -> bool:
+        return self.current_target_path != self.last_target_path
+
+    def _update_last_path(self) -> None:
+        self.last_target_path = self.current_target_path
+
+
+def without(seq: Iterable[T], *excluded_elems: T) -> Iterable[T]:
+    for elem in seq:
+        if elem not in excluded_elems:
+            yield elem
+
+
+def is_string(value) -> bool:
+    return isinstance(value, str)
+
+
+def render_long_text(text, wrap_at=100, **kwargs) -> str:
+    text = text.strip()
+    if text == "":
+        return '""'
+    if len(text) < wrap_at:
+        return repr(text)
+    segments = textwrap.wrap(text, **kwargs)
+    if len(segments) == 1:
+        return repr(segments[0])
+    joined = ' '.join(map(repr, segments))
+    return f"({joined})"
+
 
 def render(all_apis: List[Api], constants: Dict) -> None:
     loader = jinja2.FileSystemLoader(str(TEMPLATE_PATH))
@@ -351,9 +387,15 @@ def render(all_apis: List[Api], constants: Dict) -> None:
     env.globals["Direction"] = Direction
     env.globals["FieldType"] = FieldType
     env.globals["len"] = len
+    env.filters["is_string"] = is_string
     env.filters["lower_first"] = lower_first
     env.filters["repr"] = repr
+    env.filters["without"] = without
     env.filters["primitive_serializer"] = PRIMITIVE_SERIALIZERS.get
+    env.filters["camelize"] = inflection.camelize
+    env.filters["underscore"] = inflection.underscore
+    env.filters["render_long_text"] = render_long_text
+    env.filters["wrap"] = textwrap.wrap
 
     templaters = [
         Templater(env, path) for path in TEMPLATE_PATH.glob("**/*.py.j2") if path.name != "base_module.py.j2"

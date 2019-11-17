@@ -3,16 +3,23 @@
 from enum import Enum
 {% endblock %}
 
+{% macro metadata_name(name) -%}
+_{{ name | underscore | upper }}_METADATA
+{%- endmacro %}
 
 {% block content %}
 {%- for name, constant in constants.items() %}
 {% if 'meta' in constant %}
-_{{ name }}_METADATA = {
+{{ metadata_name(name) }} = {
     {% for entry in constant.meta %}
-    {{ entry.value }}: ({%- for key, value in entry.items() -%}
-        {%- if key != "value" -%}
-        {{ value | repr }}{{ ", " }}
-        {%- endif -%}
+    {{ entry.value }}: (
+        {%- for key, value in entry.items() if key != "value" -%}
+            {% if value | is_string -%}
+                {{ value | render_long_text(width=100, drop_whitespace=False) }}
+            {%- else -%}
+                {{ value }}
+            {%- endif -%}
+            {{ ", " }}
         {%- endfor -%}),
     {%- endfor %}
 }
@@ -23,14 +30,15 @@ class {{ name }}(Enum):
     {{ entry.name }} = {{ entry.value }}
     {%- endfor %}
     {%- if 'meta' in constant %}
+
     def __init__(self, value):
         super().__init__(value)
-        {{ constant.meta[0].keys() | join(", ") }} = _{{ name }}_METADATA[value]
-        {% for key in constant.meta[0].keys() %}
-        {% if key != "value" %}
+        {{ constant.meta[0].keys() | without("value") | join(", ") }} = {{ metadata_name(name) }}[value]
+        {%- for key in constant.meta[0].keys() %}
+        {%- if key != "value" %}
         self.{{ key }} = {{ key }}
-        {% endif %}
-        {% endfor %}
-    {% endif -%}
+        {%- endif %}
+        {%- endfor %}
+    {%- endif -%}
 {% endfor %}
 {% endblock %}
