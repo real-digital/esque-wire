@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.describe_groups_response import (
-    DescribeGroupsResponseData,
-    Group,
-    Member,
-)
+from ...structs.api.describe_groups_response import DescribeGroupsResponseData, Group, Member
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     bytesSerializer,
@@ -53,10 +49,11 @@ memberSchemas: Dict[int, Schema] = {
 }
 
 
-memberSerializers: Dict[int, DataClassSerializer[Member]] = {
-    version: DataClassSerializer(Member, schema)
-    for version, schema in memberSchemas.items()
+memberSerializers: Dict[int, ClassSerializer[Member]] = {
+    version: ClassSerializer(Member, schema) for version, schema in memberSchemas.items()
 }
+
+memberSerializers[-1] = memberSerializers[3]
 
 
 groupSchemas: Dict[int, Schema] = {
@@ -99,10 +96,11 @@ groupSchemas: Dict[int, Schema] = {
 }
 
 
-groupSerializers: Dict[int, DataClassSerializer[Group]] = {
-    version: DataClassSerializer(Group, schema)
-    for version, schema in groupSchemas.items()
+groupSerializers: Dict[int, ClassSerializer[Group]] = {
+    version: ClassSerializer(Group, schema) for version, schema in groupSchemas.items()
 }
+
+groupSerializers[-1] = groupSerializers[3]
 
 
 describeGroupsResponseDataSchemas: Dict[int, Schema] = {
@@ -110,24 +108,15 @@ describeGroupsResponseDataSchemas: Dict[int, Schema] = {
         ("groups", ArraySerializer(groupSerializers[0])),
         ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
-    1: [
-        ("throttle_time_ms", int32Serializer),
-        ("groups", ArraySerializer(groupSerializers[1])),
-    ],
-    2: [
-        ("throttle_time_ms", int32Serializer),
-        ("groups", ArraySerializer(groupSerializers[2])),
-    ],
-    3: [
-        ("throttle_time_ms", int32Serializer),
-        ("groups", ArraySerializer(groupSerializers[3])),
-    ],
+    1: [("throttle_time_ms", int32Serializer), ("groups", ArraySerializer(groupSerializers[1]))],
+    2: [("throttle_time_ms", int32Serializer), ("groups", ArraySerializer(groupSerializers[2]))],
+    3: [("throttle_time_ms", int32Serializer), ("groups", ArraySerializer(groupSerializers[3]))],
 }
 
 
-describeGroupsResponseDataSerializers: Dict[
-    int, DataClassSerializer[DescribeGroupsResponseData]
-] = {
-    version: DataClassSerializer(DescribeGroupsResponseData, schema)
+describeGroupsResponseDataSerializers: Dict[int, ClassSerializer[DescribeGroupsResponseData]] = {
+    version: ClassSerializer(DescribeGroupsResponseData, schema)
     for version, schema in describeGroupsResponseDataSchemas.items()
 }
+
+describeGroupsResponseDataSerializers[-1] = describeGroupsResponseDataSerializers[3]

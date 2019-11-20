@@ -1,21 +1,17 @@
-from dataclasses import dataclass
+from typing import ClassVar
 
 from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
-@dataclass
 class UpdateMetadataResponseData(ResponseData):
-    """
-    :param error_code: Response error code
-    :type error_code: ErrorCode
-    """
 
     error_code: ErrorCode
+    api_key: ClassVar[ApiKey] = ApiKey.UPDATE_METADATA
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, error_code: ErrorCode):
         """
-        :return: the api key for this API: `ApiKey.UPDATE_METADATA` (`ApiKey(6)`)
+        :param error_code: Response error code
+        :type error_code: ErrorCode
         """
-        return ApiKey.UPDATE_METADATA
+        self.error_code = error_code

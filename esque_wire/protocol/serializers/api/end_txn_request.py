@@ -6,7 +6,7 @@ from typing import Dict
 from ...structs.api.end_txn_request import EndTxnRequestData
 
 from ._main_serializers import (
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     booleanSerializer,
     int16Serializer,
@@ -31,7 +31,8 @@ endTxnRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-endTxnRequestDataSerializers: Dict[int, DataClassSerializer[EndTxnRequestData]] = {
-    version: DataClassSerializer(EndTxnRequestData, schema)
-    for version, schema in endTxnRequestDataSchemas.items()
+endTxnRequestDataSerializers: Dict[int, ClassSerializer[EndTxnRequestData]] = {
+    version: ClassSerializer(EndTxnRequestData, schema) for version, schema in endTxnRequestDataSchemas.items()
 }
+
+endTxnRequestDataSerializers[-1] = endTxnRequestDataSerializers[1]

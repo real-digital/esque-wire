@@ -3,38 +3,39 @@
 {%- if type_imports -%}
 from typing import {{ type_imports | join(", ") }}
 {%- endif %}
-from dataclasses import dataclass
 
 from ...constants import {{ current_api.get_constant_imports(direction) | join(", ") }}
 from ..base import {{ direction.name.title() }}Data
 {% endblock %}
 
-{% block content %}
-{% for struct in latest_schema.structs_ordered %}
+{%- block content %}
+{%- for struct in latest_schema.structs_ordered %}
 
-@dataclass
 {% if loop.last -%}
 class {{ struct.name }}({{ direction.name.title() }}Data):
 {%- else -%}
 class {{ struct.name }}:
 {%- endif %}
-    """
-    {%- for field in struct.fields %}
-    :param {{ field.name }}: {{ ("" ~ field.doc) | wordwrap(119-13-len(field.name)) | indent(13+len(field.name)) }}
-    :type {{ field.name }}: {{ field.type_hint }}
-    {%- endfor %}
-    """
     {% for field in struct.fields %}
     {{ field.name }}: {{ field.type_hint }}
     {%- endfor %}
     {%- if loop.last %}
-
-    @staticmethod
-    def api_key() -> ApiKey:
-        """
-        :return: the api key for this API: `ApiKey.{{ current_api.api_name }}` (`ApiKey({{ current_api.api_key }})`)
-        """
-        return ApiKey.{{ current_api.api_name }}
+    api_key: ClassVar[ApiKey] = ApiKey.{{ current_api.api_name }}
     {%- endif %}
+
+    def __init__(self
+        {%- for field in struct.fields -%}
+        , {{ field.name }}: {{ field.type_hint }}
+        {%- endfor -%}
+    ):
+        """
+        {%- for field in struct.fields %}
+        :param {{ field.name }}: {{ ("" ~ field.doc) | wordwrap(119-17-len(field.name)) | indent(17+len(field.name)) }}
+        :type {{ field.name }}: {{ field.type_hint }}
+        {%- endfor %}
+        """
+        {%- for field in struct.fields %}
+        self.{{ field.name }} = {{ field.name }}
+        {%- endfor %}
 {% endfor %}
-{% endblock %}
+{%- endblock %}

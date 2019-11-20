@@ -1,61 +1,65 @@
-from typing import List
-from dataclasses import dataclass
+from typing import ClassVar, List
 
 from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
-@dataclass
 class Partition:
-    """
-    :param partition: Topic partition id
-    :type partition: int
-    :param error_code: Response error code
-    :type error_code: ErrorCode
-    """
 
     partition: int
     error_code: ErrorCode
 
+    def __init__(self, partition: int, error_code: ErrorCode):
+        """
+        :param partition: Topic partition id
+        :type partition: int
+        :param error_code: Response error code
+        :type error_code: ErrorCode
+        """
+        self.partition = partition
+        self.error_code = error_code
 
-@dataclass
+
 class Topic:
-    """
-    :param topic: Name of topic
-    :type topic: str
-    :param partitions: None
-    :type partitions: List[Partition]
-    """
 
     topic: str
     partitions: List[Partition]
 
+    def __init__(self, topic: str, partitions: List[Partition]):
+        """
+        :param topic: Name of topic
+        :type topic: str
+        :param partitions: None
+        :type partitions: List[Partition]
+        """
+        self.topic = topic
+        self.partitions = partitions
 
-@dataclass
+
 class TransactionMarker:
-    """
-    :param producer_id: Current producer id in use by the transactional id.
-    :type producer_id: int
-    :param topics: Errors per partition from writing markers.
-    :type topics: List[Topic]
-    """
 
     producer_id: int
     topics: List[Topic]
 
+    def __init__(self, producer_id: int, topics: List[Topic]):
+        """
+        :param producer_id: Current producer id in use by the transactional id.
+        :type producer_id: int
+        :param topics: Errors per partition from writing markers.
+        :type topics: List[Topic]
+        """
+        self.producer_id = producer_id
+        self.topics = topics
 
-@dataclass
+
 class WriteTxnMarkersResponseData(ResponseData):
-    """
-    :param transaction_markers: Errors per partition from writing markers.
-    :type transaction_markers: List[TransactionMarker]
-    """
 
     transaction_markers: List[TransactionMarker]
+    api_key: ClassVar[ApiKey] = ApiKey.WRITE_TXN_MARKERS
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, transaction_markers: List[TransactionMarker]):
         """
-        :return: the api key for this API: `ApiKey.WRITE_TXN_MARKERS` (`ApiKey(27)`)
+        :param transaction_markers: Errors per partition from writing markers.
+        :type transaction_markers: List[TransactionMarker]
         """
-        return ApiKey.WRITE_TXN_MARKERS
+        self.transaction_markers = transaction_markers

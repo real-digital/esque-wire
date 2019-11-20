@@ -6,7 +6,7 @@ from typing import Dict
 from ...structs.api.init_producer_id_response import InitProducerIdResponseData
 
 from ._main_serializers import (
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     errorCodeSerializer,
     int16Serializer,
@@ -31,9 +31,9 @@ initProducerIdResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-initProducerIdResponseDataSerializers: Dict[
-    int, DataClassSerializer[InitProducerIdResponseData]
-] = {
-    version: DataClassSerializer(InitProducerIdResponseData, schema)
+initProducerIdResponseDataSerializers: Dict[int, ClassSerializer[InitProducerIdResponseData]] = {
+    version: ClassSerializer(InitProducerIdResponseData, schema)
     for version, schema in initProducerIdResponseDataSchemas.items()
 }
+
+initProducerIdResponseDataSerializers[-1] = initProducerIdResponseDataSerializers[1]

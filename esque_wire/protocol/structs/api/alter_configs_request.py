@@ -1,54 +1,57 @@
-from typing import List, Optional
-from dataclasses import dataclass
+from typing import ClassVar, List, Optional
 
 from ...constants import ApiKey, ResourceType
 from ..base import RequestData
 
 
-@dataclass
 class ConfigEntry:
-    """
-    :param config_name: Configuration name
-    :type config_name: str
-    :param config_value: Configuration value
-    :type config_value: Optional[str]
-    """
 
     config_name: str
     config_value: Optional[str]
 
+    def __init__(self, config_name: str, config_value: Optional[str]):
+        """
+        :param config_name: Configuration name
+        :type config_name: str
+        :param config_value: Configuration value
+        :type config_value: Optional[str]
+        """
+        self.config_name = config_name
+        self.config_value = config_value
 
-@dataclass
+
 class Resource:
-    """
-    :param resource_type: None
-    :type resource_type: ResourceType
-    :param resource_name: None
-    :type resource_name: str
-    :param config_entries: None
-    :type config_entries: List[ConfigEntry]
-    """
 
     resource_type: ResourceType
     resource_name: str
     config_entries: List[ConfigEntry]
 
+    def __init__(self, resource_type: ResourceType, resource_name: str, config_entries: List[ConfigEntry]):
+        """
+        :param resource_type: None
+        :type resource_type: ResourceType
+        :param resource_name: None
+        :type resource_name: str
+        :param config_entries: None
+        :type config_entries: List[ConfigEntry]
+        """
+        self.resource_type = resource_type
+        self.resource_name = resource_name
+        self.config_entries = config_entries
 
-@dataclass
+
 class AlterConfigsRequestData(RequestData):
-    """
-    :param resources: An array of resources to update with the provided configs.
-    :type resources: List[Resource]
-    :param validate_only: None
-    :type validate_only: bool
-    """
 
     resources: List[Resource]
     validate_only: bool
+    api_key: ClassVar[ApiKey] = ApiKey.ALTER_CONFIGS
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, resources: List[Resource], validate_only: bool):
         """
-        :return: the api key for this API: `ApiKey.ALTER_CONFIGS` (`ApiKey(33)`)
+        :param resources: An array of resources to update with the provided configs.
+        :type resources: List[Resource]
+        :param validate_only: None
+        :type validate_only: bool
         """
-        return ApiKey.ALTER_CONFIGS
+        self.resources = resources
+        self.validate_only = validate_only

@@ -7,7 +7,7 @@ from ...structs.api.api_versions_response import ApiVersion, ApiVersionsResponse
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     apiKeySerializer,
@@ -18,28 +18,17 @@ from ._main_serializers import (
 
 
 apiVersionSchemas: Dict[int, Schema] = {
-    0: [
-        ("api_key", apiKeySerializer),
-        ("min_version", int16Serializer),
-        ("max_version", int16Serializer),
-    ],
-    1: [
-        ("api_key", apiKeySerializer),
-        ("min_version", int16Serializer),
-        ("max_version", int16Serializer),
-    ],
-    2: [
-        ("api_key", apiKeySerializer),
-        ("min_version", int16Serializer),
-        ("max_version", int16Serializer),
-    ],
+    0: [("api_key", apiKeySerializer), ("min_version", int16Serializer), ("max_version", int16Serializer)],
+    1: [("api_key", apiKeySerializer), ("min_version", int16Serializer), ("max_version", int16Serializer)],
+    2: [("api_key", apiKeySerializer), ("min_version", int16Serializer), ("max_version", int16Serializer)],
 }
 
 
-apiVersionSerializers: Dict[int, DataClassSerializer[ApiVersion]] = {
-    version: DataClassSerializer(ApiVersion, schema)
-    for version, schema in apiVersionSchemas.items()
+apiVersionSerializers: Dict[int, ClassSerializer[ApiVersion]] = {
+    version: ClassSerializer(ApiVersion, schema) for version, schema in apiVersionSchemas.items()
 }
+
+apiVersionSerializers[-1] = apiVersionSerializers[2]
 
 
 apiVersionsResponseDataSchemas: Dict[int, Schema] = {
@@ -61,9 +50,9 @@ apiVersionsResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-apiVersionsResponseDataSerializers: Dict[
-    int, DataClassSerializer[ApiVersionsResponseData]
-] = {
-    version: DataClassSerializer(ApiVersionsResponseData, schema)
+apiVersionsResponseDataSerializers: Dict[int, ClassSerializer[ApiVersionsResponseData]] = {
+    version: ClassSerializer(ApiVersionsResponseData, schema)
     for version, schema in apiVersionsResponseDataSchemas.items()
 }
+
+apiVersionsResponseDataSerializers[-1] = apiVersionsResponseDataSerializers[2]

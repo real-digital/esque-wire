@@ -3,14 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.add_partitions_to_txn_request import (
-    AddPartitionsToTxnRequestData,
-    Topic,
-)
+from ...structs.api.add_partitions_to_txn_request import AddPartitionsToTxnRequestData, Topic
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     int16Serializer,
     int32Serializer,
@@ -25,10 +22,11 @@ topicSchemas: Dict[int, Schema] = {
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[1]
 
 
 addPartitionsToTxnRequestDataSchemas: Dict[int, Schema] = {
@@ -47,9 +45,9 @@ addPartitionsToTxnRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-addPartitionsToTxnRequestDataSerializers: Dict[
-    int, DataClassSerializer[AddPartitionsToTxnRequestData]
-] = {
-    version: DataClassSerializer(AddPartitionsToTxnRequestData, schema)
+addPartitionsToTxnRequestDataSerializers: Dict[int, ClassSerializer[AddPartitionsToTxnRequestData]] = {
+    version: ClassSerializer(AddPartitionsToTxnRequestData, schema)
     for version, schema in addPartitionsToTxnRequestDataSchemas.items()
 }
+
+addPartitionsToTxnRequestDataSerializers[-1] = addPartitionsToTxnRequestDataSerializers[1]

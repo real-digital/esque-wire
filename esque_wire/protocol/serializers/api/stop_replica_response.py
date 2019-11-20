@@ -7,7 +7,7 @@ from ...structs.api.stop_replica_response import Partition, StopReplicaResponseD
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     errorCodeSerializer,
     int32Serializer,
@@ -16,40 +16,27 @@ from ._main_serializers import (
 
 
 partitionSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partition", int32Serializer),
-        ("error_code", errorCodeSerializer),
-    ],
-    1: [
-        ("topic", stringSerializer),
-        ("partition", int32Serializer),
-        ("error_code", errorCodeSerializer),
-    ],
+    0: [("topic", stringSerializer), ("partition", int32Serializer), ("error_code", errorCodeSerializer)],
+    1: [("topic", stringSerializer), ("partition", int32Serializer), ("error_code", errorCodeSerializer)],
 }
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[1]
 
 
 stopReplicaResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("error_code", errorCodeSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[0])),
-    ],
-    1: [
-        ("error_code", errorCodeSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[1])),
-    ],
+    0: [("error_code", errorCodeSerializer), ("partitions", ArraySerializer(partitionSerializers[0]))],
+    1: [("error_code", errorCodeSerializer), ("partitions", ArraySerializer(partitionSerializers[1]))],
 }
 
 
-stopReplicaResponseDataSerializers: Dict[
-    int, DataClassSerializer[StopReplicaResponseData]
-] = {
-    version: DataClassSerializer(StopReplicaResponseData, schema)
+stopReplicaResponseDataSerializers: Dict[int, ClassSerializer[StopReplicaResponseData]] = {
+    version: ClassSerializer(StopReplicaResponseData, schema)
     for version, schema in stopReplicaResponseDataSchemas.items()
 }
+
+stopReplicaResponseDataSerializers[-1] = stopReplicaResponseDataSerializers[1]

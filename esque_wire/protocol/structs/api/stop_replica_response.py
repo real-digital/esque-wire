@@ -1,41 +1,41 @@
-from typing import List
-from dataclasses import dataclass
+from typing import ClassVar, List
 
 from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
-@dataclass
 class Partition:
-    """
-    :param topic: Name of topic
-    :type topic: str
-    :param partition: Topic partition id
-    :type partition: int
-    :param error_code: Response error code
-    :type error_code: ErrorCode
-    """
 
     topic: str
     partition: int
     error_code: ErrorCode
 
+    def __init__(self, topic: str, partition: int, error_code: ErrorCode):
+        """
+        :param topic: Name of topic
+        :type topic: str
+        :param partition: Topic partition id
+        :type partition: int
+        :param error_code: Response error code
+        :type error_code: ErrorCode
+        """
+        self.topic = topic
+        self.partition = partition
+        self.error_code = error_code
 
-@dataclass
+
 class StopReplicaResponseData(ResponseData):
-    """
-    :param error_code: Response error code
-    :type error_code: ErrorCode
-    :param partitions: Response for the requests partitions
-    :type partitions: List[Partition]
-    """
 
     error_code: ErrorCode
     partitions: List[Partition]
+    api_key: ClassVar[ApiKey] = ApiKey.STOP_REPLICA
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, error_code: ErrorCode, partitions: List[Partition]):
         """
-        :return: the api key for this API: `ApiKey.STOP_REPLICA` (`ApiKey(5)`)
+        :param error_code: Response error code
+        :type error_code: ErrorCode
+        :param partitions: Response for the requests partitions
+        :type partitions: List[Partition]
         """
-        return ApiKey.STOP_REPLICA
+        self.error_code = error_code
+        self.partitions = partitions

@@ -1,22 +1,17 @@
-from typing import List
-from dataclasses import dataclass
+from typing import ClassVar, List
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class DeleteGroupsRequestData(RequestData):
-    """
-    :param groups: An array of groups to be deleted.
-    :type groups: List[str]
-    """
 
     groups: List[str]
+    api_key: ClassVar[ApiKey] = ApiKey.DELETE_GROUPS
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, groups: List[str]):
         """
-        :return: the api key for this API: `ApiKey.DELETE_GROUPS` (`ApiKey(42)`)
+        :param groups: An array of groups to be deleted.
+        :type groups: List[str]
         """
-        return ApiKey.DELETE_GROUPS
+        self.groups = groups

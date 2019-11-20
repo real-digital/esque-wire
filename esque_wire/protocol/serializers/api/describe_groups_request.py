@@ -7,7 +7,7 @@ from ...structs.api.describe_groups_request import DescribeGroupsRequestData
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     booleanSerializer,
@@ -28,16 +28,13 @@ describeGroupsRequestDataSchemas: Dict[int, Schema] = {
         ("groups", ArraySerializer(stringSerializer)),
         ("include_authorized_operations", DummySerializer(booleanSerializer.default)),
     ],
-    3: [
-        ("groups", ArraySerializer(stringSerializer)),
-        ("include_authorized_operations", booleanSerializer),
-    ],
+    3: [("groups", ArraySerializer(stringSerializer)), ("include_authorized_operations", booleanSerializer)],
 }
 
 
-describeGroupsRequestDataSerializers: Dict[
-    int, DataClassSerializer[DescribeGroupsRequestData]
-] = {
-    version: DataClassSerializer(DescribeGroupsRequestData, schema)
+describeGroupsRequestDataSerializers: Dict[int, ClassSerializer[DescribeGroupsRequestData]] = {
+    version: ClassSerializer(DescribeGroupsRequestData, schema)
     for version, schema in describeGroupsRequestDataSchemas.items()
 }
+
+describeGroupsRequestDataSerializers[-1] = describeGroupsRequestDataSerializers[3]

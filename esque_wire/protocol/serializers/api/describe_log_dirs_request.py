@@ -5,13 +5,7 @@
 from typing import Dict
 from ...structs.api.describe_log_dirs_request import DescribeLogDirsRequestData, Topic
 
-from ._main_serializers import (
-    ArraySerializer,
-    DataClassSerializer,
-    Schema,
-    int32Serializer,
-    stringSerializer,
-)
+from ._main_serializers import ArraySerializer, ClassSerializer, Schema, int32Serializer, stringSerializer
 
 
 topicSchemas: Dict[int, Schema] = {
@@ -20,10 +14,11 @@ topicSchemas: Dict[int, Schema] = {
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[1]
 
 
 describeLogDirsRequestDataSchemas: Dict[int, Schema] = {
@@ -32,9 +27,9 @@ describeLogDirsRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-describeLogDirsRequestDataSerializers: Dict[
-    int, DataClassSerializer[DescribeLogDirsRequestData]
-] = {
-    version: DataClassSerializer(DescribeLogDirsRequestData, schema)
+describeLogDirsRequestDataSerializers: Dict[int, ClassSerializer[DescribeLogDirsRequestData]] = {
+    version: ClassSerializer(DescribeLogDirsRequestData, schema)
     for version, schema in describeLogDirsRequestDataSchemas.items()
 }
+
+describeLogDirsRequestDataSerializers[-1] = describeLogDirsRequestDataSerializers[1]

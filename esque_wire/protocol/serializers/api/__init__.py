@@ -49,9 +49,7 @@ from .delete_records_response import deleteRecordsResponseDataSerializers
 from .init_producer_id_request import initProducerIdRequestDataSerializers
 from .init_producer_id_response import initProducerIdResponseDataSerializers
 from .offset_for_leader_epoch_request import offsetForLeaderEpochRequestDataSerializers
-from .offset_for_leader_epoch_response import (
-    offsetForLeaderEpochResponseDataSerializers,
-)
+from .offset_for_leader_epoch_response import offsetForLeaderEpochResponseDataSerializers
 from .add_partitions_to_txn_request import addPartitionsToTxnRequestDataSerializers
 from .add_partitions_to_txn_response import addPartitionsToTxnResponseDataSerializers
 from .add_offsets_to_txn_request import addOffsetsToTxnRequestDataSerializers
@@ -81,30 +79,16 @@ from .sasl_authenticate_response import saslAuthenticateResponseDataSerializers
 from .create_partitions_request import createPartitionsRequestDataSerializers
 from .create_partitions_response import createPartitionsResponseDataSerializers
 from .create_delegation_token_request import createDelegationTokenRequestDataSerializers
-from .create_delegation_token_response import (
-    createDelegationTokenResponseDataSerializers,
-)
+from .create_delegation_token_response import createDelegationTokenResponseDataSerializers
 from .renew_delegation_token_request import renewDelegationTokenRequestDataSerializers
 from .renew_delegation_token_response import renewDelegationTokenResponseDataSerializers
 from .expire_delegation_token_request import expireDelegationTokenRequestDataSerializers
-from .expire_delegation_token_response import (
-    expireDelegationTokenResponseDataSerializers,
-)
-from .describe_delegation_token_request import (
-    describeDelegationTokenRequestDataSerializers,
-)
-from .describe_delegation_token_response import (
-    describeDelegationTokenResponseDataSerializers,
-)
+from .expire_delegation_token_response import expireDelegationTokenResponseDataSerializers
+from .describe_delegation_token_request import describeDelegationTokenRequestDataSerializers
+from .describe_delegation_token_response import describeDelegationTokenResponseDataSerializers
 from .delete_groups_request import deleteGroupsRequestDataSerializers
 from .delete_groups_response import deleteGroupsResponseDataSerializers
 from .elect_preferred_leaders_request import electPreferredLeadersRequestDataSerializers
-from .elect_preferred_leaders_response import (
-    electPreferredLeadersResponseDataSerializers,
-)
-from .incremental_alter_configs_request import (
-    incrementalAlterConfigsRequestDataSerializers,
-)
-from .incremental_alter_configs_response import (
-    incrementalAlterConfigsResponseDataSerializers,
-)
+from .elect_preferred_leaders_response import electPreferredLeadersResponseDataSerializers
+from .incremental_alter_configs_request import incrementalAlterConfigsRequestDataSerializers
+from .incremental_alter_configs_response import incrementalAlterConfigsResponseDataSerializers

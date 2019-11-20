@@ -1,24 +1,21 @@
-from dataclasses import dataclass
+from typing import ClassVar
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class ExpireDelegationTokenRequestData(RequestData):
-    """
-    :param hmac: HMAC of the delegation token to be expired.
-    :type hmac: bytes
-    :param expiry_time_period: expiry time period in milli seconds.
-    :type expiry_time_period: int
-    """
 
     hmac: bytes
     expiry_time_period: int
+    api_key: ClassVar[ApiKey] = ApiKey.EXPIRE_DELEGATION_TOKEN
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, hmac: bytes, expiry_time_period: int):
         """
-        :return: the api key for this API: `ApiKey.EXPIRE_DELEGATION_TOKEN` (`ApiKey(40)`)
+        :param hmac: HMAC of the delegation token to be expired.
+        :type hmac: bytes
+        :param expiry_time_period: expiry time period in milli seconds.
+        :type expiry_time_period: int
         """
-        return ApiKey.EXPIRE_DELEGATION_TOKEN
+        self.hmac = hmac
+        self.expiry_time_period = expiry_time_period

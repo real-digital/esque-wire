@@ -6,7 +6,7 @@ from typing import Dict
 from ...structs.api.describe_acls_request import DescribeAclsRequestData
 
 from ._main_serializers import (
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     aclOperationSerializer,
@@ -39,9 +39,9 @@ describeAclsRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-describeAclsRequestDataSerializers: Dict[
-    int, DataClassSerializer[DescribeAclsRequestData]
-] = {
-    version: DataClassSerializer(DescribeAclsRequestData, schema)
+describeAclsRequestDataSerializers: Dict[int, ClassSerializer[DescribeAclsRequestData]] = {
+    version: ClassSerializer(DescribeAclsRequestData, schema)
     for version, schema in describeAclsRequestDataSchemas.items()
 }
+
+describeAclsRequestDataSerializers[-1] = describeAclsRequestDataSerializers[1]

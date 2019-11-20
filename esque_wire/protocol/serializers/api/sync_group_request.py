@@ -7,7 +7,7 @@ from ...structs.api.sync_group_request import Assignment, SyncGroupRequestData
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     bytesSerializer,
@@ -25,10 +25,11 @@ assignmentSchemas: Dict[int, Schema] = {
 }
 
 
-assignmentSerializers: Dict[int, DataClassSerializer[Assignment]] = {
-    version: DataClassSerializer(Assignment, schema)
-    for version, schema in assignmentSchemas.items()
+assignmentSerializers: Dict[int, ClassSerializer[Assignment]] = {
+    version: ClassSerializer(Assignment, schema) for version, schema in assignmentSchemas.items()
 }
+
+assignmentSerializers[-1] = assignmentSerializers[3]
 
 
 syncGroupRequestDataSchemas: Dict[int, Schema] = {
@@ -63,9 +64,8 @@ syncGroupRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-syncGroupRequestDataSerializers: Dict[
-    int, DataClassSerializer[SyncGroupRequestData]
-] = {
-    version: DataClassSerializer(SyncGroupRequestData, schema)
-    for version, schema in syncGroupRequestDataSchemas.items()
+syncGroupRequestDataSerializers: Dict[int, ClassSerializer[SyncGroupRequestData]] = {
+    version: ClassSerializer(SyncGroupRequestData, schema) for version, schema in syncGroupRequestDataSchemas.items()
 }
+
+syncGroupRequestDataSerializers[-1] = syncGroupRequestDataSerializers[3]

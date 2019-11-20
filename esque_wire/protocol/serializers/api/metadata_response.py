@@ -3,16 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.metadata_response import (
-    Broker,
-    MetadataResponseData,
-    Partition,
-    Topic,
-)
+from ...structs.api.metadata_response import Broker, MetadataResponseData, Partition, Topic
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     booleanSerializer,
@@ -108,10 +103,11 @@ partitionSchemas: Dict[int, Schema] = {
 }
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[8]
 
 
 topicSchemas: Dict[int, Schema] = {
@@ -181,10 +177,11 @@ topicSchemas: Dict[int, Schema] = {
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[8]
 
 
 brokerSchemas: Dict[int, Schema] = {
@@ -245,10 +242,11 @@ brokerSchemas: Dict[int, Schema] = {
 }
 
 
-brokerSerializers: Dict[int, DataClassSerializer[Broker]] = {
-    version: DataClassSerializer(Broker, schema)
-    for version, schema in brokerSchemas.items()
+brokerSerializers: Dict[int, ClassSerializer[Broker]] = {
+    version: ClassSerializer(Broker, schema) for version, schema in brokerSchemas.items()
 }
+
+brokerSerializers[-1] = brokerSerializers[8]
 
 
 metadataResponseDataSchemas: Dict[int, Schema] = {
@@ -327,9 +325,8 @@ metadataResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-metadataResponseDataSerializers: Dict[
-    int, DataClassSerializer[MetadataResponseData]
-] = {
-    version: DataClassSerializer(MetadataResponseData, schema)
-    for version, schema in metadataResponseDataSchemas.items()
+metadataResponseDataSerializers: Dict[int, ClassSerializer[MetadataResponseData]] = {
+    version: ClassSerializer(MetadataResponseData, schema) for version, schema in metadataResponseDataSchemas.items()
 }
+
+metadataResponseDataSerializers[-1] = metadataResponseDataSerializers[8]

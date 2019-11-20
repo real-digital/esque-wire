@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.txn_offset_commit_request import (
-    Partition,
-    Topic,
-    TxnOffsetCommitRequestData,
-)
+from ...structs.api.txn_offset_commit_request import Partition, Topic, TxnOffsetCommitRequestData
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     int16Serializer,
@@ -44,32 +40,25 @@ partitionSchemas: Dict[int, Schema] = {
 }
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[2]
 
 
 topicSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[0])),
-    ],
-    1: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[1])),
-    ],
-    2: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[2])),
-    ],
+    0: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[0]))],
+    1: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[1]))],
+    2: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[2]))],
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[2]
 
 
 txnOffsetCommitRequestDataSchemas: Dict[int, Schema] = {
@@ -97,9 +86,9 @@ txnOffsetCommitRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-txnOffsetCommitRequestDataSerializers: Dict[
-    int, DataClassSerializer[TxnOffsetCommitRequestData]
-] = {
-    version: DataClassSerializer(TxnOffsetCommitRequestData, schema)
+txnOffsetCommitRequestDataSerializers: Dict[int, ClassSerializer[TxnOffsetCommitRequestData]] = {
+    version: ClassSerializer(TxnOffsetCommitRequestData, schema)
     for version, schema in txnOffsetCommitRequestDataSchemas.items()
 }
+
+txnOffsetCommitRequestDataSerializers[-1] = txnOffsetCommitRequestDataSerializers[2]

@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.add_partitions_to_txn_response import (
-    AddPartitionsToTxnResponseData,
-    Error,
-    PartitionError,
-)
+from ...structs.api.add_partitions_to_txn_response import AddPartitionsToTxnResponseData, Error, PartitionError
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     errorCodeSerializer,
     int32Serializer,
@@ -25,45 +21,35 @@ partitionErrorSchemas: Dict[int, Schema] = {
 }
 
 
-partitionErrorSerializers: Dict[int, DataClassSerializer[PartitionError]] = {
-    version: DataClassSerializer(PartitionError, schema)
-    for version, schema in partitionErrorSchemas.items()
+partitionErrorSerializers: Dict[int, ClassSerializer[PartitionError]] = {
+    version: ClassSerializer(PartitionError, schema) for version, schema in partitionErrorSchemas.items()
 }
+
+partitionErrorSerializers[-1] = partitionErrorSerializers[1]
 
 
 errorSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partition_errors", ArraySerializer(partitionErrorSerializers[0])),
-    ],
-    1: [
-        ("topic", stringSerializer),
-        ("partition_errors", ArraySerializer(partitionErrorSerializers[1])),
-    ],
+    0: [("topic", stringSerializer), ("partition_errors", ArraySerializer(partitionErrorSerializers[0]))],
+    1: [("topic", stringSerializer), ("partition_errors", ArraySerializer(partitionErrorSerializers[1]))],
 }
 
 
-errorSerializers: Dict[int, DataClassSerializer[Error]] = {
-    version: DataClassSerializer(Error, schema)
-    for version, schema in errorSchemas.items()
+errorSerializers: Dict[int, ClassSerializer[Error]] = {
+    version: ClassSerializer(Error, schema) for version, schema in errorSchemas.items()
 }
+
+errorSerializers[-1] = errorSerializers[1]
 
 
 addPartitionsToTxnResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("throttle_time_ms", int32Serializer),
-        ("errors", ArraySerializer(errorSerializers[0])),
-    ],
-    1: [
-        ("throttle_time_ms", int32Serializer),
-        ("errors", ArraySerializer(errorSerializers[1])),
-    ],
+    0: [("throttle_time_ms", int32Serializer), ("errors", ArraySerializer(errorSerializers[0]))],
+    1: [("throttle_time_ms", int32Serializer), ("errors", ArraySerializer(errorSerializers[1]))],
 }
 
 
-addPartitionsToTxnResponseDataSerializers: Dict[
-    int, DataClassSerializer[AddPartitionsToTxnResponseData]
-] = {
-    version: DataClassSerializer(AddPartitionsToTxnResponseData, schema)
+addPartitionsToTxnResponseDataSerializers: Dict[int, ClassSerializer[AddPartitionsToTxnResponseData]] = {
+    version: ClassSerializer(AddPartitionsToTxnResponseData, schema)
     for version, schema in addPartitionsToTxnResponseDataSchemas.items()
 }
+
+addPartitionsToTxnResponseDataSerializers[-1] = addPartitionsToTxnResponseDataSerializers[1]

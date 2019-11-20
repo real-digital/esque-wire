@@ -1,31 +1,29 @@
-from typing import Optional
-from dataclasses import dataclass
+from typing import ClassVar, Optional
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class HeartbeatRequestData(RequestData):
-    """
-    :param group_id: The group id.
-    :type group_id: str
-    :param generation_id: The generation of the group.
-    :type generation_id: int
-    :param member_id: The member ID.
-    :type member_id: str
-    :param group_instance_id: The unique identifier of the consumer instance provided by end user.
-    :type group_instance_id: Optional[str]
-    """
 
     group_id: str
     generation_id: int
     member_id: str
     group_instance_id: Optional[str]
+    api_key: ClassVar[ApiKey] = ApiKey.HEARTBEAT
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, group_id: str, generation_id: int, member_id: str, group_instance_id: Optional[str]):
         """
-        :return: the api key for this API: `ApiKey.HEARTBEAT` (`ApiKey(12)`)
+        :param group_id: The group id.
+        :type group_id: str
+        :param generation_id: The generation of the group.
+        :type generation_id: int
+        :param member_id: The member ID.
+        :type member_id: str
+        :param group_instance_id: The unique identifier of the consumer instance provided by end user.
+        :type group_instance_id: Optional[str]
         """
-        return ApiKey.HEARTBEAT
+        self.group_id = group_id
+        self.generation_id = generation_id
+        self.member_id = member_id
+        self.group_instance_id = group_instance_id

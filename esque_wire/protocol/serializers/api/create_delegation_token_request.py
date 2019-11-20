@@ -3,18 +3,9 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.create_delegation_token_request import (
-    CreateDelegationTokenRequestData,
-    Renewer,
-)
+from ...structs.api.create_delegation_token_request import CreateDelegationTokenRequestData, Renewer
 
-from ._main_serializers import (
-    ArraySerializer,
-    DataClassSerializer,
-    Schema,
-    int64Serializer,
-    stringSerializer,
-)
+from ._main_serializers import ArraySerializer, ClassSerializer, Schema, int64Serializer, stringSerializer
 
 
 renewerSchemas: Dict[int, Schema] = {
@@ -23,27 +14,22 @@ renewerSchemas: Dict[int, Schema] = {
 }
 
 
-renewerSerializers: Dict[int, DataClassSerializer[Renewer]] = {
-    version: DataClassSerializer(Renewer, schema)
-    for version, schema in renewerSchemas.items()
+renewerSerializers: Dict[int, ClassSerializer[Renewer]] = {
+    version: ClassSerializer(Renewer, schema) for version, schema in renewerSchemas.items()
 }
+
+renewerSerializers[-1] = renewerSerializers[1]
 
 
 createDelegationTokenRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("renewers", ArraySerializer(renewerSerializers[0])),
-        ("max_life_time", int64Serializer),
-    ],
-    1: [
-        ("renewers", ArraySerializer(renewerSerializers[1])),
-        ("max_life_time", int64Serializer),
-    ],
+    0: [("renewers", ArraySerializer(renewerSerializers[0])), ("max_life_time", int64Serializer)],
+    1: [("renewers", ArraySerializer(renewerSerializers[1])), ("max_life_time", int64Serializer)],
 }
 
 
-createDelegationTokenRequestDataSerializers: Dict[
-    int, DataClassSerializer[CreateDelegationTokenRequestData]
-] = {
-    version: DataClassSerializer(CreateDelegationTokenRequestData, schema)
+createDelegationTokenRequestDataSerializers: Dict[int, ClassSerializer[CreateDelegationTokenRequestData]] = {
+    version: ClassSerializer(CreateDelegationTokenRequestData, schema)
     for version, schema in createDelegationTokenRequestDataSchemas.items()
 }
+
+createDelegationTokenRequestDataSerializers[-1] = createDelegationTokenRequestDataSerializers[1]

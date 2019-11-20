@@ -7,7 +7,7 @@ from ...structs.api.alter_configs_response import AlterConfigsResponseData, Reso
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     errorCodeSerializer,
     int32Serializer,
@@ -33,27 +33,22 @@ resourceSchemas: Dict[int, Schema] = {
 }
 
 
-resourceSerializers: Dict[int, DataClassSerializer[Resource]] = {
-    version: DataClassSerializer(Resource, schema)
-    for version, schema in resourceSchemas.items()
+resourceSerializers: Dict[int, ClassSerializer[Resource]] = {
+    version: ClassSerializer(Resource, schema) for version, schema in resourceSchemas.items()
 }
+
+resourceSerializers[-1] = resourceSerializers[1]
 
 
 alterConfigsResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("throttle_time_ms", int32Serializer),
-        ("resources", ArraySerializer(resourceSerializers[0])),
-    ],
-    1: [
-        ("throttle_time_ms", int32Serializer),
-        ("resources", ArraySerializer(resourceSerializers[1])),
-    ],
+    0: [("throttle_time_ms", int32Serializer), ("resources", ArraySerializer(resourceSerializers[0]))],
+    1: [("throttle_time_ms", int32Serializer), ("resources", ArraySerializer(resourceSerializers[1]))],
 }
 
 
-alterConfigsResponseDataSerializers: Dict[
-    int, DataClassSerializer[AlterConfigsResponseData]
-] = {
-    version: DataClassSerializer(AlterConfigsResponseData, schema)
+alterConfigsResponseDataSerializers: Dict[int, ClassSerializer[AlterConfigsResponseData]] = {
+    version: ClassSerializer(AlterConfigsResponseData, schema)
     for version, schema in alterConfigsResponseDataSchemas.items()
 }
+
+alterConfigsResponseDataSerializers[-1] = alterConfigsResponseDataSerializers[1]

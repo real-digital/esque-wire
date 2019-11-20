@@ -3,17 +3,9 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.renew_delegation_token_response import (
-    RenewDelegationTokenResponseData,
-)
+from ...structs.api.renew_delegation_token_response import RenewDelegationTokenResponseData
 
-from ._main_serializers import (
-    DataClassSerializer,
-    Schema,
-    errorCodeSerializer,
-    int32Serializer,
-    int64Serializer,
-)
+from ._main_serializers import ClassSerializer, Schema, errorCodeSerializer, int32Serializer, int64Serializer
 
 
 renewDelegationTokenResponseDataSchemas: Dict[int, Schema] = {
@@ -30,9 +22,9 @@ renewDelegationTokenResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-renewDelegationTokenResponseDataSerializers: Dict[
-    int, DataClassSerializer[RenewDelegationTokenResponseData]
-] = {
-    version: DataClassSerializer(RenewDelegationTokenResponseData, schema)
+renewDelegationTokenResponseDataSerializers: Dict[int, ClassSerializer[RenewDelegationTokenResponseData]] = {
+    version: ClassSerializer(RenewDelegationTokenResponseData, schema)
     for version, schema in renewDelegationTokenResponseDataSchemas.items()
 }
+
+renewDelegationTokenResponseDataSerializers[-1] = renewDelegationTokenResponseDataSerializers[1]

@@ -1,24 +1,21 @@
-from dataclasses import dataclass
+from typing import ClassVar
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class LeaveGroupRequestData(RequestData):
-    """
-    :param group_id: The ID of the group to leave.
-    :type group_id: str
-    :param member_id: The member ID to remove from the group.
-    :type member_id: str
-    """
 
     group_id: str
     member_id: str
+    api_key: ClassVar[ApiKey] = ApiKey.LEAVE_GROUP
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, group_id: str, member_id: str):
         """
-        :return: the api key for this API: `ApiKey.LEAVE_GROUP` (`ApiKey(13)`)
+        :param group_id: The ID of the group to leave.
+        :type group_id: str
+        :param member_id: The member ID to remove from the group.
+        :type member_id: str
         """
-        return ApiKey.LEAVE_GROUP
+        self.group_id = group_id
+        self.member_id = member_id

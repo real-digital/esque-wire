@@ -7,7 +7,7 @@ from ...structs.api.produce_request import Data, ProduceRequestData, TopicData
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     int16Serializer,
@@ -30,10 +30,11 @@ dataSchemas: Dict[int, Schema] = {
 }
 
 
-dataSerializers: Dict[int, DataClassSerializer[Data]] = {
-    version: DataClassSerializer(Data, schema)
-    for version, schema in dataSchemas.items()
+dataSerializers: Dict[int, ClassSerializer[Data]] = {
+    version: ClassSerializer(Data, schema) for version, schema in dataSchemas.items()
 }
+
+dataSerializers[-1] = dataSerializers[7]
 
 
 topicDataSchemas: Dict[int, Schema] = {
@@ -48,10 +49,11 @@ topicDataSchemas: Dict[int, Schema] = {
 }
 
 
-topicDataSerializers: Dict[int, DataClassSerializer[TopicData]] = {
-    version: DataClassSerializer(TopicData, schema)
-    for version, schema in topicDataSchemas.items()
+topicDataSerializers: Dict[int, ClassSerializer[TopicData]] = {
+    version: ClassSerializer(TopicData, schema) for version, schema in topicDataSchemas.items()
 }
+
+topicDataSerializers[-1] = topicDataSerializers[7]
 
 
 produceRequestDataSchemas: Dict[int, Schema] = {
@@ -106,7 +108,8 @@ produceRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-produceRequestDataSerializers: Dict[int, DataClassSerializer[ProduceRequestData]] = {
-    version: DataClassSerializer(ProduceRequestData, schema)
-    for version, schema in produceRequestDataSchemas.items()
+produceRequestDataSerializers: Dict[int, ClassSerializer[ProduceRequestData]] = {
+    version: ClassSerializer(ProduceRequestData, schema) for version, schema in produceRequestDataSchemas.items()
 }
+
+produceRequestDataSerializers[-1] = produceRequestDataSerializers[7]

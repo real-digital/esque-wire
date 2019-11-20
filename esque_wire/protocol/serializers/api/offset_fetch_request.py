@@ -5,13 +5,7 @@
 from typing import Dict
 from ...structs.api.offset_fetch_request import OffsetFetchRequestData, Partition, Topic
 
-from ._main_serializers import (
-    ArraySerializer,
-    DataClassSerializer,
-    Schema,
-    int32Serializer,
-    stringSerializer,
-)
+from ._main_serializers import ArraySerializer, ClassSerializer, Schema, int32Serializer, stringSerializer
 
 
 partitionSchemas: Dict[int, Schema] = {
@@ -24,77 +18,43 @@ partitionSchemas: Dict[int, Schema] = {
 }
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[5]
 
 
 topicSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[0])),
-    ],
-    1: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[1])),
-    ],
-    2: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[2])),
-    ],
-    3: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[3])),
-    ],
-    4: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[4])),
-    ],
-    5: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[5])),
-    ],
+    0: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[0]))],
+    1: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[1]))],
+    2: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[2]))],
+    3: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[3]))],
+    4: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[4]))],
+    5: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[5]))],
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[5]
 
 
 offsetFetchRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("group_id", stringSerializer),
-        ("topics", ArraySerializer(topicSerializers[0])),
-    ],
-    1: [
-        ("group_id", stringSerializer),
-        ("topics", ArraySerializer(topicSerializers[1])),
-    ],
-    2: [
-        ("group_id", stringSerializer),
-        ("topics", ArraySerializer(topicSerializers[2])),
-    ],
-    3: [
-        ("group_id", stringSerializer),
-        ("topics", ArraySerializer(topicSerializers[3])),
-    ],
-    4: [
-        ("group_id", stringSerializer),
-        ("topics", ArraySerializer(topicSerializers[4])),
-    ],
-    5: [
-        ("group_id", stringSerializer),
-        ("topics", ArraySerializer(topicSerializers[5])),
-    ],
+    0: [("group_id", stringSerializer), ("topics", ArraySerializer(topicSerializers[0]))],
+    1: [("group_id", stringSerializer), ("topics", ArraySerializer(topicSerializers[1]))],
+    2: [("group_id", stringSerializer), ("topics", ArraySerializer(topicSerializers[2]))],
+    3: [("group_id", stringSerializer), ("topics", ArraySerializer(topicSerializers[3]))],
+    4: [("group_id", stringSerializer), ("topics", ArraySerializer(topicSerializers[4]))],
+    5: [("group_id", stringSerializer), ("topics", ArraySerializer(topicSerializers[5]))],
 }
 
 
-offsetFetchRequestDataSerializers: Dict[
-    int, DataClassSerializer[OffsetFetchRequestData]
-] = {
-    version: DataClassSerializer(OffsetFetchRequestData, schema)
+offsetFetchRequestDataSerializers: Dict[int, ClassSerializer[OffsetFetchRequestData]] = {
+    version: ClassSerializer(OffsetFetchRequestData, schema)
     for version, schema in offsetFetchRequestDataSchemas.items()
 }
+
+offsetFetchRequestDataSerializers[-1] = offsetFetchRequestDataSerializers[5]

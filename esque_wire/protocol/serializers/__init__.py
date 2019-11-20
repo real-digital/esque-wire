@@ -105,7 +105,7 @@ from .constants import (
     resourcePatternTypeSerializer,
     errorCodeSerializer,
 )
-from .generic import ArraySerializer, DataClassSerializer, DummySerializer, Schema
+from .generic import ArraySerializer, ClassSerializer, DummySerializer, Schema
 from .primitive import (
     booleanSerializer,
     int8Serializer,

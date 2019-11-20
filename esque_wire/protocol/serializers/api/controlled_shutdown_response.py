@@ -3,14 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.controlled_shutdown_response import (
-    ControlledShutdownResponseData,
-    RemainingPartition,
-)
+from ...structs.api.controlled_shutdown_response import ControlledShutdownResponseData, RemainingPartition
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     errorCodeSerializer,
     int32Serializer,
@@ -25,10 +22,11 @@ remainingPartitionSchemas: Dict[int, Schema] = {
 }
 
 
-remainingPartitionSerializers: Dict[int, DataClassSerializer[RemainingPartition]] = {
-    version: DataClassSerializer(RemainingPartition, schema)
-    for version, schema in remainingPartitionSchemas.items()
+remainingPartitionSerializers: Dict[int, ClassSerializer[RemainingPartition]] = {
+    version: ClassSerializer(RemainingPartition, schema) for version, schema in remainingPartitionSchemas.items()
 }
+
+remainingPartitionSerializers[-1] = remainingPartitionSerializers[2]
 
 
 controlledShutdownResponseDataSchemas: Dict[int, Schema] = {
@@ -47,9 +45,9 @@ controlledShutdownResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-controlledShutdownResponseDataSerializers: Dict[
-    int, DataClassSerializer[ControlledShutdownResponseData]
-] = {
-    version: DataClassSerializer(ControlledShutdownResponseData, schema)
+controlledShutdownResponseDataSerializers: Dict[int, ClassSerializer[ControlledShutdownResponseData]] = {
+    version: ClassSerializer(ControlledShutdownResponseData, schema)
     for version, schema in controlledShutdownResponseDataSchemas.items()
 }
+
+controlledShutdownResponseDataSerializers[-1] = controlledShutdownResponseDataSerializers[2]

@@ -7,7 +7,7 @@ from ...structs.api.create_acls_response import CreateAclsResponseData, Creation
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     errorCodeSerializer,
     int32Serializer,
@@ -16,21 +16,16 @@ from ._main_serializers import (
 
 
 creationResponseSchemas: Dict[int, Schema] = {
-    0: [
-        ("error_code", errorCodeSerializer),
-        ("error_message", nullableStringSerializer),
-    ],
-    1: [
-        ("error_code", errorCodeSerializer),
-        ("error_message", nullableStringSerializer),
-    ],
+    0: [("error_code", errorCodeSerializer), ("error_message", nullableStringSerializer)],
+    1: [("error_code", errorCodeSerializer), ("error_message", nullableStringSerializer)],
 }
 
 
-creationResponseSerializers: Dict[int, DataClassSerializer[CreationResponse]] = {
-    version: DataClassSerializer(CreationResponse, schema)
-    for version, schema in creationResponseSchemas.items()
+creationResponseSerializers: Dict[int, ClassSerializer[CreationResponse]] = {
+    version: ClassSerializer(CreationResponse, schema) for version, schema in creationResponseSchemas.items()
 }
+
+creationResponseSerializers[-1] = creationResponseSerializers[1]
 
 
 createAclsResponseDataSchemas: Dict[int, Schema] = {
@@ -45,9 +40,9 @@ createAclsResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-createAclsResponseDataSerializers: Dict[
-    int, DataClassSerializer[CreateAclsResponseData]
-] = {
-    version: DataClassSerializer(CreateAclsResponseData, schema)
+createAclsResponseDataSerializers: Dict[int, ClassSerializer[CreateAclsResponseData]] = {
+    version: ClassSerializer(CreateAclsResponseData, schema)
     for version, schema in createAclsResponseDataSchemas.items()
 }
+
+createAclsResponseDataSerializers[-1] = createAclsResponseDataSerializers[1]

@@ -1,25 +1,21 @@
-from typing import List
-from dataclasses import dataclass
+from typing import ClassVar, List
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class DescribeGroupsRequestData(RequestData):
-    """
-    :param groups: The names of the groups to describe
-    :type groups: List[str]
-    :param include_authorized_operations: Whether to include authorized operations.
-    :type include_authorized_operations: bool
-    """
 
     groups: List[str]
     include_authorized_operations: bool
+    api_key: ClassVar[ApiKey] = ApiKey.DESCRIBE_GROUPS
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, groups: List[str], include_authorized_operations: bool):
         """
-        :return: the api key for this API: `ApiKey.DESCRIBE_GROUPS` (`ApiKey(15)`)
+        :param groups: The names of the groups to describe
+        :type groups: List[str]
+        :param include_authorized_operations: Whether to include authorized operations.
+        :type include_authorized_operations: bool
         """
-        return ApiKey.DESCRIBE_GROUPS
+        self.groups = groups
+        self.include_authorized_operations = include_authorized_operations

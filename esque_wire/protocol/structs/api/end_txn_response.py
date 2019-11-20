@@ -1,25 +1,22 @@
-from dataclasses import dataclass
+from typing import ClassVar
 
 from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
-@dataclass
 class EndTxnResponseData(ResponseData):
-    """
-    :param throttle_time_ms: Duration in milliseconds for which the request was throttled due to quota violation (Zero
-                             if the request did not violate any quota)
-    :type throttle_time_ms: int
-    :param error_code: Response error code
-    :type error_code: ErrorCode
-    """
 
     throttle_time_ms: int
     error_code: ErrorCode
+    api_key: ClassVar[ApiKey] = ApiKey.END_TXN
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, throttle_time_ms: int, error_code: ErrorCode):
         """
-        :return: the api key for this API: `ApiKey.END_TXN` (`ApiKey(26)`)
+        :param throttle_time_ms: Duration in milliseconds for which the request was throttled due to quota violation
+                                 (Zero if the request did not violate any quota)
+        :type throttle_time_ms: int
+        :param error_code: Response error code
+        :type error_code: ErrorCode
         """
-        return ApiKey.END_TXN
+        self.throttle_time_ms = throttle_time_ms
+        self.error_code = error_code

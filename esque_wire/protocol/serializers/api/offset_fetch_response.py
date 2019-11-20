@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.offset_fetch_response import (
-    OffsetFetchResponseData,
-    PartitionResponse,
-    Response,
-)
+from ...structs.api.offset_fetch_response import OffsetFetchResponseData, PartitionResponse, Response
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     errorCodeSerializer,
@@ -68,44 +64,28 @@ partitionResponseSchemas: Dict[int, Schema] = {
 }
 
 
-partitionResponseSerializers: Dict[int, DataClassSerializer[PartitionResponse]] = {
-    version: DataClassSerializer(PartitionResponse, schema)
-    for version, schema in partitionResponseSchemas.items()
+partitionResponseSerializers: Dict[int, ClassSerializer[PartitionResponse]] = {
+    version: ClassSerializer(PartitionResponse, schema) for version, schema in partitionResponseSchemas.items()
 }
+
+partitionResponseSerializers[-1] = partitionResponseSerializers[5]
 
 
 responseSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[0])),
-    ],
-    1: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[1])),
-    ],
-    2: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[2])),
-    ],
-    3: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[3])),
-    ],
-    4: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[4])),
-    ],
-    5: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[5])),
-    ],
+    0: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[0]))],
+    1: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[1]))],
+    2: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[2]))],
+    3: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[3]))],
+    4: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[4]))],
+    5: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[5]))],
 }
 
 
-responseSerializers: Dict[int, DataClassSerializer[Response]] = {
-    version: DataClassSerializer(Response, schema)
-    for version, schema in responseSchemas.items()
+responseSerializers: Dict[int, ClassSerializer[Response]] = {
+    version: ClassSerializer(Response, schema) for version, schema in responseSchemas.items()
 }
+
+responseSerializers[-1] = responseSerializers[5]
 
 
 offsetFetchResponseDataSchemas: Dict[int, Schema] = {
@@ -142,9 +122,9 @@ offsetFetchResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-offsetFetchResponseDataSerializers: Dict[
-    int, DataClassSerializer[OffsetFetchResponseData]
-] = {
-    version: DataClassSerializer(OffsetFetchResponseData, schema)
+offsetFetchResponseDataSerializers: Dict[int, ClassSerializer[OffsetFetchResponseData]] = {
+    version: ClassSerializer(OffsetFetchResponseData, schema)
     for version, schema in offsetFetchResponseDataSchemas.items()
 }
+
+offsetFetchResponseDataSerializers[-1] = offsetFetchResponseDataSerializers[5]

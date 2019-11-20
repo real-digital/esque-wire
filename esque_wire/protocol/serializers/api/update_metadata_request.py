@@ -13,7 +13,7 @@ from ...structs.api.update_metadata_request import (
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     int16Serializer,
@@ -58,10 +58,11 @@ endPointSchemas: Dict[int, Schema] = {
 }
 
 
-endPointSerializers: Dict[int, DataClassSerializer[EndPoint]] = {
-    version: DataClassSerializer(EndPoint, schema)
-    for version, schema in endPointSchemas.items()
+endPointSerializers: Dict[int, ClassSerializer[EndPoint]] = {
+    version: ClassSerializer(EndPoint, schema) for version, schema in endPointSchemas.items()
 }
+
+endPointSerializers[-1] = endPointSerializers[5]
 
 
 liveBrokerSchemas: Dict[int, Schema] = {
@@ -69,10 +70,7 @@ liveBrokerSchemas: Dict[int, Schema] = {
         ("id", int32Serializer),
         (None, stringSerializer),
         (None, int32Serializer),
-        (
-            "end_points",
-            DummySerializer(ArraySerializer(endPointSerializers[0]).default),
-        ),
+        ("end_points", DummySerializer(ArraySerializer(endPointSerializers[-1]).default)),
         ("rack", DummySerializer(nullableStringSerializer.default)),
     ],
     1: [
@@ -103,10 +101,11 @@ liveBrokerSchemas: Dict[int, Schema] = {
 }
 
 
-liveBrokerSerializers: Dict[int, DataClassSerializer[LiveBroker]] = {
-    version: DataClassSerializer(LiveBroker, schema)
-    for version, schema in liveBrokerSchemas.items()
+liveBrokerSerializers: Dict[int, ClassSerializer[LiveBroker]] = {
+    version: ClassSerializer(LiveBroker, schema) for version, schema in liveBrokerSchemas.items()
 }
+
+liveBrokerSerializers[-1] = liveBrokerSerializers[5]
 
 
 partitionStateSchemas: Dict[int, Schema] = {
@@ -178,24 +177,23 @@ partitionStateSchemas: Dict[int, Schema] = {
 }
 
 
-partitionStateSerializers: Dict[int, DataClassSerializer[PartitionState]] = {
-    version: DataClassSerializer(PartitionState, schema)
-    for version, schema in partitionStateSchemas.items()
+partitionStateSerializers: Dict[int, ClassSerializer[PartitionState]] = {
+    version: ClassSerializer(PartitionState, schema) for version, schema in partitionStateSchemas.items()
 }
+
+partitionStateSerializers[-1] = partitionStateSerializers[5]
 
 
 topicStateSchemas: Dict[int, Schema] = {
-    5: [
-        ("topic", stringSerializer),
-        ("partition_states", ArraySerializer(partitionStateSerializers[5])),
-    ]
+    5: [("topic", stringSerializer), ("partition_states", ArraySerializer(partitionStateSerializers[5]))]
 }
 
 
-topicStateSerializers: Dict[int, DataClassSerializer[TopicState]] = {
-    version: DataClassSerializer(TopicState, schema)
-    for version, schema in topicStateSchemas.items()
+topicStateSerializers: Dict[int, ClassSerializer[TopicState]] = {
+    version: ClassSerializer(TopicState, schema) for version, schema in topicStateSchemas.items()
 }
+
+topicStateSerializers[-1] = topicStateSerializers[5]
 
 
 updateMetadataRequestDataSchemas: Dict[int, Schema] = {
@@ -205,10 +203,7 @@ updateMetadataRequestDataSchemas: Dict[int, Schema] = {
         (None, ArraySerializer(partitionStateSerializers[0])),
         ("live_brokers", ArraySerializer(liveBrokerSerializers[0])),
         ("broker_epoch", DummySerializer(int64Serializer.default)),
-        (
-            "topic_states",
-            DummySerializer(ArraySerializer(topicStateSerializers[0]).default),
-        ),
+        ("topic_states", DummySerializer(ArraySerializer(topicStateSerializers[-1]).default)),
     ],
     1: [
         ("controller_id", int32Serializer),
@@ -216,10 +211,7 @@ updateMetadataRequestDataSchemas: Dict[int, Schema] = {
         (None, ArraySerializer(partitionStateSerializers[1])),
         ("live_brokers", ArraySerializer(liveBrokerSerializers[1])),
         ("broker_epoch", DummySerializer(int64Serializer.default)),
-        (
-            "topic_states",
-            DummySerializer(ArraySerializer(topicStateSerializers[0]).default),
-        ),
+        ("topic_states", DummySerializer(ArraySerializer(topicStateSerializers[-1]).default)),
     ],
     2: [
         ("controller_id", int32Serializer),
@@ -227,10 +219,7 @@ updateMetadataRequestDataSchemas: Dict[int, Schema] = {
         (None, ArraySerializer(partitionStateSerializers[2])),
         ("live_brokers", ArraySerializer(liveBrokerSerializers[2])),
         ("broker_epoch", DummySerializer(int64Serializer.default)),
-        (
-            "topic_states",
-            DummySerializer(ArraySerializer(topicStateSerializers[0]).default),
-        ),
+        ("topic_states", DummySerializer(ArraySerializer(topicStateSerializers[-1]).default)),
     ],
     3: [
         ("controller_id", int32Serializer),
@@ -238,10 +227,7 @@ updateMetadataRequestDataSchemas: Dict[int, Schema] = {
         (None, ArraySerializer(partitionStateSerializers[3])),
         ("live_brokers", ArraySerializer(liveBrokerSerializers[3])),
         ("broker_epoch", DummySerializer(int64Serializer.default)),
-        (
-            "topic_states",
-            DummySerializer(ArraySerializer(topicStateSerializers[0]).default),
-        ),
+        ("topic_states", DummySerializer(ArraySerializer(topicStateSerializers[-1]).default)),
     ],
     4: [
         ("controller_id", int32Serializer),
@@ -249,10 +235,7 @@ updateMetadataRequestDataSchemas: Dict[int, Schema] = {
         (None, ArraySerializer(partitionStateSerializers[4])),
         ("live_brokers", ArraySerializer(liveBrokerSerializers[4])),
         ("broker_epoch", DummySerializer(int64Serializer.default)),
-        (
-            "topic_states",
-            DummySerializer(ArraySerializer(topicStateSerializers[0]).default),
-        ),
+        ("topic_states", DummySerializer(ArraySerializer(topicStateSerializers[-1]).default)),
     ],
     5: [
         ("controller_id", int32Serializer),
@@ -264,9 +247,9 @@ updateMetadataRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-updateMetadataRequestDataSerializers: Dict[
-    int, DataClassSerializer[UpdateMetadataRequestData]
-] = {
-    version: DataClassSerializer(UpdateMetadataRequestData, schema)
+updateMetadataRequestDataSerializers: Dict[int, ClassSerializer[UpdateMetadataRequestData]] = {
+    version: ClassSerializer(UpdateMetadataRequestData, schema)
     for version, schema in updateMetadataRequestDataSchemas.items()
 }
+
+updateMetadataRequestDataSerializers[-1] = updateMetadataRequestDataSerializers[5]

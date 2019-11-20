@@ -1,52 +1,42 @@
-from typing import List, Optional
-from dataclasses import dataclass
+from typing import ClassVar, List, Optional
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class Config:
-    """
-    :param name: The configuration name.
-    :type name: str
-    :param value: The configuration value.
-    :type value: Optional[str]
-    """
 
     name: str
     value: Optional[str]
 
+    def __init__(self, name: str, value: Optional[str]):
+        """
+        :param name: The configuration name.
+        :type name: str
+        :param value: The configuration value.
+        :type value: Optional[str]
+        """
+        self.name = name
+        self.value = value
 
-@dataclass
+
 class Assignment:
-    """
-    :param partition_index: The partition index.
-    :type partition_index: int
-    :param broker_ids: The brokers to place the partition on.
-    :type broker_ids: List[int]
-    """
 
     partition_index: int
     broker_ids: List[int]
 
+    def __init__(self, partition_index: int, broker_ids: List[int]):
+        """
+        :param partition_index: The partition index.
+        :type partition_index: int
+        :param broker_ids: The brokers to place the partition on.
+        :type broker_ids: List[int]
+        """
+        self.partition_index = partition_index
+        self.broker_ids = broker_ids
 
-@dataclass
+
 class Topic:
-    """
-    :param name: The topic name.
-    :type name: str
-    :param num_partitions: The number of partitions to create in the topic, or -1 if we are specifying a manual
-                           partition assignment.
-    :type num_partitions: int
-    :param replication_factor: The number of replicas to create for each partition in the topic, or -1 if we are
-                               specifying a manual partition assignment.
-    :type replication_factor: int
-    :param assignments: The manual partition assignment, or the empty array if we are using automatic assignment.
-    :type assignments: List[Assignment]
-    :param configs: The custom topic configurations to set.
-    :type configs: List[Config]
-    """
 
     name: str
     num_partitions: int
@@ -54,25 +44,51 @@ class Topic:
     assignments: List[Assignment]
     configs: List[Config]
 
+    def __init__(
+        self,
+        name: str,
+        num_partitions: int,
+        replication_factor: int,
+        assignments: List[Assignment],
+        configs: List[Config],
+    ):
+        """
+        :param name: The topic name.
+        :type name: str
+        :param num_partitions: The number of partitions to create in the topic, or -1 if we are specifying a manual
+                               partition assignment.
+        :type num_partitions: int
+        :param replication_factor: The number of replicas to create for each partition in the topic, or -1 if we are
+                                   specifying a manual partition assignment.
+        :type replication_factor: int
+        :param assignments: The manual partition assignment, or the empty array if we are using automatic assignment.
+        :type assignments: List[Assignment]
+        :param configs: The custom topic configurations to set.
+        :type configs: List[Config]
+        """
+        self.name = name
+        self.num_partitions = num_partitions
+        self.replication_factor = replication_factor
+        self.assignments = assignments
+        self.configs = configs
 
-@dataclass
+
 class CreateTopicsRequestData(RequestData):
-    """
-    :param topics: The topics to create.
-    :type topics: List[Topic]
-    :param timeout_ms: How long to wait in milliseconds before timing out the request.
-    :type timeout_ms: int
-    :param validate_only: If true, check that the topics can be created as specified, but don't create anything.
-    :type validate_only: bool
-    """
 
     topics: List[Topic]
     timeout_ms: int
     validate_only: bool
+    api_key: ClassVar[ApiKey] = ApiKey.CREATE_TOPICS
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, topics: List[Topic], timeout_ms: int, validate_only: bool):
         """
-        :return: the api key for this API: `ApiKey.CREATE_TOPICS` (`ApiKey(19)`)
+        :param topics: The topics to create.
+        :type topics: List[Topic]
+        :param timeout_ms: How long to wait in milliseconds before timing out the request.
+        :type timeout_ms: int
+        :param validate_only: If true, check that the topics can be created as specified, but don't create anything.
+        :type validate_only: bool
         """
-        return ApiKey.CREATE_TOPICS
+        self.topics = topics
+        self.timeout_ms = timeout_ms
+        self.validate_only = validate_only

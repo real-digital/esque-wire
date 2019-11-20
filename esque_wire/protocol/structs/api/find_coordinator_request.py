@@ -1,24 +1,21 @@
-from dataclasses import dataclass
+from typing import ClassVar
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class FindCoordinatorRequestData(RequestData):
-    """
-    :param key: The coordinator key.
-    :type key: str
-    :param key_type: The coordinator key type.  (Group, transaction, etc.)
-    :type key_type: int
-    """
 
     key: str
     key_type: int
+    api_key: ClassVar[ApiKey] = ApiKey.FIND_COORDINATOR
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, key: str, key_type: int):
         """
-        :return: the api key for this API: `ApiKey.FIND_COORDINATOR` (`ApiKey(10)`)
+        :param key: The coordinator key.
+        :type key: str
+        :param key_type: The coordinator key type.  (Group, transaction, etc.)
+        :type key_type: int
         """
-        return ApiKey.FIND_COORDINATOR
+        self.key = key
+        self.key_type = key_type

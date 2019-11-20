@@ -3,16 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.create_topics_request import (
-    Assignment,
-    Config,
-    CreateTopicsRequestData,
-    Topic,
-)
+from ...structs.api.create_topics_request import Assignment, Config, CreateTopicsRequestData, Topic
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     booleanSerializer,
@@ -31,36 +26,26 @@ configSchemas: Dict[int, Schema] = {
 }
 
 
-configSerializers: Dict[int, DataClassSerializer[Config]] = {
-    version: DataClassSerializer(Config, schema)
-    for version, schema in configSchemas.items()
+configSerializers: Dict[int, ClassSerializer[Config]] = {
+    version: ClassSerializer(Config, schema) for version, schema in configSchemas.items()
 }
+
+configSerializers[-1] = configSerializers[3]
 
 
 assignmentSchemas: Dict[int, Schema] = {
-    0: [
-        ("partition_index", int32Serializer),
-        ("broker_ids", ArraySerializer(int32Serializer)),
-    ],
-    1: [
-        ("partition_index", int32Serializer),
-        ("broker_ids", ArraySerializer(int32Serializer)),
-    ],
-    2: [
-        ("partition_index", int32Serializer),
-        ("broker_ids", ArraySerializer(int32Serializer)),
-    ],
-    3: [
-        ("partition_index", int32Serializer),
-        ("broker_ids", ArraySerializer(int32Serializer)),
-    ],
+    0: [("partition_index", int32Serializer), ("broker_ids", ArraySerializer(int32Serializer))],
+    1: [("partition_index", int32Serializer), ("broker_ids", ArraySerializer(int32Serializer))],
+    2: [("partition_index", int32Serializer), ("broker_ids", ArraySerializer(int32Serializer))],
+    3: [("partition_index", int32Serializer), ("broker_ids", ArraySerializer(int32Serializer))],
 }
 
 
-assignmentSerializers: Dict[int, DataClassSerializer[Assignment]] = {
-    version: DataClassSerializer(Assignment, schema)
-    for version, schema in assignmentSchemas.items()
+assignmentSerializers: Dict[int, ClassSerializer[Assignment]] = {
+    version: ClassSerializer(Assignment, schema) for version, schema in assignmentSchemas.items()
 }
+
+assignmentSerializers[-1] = assignmentSerializers[3]
 
 
 topicSchemas: Dict[int, Schema] = {
@@ -95,10 +80,11 @@ topicSchemas: Dict[int, Schema] = {
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[3]
 
 
 createTopicsRequestDataSchemas: Dict[int, Schema] = {
@@ -125,9 +111,9 @@ createTopicsRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-createTopicsRequestDataSerializers: Dict[
-    int, DataClassSerializer[CreateTopicsRequestData]
-] = {
-    version: DataClassSerializer(CreateTopicsRequestData, schema)
+createTopicsRequestDataSerializers: Dict[int, ClassSerializer[CreateTopicsRequestData]] = {
+    version: ClassSerializer(CreateTopicsRequestData, schema)
     for version, schema in createTopicsRequestDataSchemas.items()
 }
+
+createTopicsRequestDataSerializers[-1] = createTopicsRequestDataSerializers[3]

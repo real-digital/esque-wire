@@ -1,25 +1,22 @@
-from dataclasses import dataclass
+from typing import ClassVar
 
 from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
-@dataclass
 class LeaveGroupResponseData(ResponseData):
-    """
-    :param throttle_time_ms: The duration in milliseconds for which the request was throttled due to a quota violation,
-                             or zero if the request did not violate any quota.
-    :type throttle_time_ms: int
-    :param error_code: The error code, or 0 if there was no error.
-    :type error_code: ErrorCode
-    """
 
     throttle_time_ms: int
     error_code: ErrorCode
+    api_key: ClassVar[ApiKey] = ApiKey.LEAVE_GROUP
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, throttle_time_ms: int, error_code: ErrorCode):
         """
-        :return: the api key for this API: `ApiKey.LEAVE_GROUP` (`ApiKey(13)`)
+        :param throttle_time_ms: The duration in milliseconds for which the request was throttled due to a quota
+                                 violation, or zero if the request did not violate any quota.
+        :type throttle_time_ms: int
+        :param error_code: The error code, or 0 if there was no error.
+        :type error_code: ErrorCode
         """
-        return ApiKey.LEAVE_GROUP
+        self.throttle_time_ms = throttle_time_ms
+        self.error_code = error_code

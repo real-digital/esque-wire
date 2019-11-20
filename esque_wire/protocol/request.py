@@ -64,6 +64,6 @@ class Request(Generic[Req, Res]):
     ) -> "Request[Req, Res]":
         request_data = request_data
         header = RequestHeader(
-            api_key=request_data.api_key(), api_version=api_version, correlation_id=correlation_id, client_id=client_id
+            api_key=request_data.api_key, api_version=api_version, correlation_id=correlation_id, client_id=client_id
         )
         return Request(request_data, header)

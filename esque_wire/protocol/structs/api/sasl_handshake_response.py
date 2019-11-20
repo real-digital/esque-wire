@@ -1,25 +1,21 @@
-from typing import List
-from dataclasses import dataclass
+from typing import ClassVar, List
 
 from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
-@dataclass
 class SaslHandshakeResponseData(ResponseData):
-    """
-    :param error_code: The error code, or 0 if there was no error.
-    :type error_code: ErrorCode
-    :param mechanisms: The mechanisms enabled in the server.
-    :type mechanisms: List[str]
-    """
 
     error_code: ErrorCode
     mechanisms: List[str]
+    api_key: ClassVar[ApiKey] = ApiKey.SASL_HANDSHAKE
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, error_code: ErrorCode, mechanisms: List[str]):
         """
-        :return: the api key for this API: `ApiKey.SASL_HANDSHAKE` (`ApiKey(17)`)
+        :param error_code: The error code, or 0 if there was no error.
+        :type error_code: ErrorCode
+        :param mechanisms: The mechanisms enabled in the server.
+        :type mechanisms: List[str]
         """
-        return ApiKey.SASL_HANDSHAKE
+        self.error_code = error_code
+        self.mechanisms = mechanisms

@@ -5,7 +5,7 @@
 from typing import Dict
 from ...structs.api.sasl_handshake_request import SaslHandshakeRequestData
 
-from ._main_serializers import DataClassSerializer, Schema, stringSerializer
+from ._main_serializers import ClassSerializer, Schema, stringSerializer
 
 
 saslHandshakeRequestDataSchemas: Dict[int, Schema] = {
@@ -14,9 +14,9 @@ saslHandshakeRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-saslHandshakeRequestDataSerializers: Dict[
-    int, DataClassSerializer[SaslHandshakeRequestData]
-] = {
-    version: DataClassSerializer(SaslHandshakeRequestData, schema)
+saslHandshakeRequestDataSerializers: Dict[int, ClassSerializer[SaslHandshakeRequestData]] = {
+    version: ClassSerializer(SaslHandshakeRequestData, schema)
     for version, schema in saslHandshakeRequestDataSchemas.items()
 }
+
+saslHandshakeRequestDataSerializers[-1] = saslHandshakeRequestDataSerializers[1]

@@ -40,5 +40,7 @@ from ._main_serializers import (
     version: {{ latest_struct.serializer_definition(schema="schema") }} for version, schema
     in {{ latest_struct.schema_dict_name() }}.items()
 }
+
+{{ latest_struct.serializer_dict_name(include_type=False) }}[-1] = {{ latest_struct.serializer_dict_name(include_type=False) }}[{{ current_api.latest_version }}]
 {% endfor %}
 {% endblock %}

@@ -1,25 +1,21 @@
-from typing import List
-from dataclasses import dataclass
+from typing import ClassVar, List
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class DeleteTopicsRequestData(RequestData):
-    """
-    :param topic_names: The names of the topics to delete
-    :type topic_names: List[str]
-    :param timeout_ms: The length of time in milliseconds to wait for the deletions to complete.
-    :type timeout_ms: int
-    """
 
     topic_names: List[str]
     timeout_ms: int
+    api_key: ClassVar[ApiKey] = ApiKey.DELETE_TOPICS
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, topic_names: List[str], timeout_ms: int):
         """
-        :return: the api key for this API: `ApiKey.DELETE_TOPICS` (`ApiKey(20)`)
+        :param topic_names: The names of the topics to delete
+        :type topic_names: List[str]
+        :param timeout_ms: The length of time in milliseconds to wait for the deletions to complete.
+        :type timeout_ms: int
         """
-        return ApiKey.DELETE_TOPICS
+        self.topic_names = topic_names
+        self.timeout_ms = timeout_ms

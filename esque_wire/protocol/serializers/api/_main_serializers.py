@@ -10,7 +10,7 @@ from ..constants import (
     resourcePatternTypeSerializer,
     errorCodeSerializer,
 )
-from ..generic import ArraySerializer, DataClassSerializer, Schema, DummySerializer
+from ..generic import ArraySerializer, ClassSerializer, Schema, DummySerializer
 from ..primitive import (
     booleanSerializer,
     int8Serializer,
@@ -35,7 +35,7 @@ __all__ = [
     "resourcePatternTypeSerializer",
     "errorCodeSerializer",
     "ArraySerializer",
-    "DataClassSerializer",
+    "ClassSerializer",
     "Schema",
     "DummySerializer",
     "booleanSerializer",

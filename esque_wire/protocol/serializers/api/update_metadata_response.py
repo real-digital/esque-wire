@@ -5,7 +5,7 @@
 from typing import Dict
 from ...structs.api.update_metadata_response import UpdateMetadataResponseData
 
-from ._main_serializers import DataClassSerializer, Schema, errorCodeSerializer
+from ._main_serializers import ClassSerializer, Schema, errorCodeSerializer
 
 
 updateMetadataResponseDataSchemas: Dict[int, Schema] = {
@@ -18,9 +18,9 @@ updateMetadataResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-updateMetadataResponseDataSerializers: Dict[
-    int, DataClassSerializer[UpdateMetadataResponseData]
-] = {
-    version: DataClassSerializer(UpdateMetadataResponseData, schema)
+updateMetadataResponseDataSerializers: Dict[int, ClassSerializer[UpdateMetadataResponseData]] = {
+    version: ClassSerializer(UpdateMetadataResponseData, schema)
     for version, schema in updateMetadataResponseDataSchemas.items()
 }
+
+updateMetadataResponseDataSerializers[-1] = updateMetadataResponseDataSerializers[5]

@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.offset_commit_request import (
-    OffsetCommitRequestData,
-    Partition,
-    Topic,
-)
+from ...structs.api.offset_commit_request import OffsetCommitRequestData, Partition, Topic
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     int32Serializer,
@@ -74,52 +70,30 @@ partitionSchemas: Dict[int, Schema] = {
 }
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[7]
 
 
 topicSchemas: Dict[int, Schema] = {
-    0: [
-        ("name", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[0])),
-    ],
-    1: [
-        ("name", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[1])),
-    ],
-    2: [
-        ("name", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[2])),
-    ],
-    3: [
-        ("name", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[3])),
-    ],
-    4: [
-        ("name", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[4])),
-    ],
-    5: [
-        ("name", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[5])),
-    ],
-    6: [
-        ("name", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[6])),
-    ],
-    7: [
-        ("name", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[7])),
-    ],
+    0: [("name", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[0]))],
+    1: [("name", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[1]))],
+    2: [("name", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[2]))],
+    3: [("name", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[3]))],
+    4: [("name", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[4]))],
+    5: [("name", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[5]))],
+    6: [("name", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[6]))],
+    7: [("name", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[7]))],
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[7]
 
 
 offsetCommitRequestDataSchemas: Dict[int, Schema] = {
@@ -185,9 +159,9 @@ offsetCommitRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-offsetCommitRequestDataSerializers: Dict[
-    int, DataClassSerializer[OffsetCommitRequestData]
-] = {
-    version: DataClassSerializer(OffsetCommitRequestData, schema)
+offsetCommitRequestDataSerializers: Dict[int, ClassSerializer[OffsetCommitRequestData]] = {
+    version: ClassSerializer(OffsetCommitRequestData, schema)
     for version, schema in offsetCommitRequestDataSchemas.items()
 }
+
+offsetCommitRequestDataSerializers[-1] = offsetCommitRequestDataSerializers[7]

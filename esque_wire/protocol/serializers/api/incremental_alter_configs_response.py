@@ -3,14 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.incremental_alter_configs_response import (
-    IncrementalAlterConfigsResponseData,
-    Response,
-)
+from ...structs.api.incremental_alter_configs_response import IncrementalAlterConfigsResponseData, Response
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     errorCodeSerializer,
     int32Serializer,
@@ -30,23 +27,21 @@ responseSchemas: Dict[int, Schema] = {
 }
 
 
-responseSerializers: Dict[int, DataClassSerializer[Response]] = {
-    version: DataClassSerializer(Response, schema)
-    for version, schema in responseSchemas.items()
+responseSerializers: Dict[int, ClassSerializer[Response]] = {
+    version: ClassSerializer(Response, schema) for version, schema in responseSchemas.items()
 }
+
+responseSerializers[-1] = responseSerializers[0]
 
 
 incrementalAlterConfigsResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("throttle_time_ms", int32Serializer),
-        ("responses", ArraySerializer(responseSerializers[0])),
-    ]
+    0: [("throttle_time_ms", int32Serializer), ("responses", ArraySerializer(responseSerializers[0]))]
 }
 
 
-incrementalAlterConfigsResponseDataSerializers: Dict[
-    int, DataClassSerializer[IncrementalAlterConfigsResponseData]
-] = {
-    version: DataClassSerializer(IncrementalAlterConfigsResponseData, schema)
+incrementalAlterConfigsResponseDataSerializers: Dict[int, ClassSerializer[IncrementalAlterConfigsResponseData]] = {
+    version: ClassSerializer(IncrementalAlterConfigsResponseData, schema)
     for version, schema in incrementalAlterConfigsResponseDataSchemas.items()
 }
+
+incrementalAlterConfigsResponseDataSerializers[-1] = incrementalAlterConfigsResponseDataSerializers[0]

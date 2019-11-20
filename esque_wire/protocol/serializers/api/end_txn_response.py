@@ -5,12 +5,7 @@
 from typing import Dict
 from ...structs.api.end_txn_response import EndTxnResponseData
 
-from ._main_serializers import (
-    DataClassSerializer,
-    Schema,
-    errorCodeSerializer,
-    int32Serializer,
-)
+from ._main_serializers import ClassSerializer, Schema, errorCodeSerializer, int32Serializer
 
 
 endTxnResponseDataSchemas: Dict[int, Schema] = {
@@ -19,7 +14,8 @@ endTxnResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-endTxnResponseDataSerializers: Dict[int, DataClassSerializer[EndTxnResponseData]] = {
-    version: DataClassSerializer(EndTxnResponseData, schema)
-    for version, schema in endTxnResponseDataSchemas.items()
+endTxnResponseDataSerializers: Dict[int, ClassSerializer[EndTxnResponseData]] = {
+    version: ClassSerializer(EndTxnResponseData, schema) for version, schema in endTxnResponseDataSchemas.items()
 }
+
+endTxnResponseDataSerializers[-1] = endTxnResponseDataSerializers[1]

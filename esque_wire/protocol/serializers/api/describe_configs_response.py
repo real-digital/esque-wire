@@ -3,16 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.describe_configs_response import (
-    ConfigEntry,
-    ConfigSynonym,
-    DescribeConfigsResponseData,
-    Resource,
-)
+from ...structs.api.describe_configs_response import ConfigEntry, ConfigSynonym, DescribeConfigsResponseData, Resource
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     booleanSerializer,
@@ -39,10 +34,11 @@ configSynonymSchemas: Dict[int, Schema] = {
 }
 
 
-configSynonymSerializers: Dict[int, DataClassSerializer[ConfigSynonym]] = {
-    version: DataClassSerializer(ConfigSynonym, schema)
-    for version, schema in configSynonymSchemas.items()
+configSynonymSerializers: Dict[int, ClassSerializer[ConfigSynonym]] = {
+    version: ClassSerializer(ConfigSynonym, schema) for version, schema in configSynonymSchemas.items()
 }
+
+configSynonymSerializers[-1] = configSynonymSerializers[2]
 
 
 configEntrySchemas: Dict[int, Schema] = {
@@ -53,10 +49,7 @@ configEntrySchemas: Dict[int, Schema] = {
         (None, booleanSerializer),
         ("is_sensitive", booleanSerializer),
         ("config_source", DummySerializer(int8Serializer.default)),
-        (
-            "config_synonyms",
-            DummySerializer(ArraySerializer(configSynonymSerializers[0]).default),
-        ),
+        ("config_synonyms", DummySerializer(ArraySerializer(configSynonymSerializers[-1]).default)),
     ],
     1: [
         ("config_name", stringSerializer),
@@ -77,10 +70,11 @@ configEntrySchemas: Dict[int, Schema] = {
 }
 
 
-configEntrySerializers: Dict[int, DataClassSerializer[ConfigEntry]] = {
-    version: DataClassSerializer(ConfigEntry, schema)
-    for version, schema in configEntrySchemas.items()
+configEntrySerializers: Dict[int, ClassSerializer[ConfigEntry]] = {
+    version: ClassSerializer(ConfigEntry, schema) for version, schema in configEntrySchemas.items()
 }
+
+configEntrySerializers[-1] = configEntrySerializers[2]
 
 
 resourceSchemas: Dict[int, Schema] = {
@@ -108,31 +102,23 @@ resourceSchemas: Dict[int, Schema] = {
 }
 
 
-resourceSerializers: Dict[int, DataClassSerializer[Resource]] = {
-    version: DataClassSerializer(Resource, schema)
-    for version, schema in resourceSchemas.items()
+resourceSerializers: Dict[int, ClassSerializer[Resource]] = {
+    version: ClassSerializer(Resource, schema) for version, schema in resourceSchemas.items()
 }
+
+resourceSerializers[-1] = resourceSerializers[2]
 
 
 describeConfigsResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("throttle_time_ms", int32Serializer),
-        ("resources", ArraySerializer(resourceSerializers[0])),
-    ],
-    1: [
-        ("throttle_time_ms", int32Serializer),
-        ("resources", ArraySerializer(resourceSerializers[1])),
-    ],
-    2: [
-        ("throttle_time_ms", int32Serializer),
-        ("resources", ArraySerializer(resourceSerializers[2])),
-    ],
+    0: [("throttle_time_ms", int32Serializer), ("resources", ArraySerializer(resourceSerializers[0]))],
+    1: [("throttle_time_ms", int32Serializer), ("resources", ArraySerializer(resourceSerializers[1]))],
+    2: [("throttle_time_ms", int32Serializer), ("resources", ArraySerializer(resourceSerializers[2]))],
 }
 
 
-describeConfigsResponseDataSerializers: Dict[
-    int, DataClassSerializer[DescribeConfigsResponseData]
-] = {
-    version: DataClassSerializer(DescribeConfigsResponseData, schema)
+describeConfigsResponseDataSerializers: Dict[int, ClassSerializer[DescribeConfigsResponseData]] = {
+    version: ClassSerializer(DescribeConfigsResponseData, schema)
     for version, schema in describeConfigsResponseDataSchemas.items()
 }
+
+describeConfigsResponseDataSerializers[-1] = describeConfigsResponseDataSerializers[2]

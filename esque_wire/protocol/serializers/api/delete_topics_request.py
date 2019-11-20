@@ -5,38 +5,20 @@
 from typing import Dict
 from ...structs.api.delete_topics_request import DeleteTopicsRequestData
 
-from ._main_serializers import (
-    ArraySerializer,
-    DataClassSerializer,
-    Schema,
-    int32Serializer,
-    stringSerializer,
-)
+from ._main_serializers import ArraySerializer, ClassSerializer, Schema, int32Serializer, stringSerializer
 
 
 deleteTopicsRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic_names", ArraySerializer(stringSerializer)),
-        ("timeout_ms", int32Serializer),
-    ],
-    1: [
-        ("topic_names", ArraySerializer(stringSerializer)),
-        ("timeout_ms", int32Serializer),
-    ],
-    2: [
-        ("topic_names", ArraySerializer(stringSerializer)),
-        ("timeout_ms", int32Serializer),
-    ],
-    3: [
-        ("topic_names", ArraySerializer(stringSerializer)),
-        ("timeout_ms", int32Serializer),
-    ],
+    0: [("topic_names", ArraySerializer(stringSerializer)), ("timeout_ms", int32Serializer)],
+    1: [("topic_names", ArraySerializer(stringSerializer)), ("timeout_ms", int32Serializer)],
+    2: [("topic_names", ArraySerializer(stringSerializer)), ("timeout_ms", int32Serializer)],
+    3: [("topic_names", ArraySerializer(stringSerializer)), ("timeout_ms", int32Serializer)],
 }
 
 
-deleteTopicsRequestDataSerializers: Dict[
-    int, DataClassSerializer[DeleteTopicsRequestData]
-] = {
-    version: DataClassSerializer(DeleteTopicsRequestData, schema)
+deleteTopicsRequestDataSerializers: Dict[int, ClassSerializer[DeleteTopicsRequestData]] = {
+    version: ClassSerializer(DeleteTopicsRequestData, schema)
     for version, schema in deleteTopicsRequestDataSchemas.items()
 }
+
+deleteTopicsRequestDataSerializers[-1] = deleteTopicsRequestDataSerializers[3]

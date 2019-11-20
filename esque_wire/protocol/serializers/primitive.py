@@ -39,9 +39,7 @@ class PrimitiveSerializer(BaseSerializer[T]):
 
 
 class GenericSerializer(BaseSerializer[T]):
-    def __init__(
-        self, encoder: Callable[[T], bytes], reader: Callable[[BinaryIO], T], default: T
-    ):
+    def __init__(self, encoder: Callable[[T], bytes], reader: Callable[[BinaryIO], T], default: T):
         self._default = default
         self._encoder: Callable[[Any], bytes] = encoder
         self._reader: Callable[[BinaryIO], Any] = reader
@@ -192,15 +190,11 @@ varLongSerializer: BaseSerializer[int] = VarlenZigZagSerializer(64)
 nullableStringSerializer: BaseSerializer[Optional[str]] = GenericSerializer(
     encode_nullable_string, read_nullable_string, None
 )
-stringSerializer: BaseSerializer[str] = GenericSerializer(
-    encode_string, read_string, ""
-)
+stringSerializer: BaseSerializer[str] = GenericSerializer(encode_string, read_string, "")
 nullableBytesSerializer: BaseSerializer[Optional[bytes]] = GenericSerializer(
     encode_nullable_bytes, read_nullable_bytes, None
 )
-bytesSerializer: BaseSerializer[bytes] = GenericSerializer(
-    encode_bytes, read_bytes, b""
-)
+bytesSerializer: BaseSerializer[bytes] = GenericSerializer(encode_bytes, read_bytes, b"")
 
 # Represents a sequence of Kafka records as NULLABLE_BYTES. For a detailed description of records see
 # Message Sets.

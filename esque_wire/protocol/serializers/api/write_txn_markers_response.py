@@ -3,16 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.write_txn_markers_response import (
-    Partition,
-    Topic,
-    TransactionMarker,
-    WriteTxnMarkersResponseData,
-)
+from ...structs.api.write_txn_markers_response import Partition, Topic, TransactionMarker, WriteTxnMarkersResponseData
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     errorCodeSerializer,
     int32Serializer,
@@ -21,43 +16,38 @@ from ._main_serializers import (
 )
 
 
-partitionSchemas: Dict[int, Schema] = {
-    0: [("partition", int32Serializer), ("error_code", errorCodeSerializer)]
-}
+partitionSchemas: Dict[int, Schema] = {0: [("partition", int32Serializer), ("error_code", errorCodeSerializer)]}
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[0]
 
 
 topicSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[0])),
-    ]
+    0: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[0]))]
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[0]
 
 
 transactionMarkerSchemas: Dict[int, Schema] = {
-    0: [
-        ("producer_id", int64Serializer),
-        ("topics", ArraySerializer(topicSerializers[0])),
-    ]
+    0: [("producer_id", int64Serializer), ("topics", ArraySerializer(topicSerializers[0]))]
 }
 
 
-transactionMarkerSerializers: Dict[int, DataClassSerializer[TransactionMarker]] = {
-    version: DataClassSerializer(TransactionMarker, schema)
-    for version, schema in transactionMarkerSchemas.items()
+transactionMarkerSerializers: Dict[int, ClassSerializer[TransactionMarker]] = {
+    version: ClassSerializer(TransactionMarker, schema) for version, schema in transactionMarkerSchemas.items()
 }
+
+transactionMarkerSerializers[-1] = transactionMarkerSerializers[0]
 
 
 writeTxnMarkersResponseDataSchemas: Dict[int, Schema] = {
@@ -65,9 +55,9 @@ writeTxnMarkersResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-writeTxnMarkersResponseDataSerializers: Dict[
-    int, DataClassSerializer[WriteTxnMarkersResponseData]
-] = {
-    version: DataClassSerializer(WriteTxnMarkersResponseData, schema)
+writeTxnMarkersResponseDataSerializers: Dict[int, ClassSerializer[WriteTxnMarkersResponseData]] = {
+    version: ClassSerializer(WriteTxnMarkersResponseData, schema)
     for version, schema in writeTxnMarkersResponseDataSchemas.items()
 }
+
+writeTxnMarkersResponseDataSerializers[-1] = writeTxnMarkersResponseDataSerializers[0]

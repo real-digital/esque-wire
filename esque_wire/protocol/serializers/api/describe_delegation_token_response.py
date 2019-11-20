@@ -12,7 +12,7 @@ from ...structs.api.describe_delegation_token_response import (
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     bytesSerializer,
     errorCodeSerializer,
@@ -28,10 +28,11 @@ renewerSchemas: Dict[int, Schema] = {
 }
 
 
-renewerSerializers: Dict[int, DataClassSerializer[Renewer]] = {
-    version: DataClassSerializer(Renewer, schema)
-    for version, schema in renewerSchemas.items()
+renewerSerializers: Dict[int, ClassSerializer[Renewer]] = {
+    version: ClassSerializer(Renewer, schema) for version, schema in renewerSchemas.items()
 }
+
+renewerSerializers[-1] = renewerSerializers[1]
 
 
 ownerSchemas: Dict[int, Schema] = {
@@ -40,10 +41,11 @@ ownerSchemas: Dict[int, Schema] = {
 }
 
 
-ownerSerializers: Dict[int, DataClassSerializer[Owner]] = {
-    version: DataClassSerializer(Owner, schema)
-    for version, schema in ownerSchemas.items()
+ownerSerializers: Dict[int, ClassSerializer[Owner]] = {
+    version: ClassSerializer(Owner, schema) for version, schema in ownerSchemas.items()
 }
+
+ownerSerializers[-1] = ownerSerializers[1]
 
 
 tokenDetailSchemas: Dict[int, Schema] = {
@@ -68,10 +70,11 @@ tokenDetailSchemas: Dict[int, Schema] = {
 }
 
 
-tokenDetailSerializers: Dict[int, DataClassSerializer[TokenDetail]] = {
-    version: DataClassSerializer(TokenDetail, schema)
-    for version, schema in tokenDetailSchemas.items()
+tokenDetailSerializers: Dict[int, ClassSerializer[TokenDetail]] = {
+    version: ClassSerializer(TokenDetail, schema) for version, schema in tokenDetailSchemas.items()
 }
+
+tokenDetailSerializers[-1] = tokenDetailSerializers[1]
 
 
 describeDelegationTokenResponseDataSchemas: Dict[int, Schema] = {
@@ -88,9 +91,9 @@ describeDelegationTokenResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-describeDelegationTokenResponseDataSerializers: Dict[
-    int, DataClassSerializer[DescribeDelegationTokenResponseData]
-] = {
-    version: DataClassSerializer(DescribeDelegationTokenResponseData, schema)
+describeDelegationTokenResponseDataSerializers: Dict[int, ClassSerializer[DescribeDelegationTokenResponseData]] = {
+    version: ClassSerializer(DescribeDelegationTokenResponseData, schema)
     for version, schema in describeDelegationTokenResponseDataSchemas.items()
 }
+
+describeDelegationTokenResponseDataSerializers[-1] = describeDelegationTokenResponseDataSerializers[1]

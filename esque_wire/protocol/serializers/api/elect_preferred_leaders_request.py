@@ -3,18 +3,9 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.elect_preferred_leaders_request import (
-    ElectPreferredLeadersRequestData,
-    TopicPartition,
-)
+from ...structs.api.elect_preferred_leaders_request import ElectPreferredLeadersRequestData, TopicPartition
 
-from ._main_serializers import (
-    ArraySerializer,
-    DataClassSerializer,
-    Schema,
-    int32Serializer,
-    stringSerializer,
-)
+from ._main_serializers import ArraySerializer, ClassSerializer, Schema, int32Serializer, stringSerializer
 
 
 topicPartitionSchemas: Dict[int, Schema] = {
@@ -22,23 +13,21 @@ topicPartitionSchemas: Dict[int, Schema] = {
 }
 
 
-topicPartitionSerializers: Dict[int, DataClassSerializer[TopicPartition]] = {
-    version: DataClassSerializer(TopicPartition, schema)
-    for version, schema in topicPartitionSchemas.items()
+topicPartitionSerializers: Dict[int, ClassSerializer[TopicPartition]] = {
+    version: ClassSerializer(TopicPartition, schema) for version, schema in topicPartitionSchemas.items()
 }
+
+topicPartitionSerializers[-1] = topicPartitionSerializers[0]
 
 
 electPreferredLeadersRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic_partitions", ArraySerializer(topicPartitionSerializers[0])),
-        ("timeout_ms", int32Serializer),
-    ]
+    0: [("topic_partitions", ArraySerializer(topicPartitionSerializers[0])), ("timeout_ms", int32Serializer)]
 }
 
 
-electPreferredLeadersRequestDataSerializers: Dict[
-    int, DataClassSerializer[ElectPreferredLeadersRequestData]
-] = {
-    version: DataClassSerializer(ElectPreferredLeadersRequestData, schema)
+electPreferredLeadersRequestDataSerializers: Dict[int, ClassSerializer[ElectPreferredLeadersRequestData]] = {
+    version: ClassSerializer(ElectPreferredLeadersRequestData, schema)
     for version, schema in electPreferredLeadersRequestDataSchemas.items()
 }
+
+electPreferredLeadersRequestDataSerializers[-1] = electPreferredLeadersRequestDataSerializers[0]

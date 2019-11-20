@@ -13,9 +13,7 @@ class DictSerializer(BaseSerializer[Dict]):
         self._schema = schema.copy()
 
     def encode(self, value: Dict) -> bytes:
-        return b"".join(
-            serializer.encode(value[field]) for field, serializer in self._schema
-        )
+        return b"".join(serializer.encode(value[field]) for field, serializer in self._schema)
 
     def read(self, buffer: BinaryIO) -> Dict:
         data = {}
@@ -35,9 +33,7 @@ class ArraySerializer(BaseSerializer[T]):
     def encode(self, elems: Optional[List[T]]) -> bytes:
         if elems is None:
             return int32Serializer.encode(-1)
-        return int32Serializer.encode(len(elems)) + b"".join(
-            self._elem_serializer.encode(elem) for elem in elems
-        )
+        return int32Serializer.encode(len(elems)) + b"".join(self._elem_serializer.encode(elem) for elem in elems)
 
     def read(self, buffer: BinaryIO) -> Optional[List[T]]:
         len_ = int32Serializer.read(buffer)
@@ -50,16 +46,13 @@ class ArraySerializer(BaseSerializer[T]):
         return []
 
 
-class DataClassSerializer(BaseSerializer[T]):
-    def __init__(self, data_class: Type[T], schema: Schema):
+class ClassSerializer(BaseSerializer[T]):
+    def __init__(self, cls: Type[T], schema: Schema):
         self._schema = schema.copy()
-        self.data_class: Type[T] = data_class
+        self._cls: Type[T] = cls
 
     def encode(self, value: T) -> bytes:
-        return b"".join(
-            serializer.encode(getattr(value, field))
-            for field, serializer in self._schema
-        )
+        return b"".join(serializer.encode(getattr(value, field)) for field, serializer in self._schema)
 
     def read(self, buffer: BinaryIO) -> T:
         data = {}
@@ -70,17 +63,11 @@ class DataClassSerializer(BaseSerializer[T]):
                 serializer.read(buffer)
             else:
                 data[field] = serializer.read(buffer)
-        return self.data_class(**data)
+        return self._cls(**data)
 
     @property
     def default(self) -> T:
-        return self.data_class(
-            **{
-                field: serializer.default
-                for field, serializer in self._schema
-                if field is not None
-            }
-        )
+        return self._cls(**{field: serializer.default for field, serializer in self._schema if field is not None})
 
 
 E = TypeVar("E", bound=Enum)
@@ -101,9 +88,7 @@ class EnumSerializer(BaseSerializer[E]):
     def default(self) -> E:
         for member in self.enum_class:
             return member
-        raise RuntimeError(
-            f"Cannot dermine default, Enum {self.enum_class.__name__} is empty!"
-        )
+        raise RuntimeError(f"Cannot dermine default, Enum {self.enum_class.__name__} is empty!")
 
 
 class DummySerializer(BaseSerializer[T]):

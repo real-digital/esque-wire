@@ -3,16 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.fetch_request import (
-    FetchRequestData,
-    ForgottenTopicsData,
-    Partition,
-    Topic,
-)
+from ...structs.api.fetch_request import FetchRequestData, ForgottenTopicsData, Partition, Topic
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     int32Serializer,
@@ -31,10 +26,11 @@ forgottenTopicsDataSchemas: Dict[int, Schema] = {
 }
 
 
-forgottenTopicsDataSerializers: Dict[int, DataClassSerializer[ForgottenTopicsData]] = {
-    version: DataClassSerializer(ForgottenTopicsData, schema)
-    for version, schema in forgottenTopicsDataSchemas.items()
+forgottenTopicsDataSerializers: Dict[int, ClassSerializer[ForgottenTopicsData]] = {
+    version: ClassSerializer(ForgottenTopicsData, schema) for version, schema in forgottenTopicsDataSchemas.items()
 }
+
+forgottenTopicsDataSerializers[-1] = forgottenTopicsDataSerializers[11]
 
 
 partitionSchemas: Dict[int, Schema] = {
@@ -125,68 +121,34 @@ partitionSchemas: Dict[int, Schema] = {
 }
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[11]
 
 
 topicSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[0])),
-    ],
-    1: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[1])),
-    ],
-    2: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[2])),
-    ],
-    3: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[3])),
-    ],
-    4: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[4])),
-    ],
-    5: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[5])),
-    ],
-    6: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[6])),
-    ],
-    7: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[7])),
-    ],
-    8: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[8])),
-    ],
-    9: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[9])),
-    ],
-    10: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[10])),
-    ],
-    11: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[11])),
-    ],
+    0: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[0]))],
+    1: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[1]))],
+    2: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[2]))],
+    3: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[3]))],
+    4: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[4]))],
+    5: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[5]))],
+    6: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[6]))],
+    7: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[7]))],
+    8: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[8]))],
+    9: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[9]))],
+    10: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[10]))],
+    11: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[11]))],
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[11]
 
 
 fetchRequestDataSchemas: Dict[int, Schema] = {
@@ -199,10 +161,7 @@ fetchRequestDataSchemas: Dict[int, Schema] = {
         ("isolation_level", DummySerializer(int8Serializer.default)),
         ("session_id", DummySerializer(int32Serializer.default)),
         ("session_epoch", DummySerializer(int32Serializer.default)),
-        (
-            "forgotten_topics_data",
-            DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[0]).default),
-        ),
+        ("forgotten_topics_data", DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[-1]).default)),
         ("rack_id", DummySerializer(stringSerializer.default)),
     ],
     1: [
@@ -214,10 +173,7 @@ fetchRequestDataSchemas: Dict[int, Schema] = {
         ("isolation_level", DummySerializer(int8Serializer.default)),
         ("session_id", DummySerializer(int32Serializer.default)),
         ("session_epoch", DummySerializer(int32Serializer.default)),
-        (
-            "forgotten_topics_data",
-            DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[0]).default),
-        ),
+        ("forgotten_topics_data", DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[-1]).default)),
         ("rack_id", DummySerializer(stringSerializer.default)),
     ],
     2: [
@@ -229,10 +185,7 @@ fetchRequestDataSchemas: Dict[int, Schema] = {
         ("isolation_level", DummySerializer(int8Serializer.default)),
         ("session_id", DummySerializer(int32Serializer.default)),
         ("session_epoch", DummySerializer(int32Serializer.default)),
-        (
-            "forgotten_topics_data",
-            DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[0]).default),
-        ),
+        ("forgotten_topics_data", DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[-1]).default)),
         ("rack_id", DummySerializer(stringSerializer.default)),
     ],
     3: [
@@ -244,10 +197,7 @@ fetchRequestDataSchemas: Dict[int, Schema] = {
         ("isolation_level", DummySerializer(int8Serializer.default)),
         ("session_id", DummySerializer(int32Serializer.default)),
         ("session_epoch", DummySerializer(int32Serializer.default)),
-        (
-            "forgotten_topics_data",
-            DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[0]).default),
-        ),
+        ("forgotten_topics_data", DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[-1]).default)),
         ("rack_id", DummySerializer(stringSerializer.default)),
     ],
     4: [
@@ -259,10 +209,7 @@ fetchRequestDataSchemas: Dict[int, Schema] = {
         ("topics", ArraySerializer(topicSerializers[4])),
         ("session_id", DummySerializer(int32Serializer.default)),
         ("session_epoch", DummySerializer(int32Serializer.default)),
-        (
-            "forgotten_topics_data",
-            DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[0]).default),
-        ),
+        ("forgotten_topics_data", DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[-1]).default)),
         ("rack_id", DummySerializer(stringSerializer.default)),
     ],
     5: [
@@ -274,10 +221,7 @@ fetchRequestDataSchemas: Dict[int, Schema] = {
         ("topics", ArraySerializer(topicSerializers[5])),
         ("session_id", DummySerializer(int32Serializer.default)),
         ("session_epoch", DummySerializer(int32Serializer.default)),
-        (
-            "forgotten_topics_data",
-            DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[0]).default),
-        ),
+        ("forgotten_topics_data", DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[-1]).default)),
         ("rack_id", DummySerializer(stringSerializer.default)),
     ],
     6: [
@@ -289,10 +233,7 @@ fetchRequestDataSchemas: Dict[int, Schema] = {
         ("topics", ArraySerializer(topicSerializers[6])),
         ("session_id", DummySerializer(int32Serializer.default)),
         ("session_epoch", DummySerializer(int32Serializer.default)),
-        (
-            "forgotten_topics_data",
-            DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[0]).default),
-        ),
+        ("forgotten_topics_data", DummySerializer(ArraySerializer(forgottenTopicsDataSerializers[-1]).default)),
         ("rack_id", DummySerializer(stringSerializer.default)),
     ],
     7: [
@@ -358,7 +299,8 @@ fetchRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-fetchRequestDataSerializers: Dict[int, DataClassSerializer[FetchRequestData]] = {
-    version: DataClassSerializer(FetchRequestData, schema)
-    for version, schema in fetchRequestDataSchemas.items()
+fetchRequestDataSerializers: Dict[int, ClassSerializer[FetchRequestData]] = {
+    version: ClassSerializer(FetchRequestData, schema) for version, schema in fetchRequestDataSchemas.items()
 }
+
+fetchRequestDataSerializers[-1] = fetchRequestDataSerializers[11]

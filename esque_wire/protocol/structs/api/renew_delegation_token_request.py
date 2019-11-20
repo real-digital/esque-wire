@@ -1,24 +1,21 @@
-from dataclasses import dataclass
+from typing import ClassVar
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class RenewDelegationTokenRequestData(RequestData):
-    """
-    :param hmac: HMAC of the delegation token to be renewed.
-    :type hmac: bytes
-    :param renew_time_period: Renew time period in milli seconds.
-    :type renew_time_period: int
-    """
 
     hmac: bytes
     renew_time_period: int
+    api_key: ClassVar[ApiKey] = ApiKey.RENEW_DELEGATION_TOKEN
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, hmac: bytes, renew_time_period: int):
         """
-        :return: the api key for this API: `ApiKey.RENEW_DELEGATION_TOKEN` (`ApiKey(39)`)
+        :param hmac: HMAC of the delegation token to be renewed.
+        :type hmac: bytes
+        :param renew_time_period: Renew time period in milli seconds.
+        :type renew_time_period: int
         """
-        return ApiKey.RENEW_DELEGATION_TOKEN
+        self.hmac = hmac
+        self.renew_time_period = renew_time_period

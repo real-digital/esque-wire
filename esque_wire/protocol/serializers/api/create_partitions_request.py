@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.create_partitions_request import (
-    CreatePartitionsRequestData,
-    NewPartitions,
-    TopicPartition,
-)
+from ...structs.api.create_partitions_request import CreatePartitionsRequestData, NewPartitions, TopicPartition
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     booleanSerializer,
     int32Serializer,
@@ -20,21 +16,16 @@ from ._main_serializers import (
 
 
 newPartitionsSchemas: Dict[int, Schema] = {
-    0: [
-        ("count", int32Serializer),
-        ("assignment", ArraySerializer(ArraySerializer(int32Serializer))),
-    ],
-    1: [
-        ("count", int32Serializer),
-        ("assignment", ArraySerializer(ArraySerializer(int32Serializer))),
-    ],
+    0: [("count", int32Serializer), ("assignment", ArraySerializer(ArraySerializer(int32Serializer)))],
+    1: [("count", int32Serializer), ("assignment", ArraySerializer(ArraySerializer(int32Serializer)))],
 }
 
 
-newPartitionsSerializers: Dict[int, DataClassSerializer[NewPartitions]] = {
-    version: DataClassSerializer(NewPartitions, schema)
-    for version, schema in newPartitionsSchemas.items()
+newPartitionsSerializers: Dict[int, ClassSerializer[NewPartitions]] = {
+    version: ClassSerializer(NewPartitions, schema) for version, schema in newPartitionsSchemas.items()
 }
+
+newPartitionsSerializers[-1] = newPartitionsSerializers[1]
 
 
 topicPartitionSchemas: Dict[int, Schema] = {
@@ -43,10 +34,11 @@ topicPartitionSchemas: Dict[int, Schema] = {
 }
 
 
-topicPartitionSerializers: Dict[int, DataClassSerializer[TopicPartition]] = {
-    version: DataClassSerializer(TopicPartition, schema)
-    for version, schema in topicPartitionSchemas.items()
+topicPartitionSerializers: Dict[int, ClassSerializer[TopicPartition]] = {
+    version: ClassSerializer(TopicPartition, schema) for version, schema in topicPartitionSchemas.items()
 }
+
+topicPartitionSerializers[-1] = topicPartitionSerializers[1]
 
 
 createPartitionsRequestDataSchemas: Dict[int, Schema] = {
@@ -63,9 +55,9 @@ createPartitionsRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-createPartitionsRequestDataSerializers: Dict[
-    int, DataClassSerializer[CreatePartitionsRequestData]
-] = {
-    version: DataClassSerializer(CreatePartitionsRequestData, schema)
+createPartitionsRequestDataSerializers: Dict[int, ClassSerializer[CreatePartitionsRequestData]] = {
+    version: ClassSerializer(CreatePartitionsRequestData, schema)
     for version, schema in createPartitionsRequestDataSchemas.items()
 }
+
+createPartitionsRequestDataSerializers[-1] = createPartitionsRequestDataSerializers[1]

@@ -3,19 +3,9 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.alter_replica_log_dirs_request import (
-    AlterReplicaLogDirsRequestData,
-    LogDir,
-    Topic,
-)
+from ...structs.api.alter_replica_log_dirs_request import AlterReplicaLogDirsRequestData, LogDir, Topic
 
-from ._main_serializers import (
-    ArraySerializer,
-    DataClassSerializer,
-    Schema,
-    int32Serializer,
-    stringSerializer,
-)
+from ._main_serializers import ArraySerializer, ClassSerializer, Schema, int32Serializer, stringSerializer
 
 
 topicSchemas: Dict[int, Schema] = {
@@ -24,28 +14,24 @@ topicSchemas: Dict[int, Schema] = {
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[1]
 
 
 logDirSchemas: Dict[int, Schema] = {
-    0: [
-        ("log_dir", stringSerializer),
-        ("topics", ArraySerializer(topicSerializers[0])),
-    ],
-    1: [
-        ("log_dir", stringSerializer),
-        ("topics", ArraySerializer(topicSerializers[1])),
-    ],
+    0: [("log_dir", stringSerializer), ("topics", ArraySerializer(topicSerializers[0]))],
+    1: [("log_dir", stringSerializer), ("topics", ArraySerializer(topicSerializers[1]))],
 }
 
 
-logDirSerializers: Dict[int, DataClassSerializer[LogDir]] = {
-    version: DataClassSerializer(LogDir, schema)
-    for version, schema in logDirSchemas.items()
+logDirSerializers: Dict[int, ClassSerializer[LogDir]] = {
+    version: ClassSerializer(LogDir, schema) for version, schema in logDirSchemas.items()
 }
+
+logDirSerializers[-1] = logDirSerializers[1]
 
 
 alterReplicaLogDirsRequestDataSchemas: Dict[int, Schema] = {
@@ -54,9 +40,9 @@ alterReplicaLogDirsRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-alterReplicaLogDirsRequestDataSerializers: Dict[
-    int, DataClassSerializer[AlterReplicaLogDirsRequestData]
-] = {
-    version: DataClassSerializer(AlterReplicaLogDirsRequestData, schema)
+alterReplicaLogDirsRequestDataSerializers: Dict[int, ClassSerializer[AlterReplicaLogDirsRequestData]] = {
+    version: ClassSerializer(AlterReplicaLogDirsRequestData, schema)
     for version, schema in alterReplicaLogDirsRequestDataSchemas.items()
 }
+
+alterReplicaLogDirsRequestDataSerializers[-1] = alterReplicaLogDirsRequestDataSerializers[1]

@@ -3,17 +3,9 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.describe_delegation_token_request import (
-    DescribeDelegationTokenRequestData,
-    Owner,
-)
+from ...structs.api.describe_delegation_token_request import DescribeDelegationTokenRequestData, Owner
 
-from ._main_serializers import (
-    ArraySerializer,
-    DataClassSerializer,
-    Schema,
-    stringSerializer,
-)
+from ._main_serializers import ArraySerializer, ClassSerializer, Schema, stringSerializer
 
 
 ownerSchemas: Dict[int, Schema] = {
@@ -22,10 +14,11 @@ ownerSchemas: Dict[int, Schema] = {
 }
 
 
-ownerSerializers: Dict[int, DataClassSerializer[Owner]] = {
-    version: DataClassSerializer(Owner, schema)
-    for version, schema in ownerSchemas.items()
+ownerSerializers: Dict[int, ClassSerializer[Owner]] = {
+    version: ClassSerializer(Owner, schema) for version, schema in ownerSchemas.items()
 }
+
+ownerSerializers[-1] = ownerSerializers[1]
 
 
 describeDelegationTokenRequestDataSchemas: Dict[int, Schema] = {
@@ -34,9 +27,9 @@ describeDelegationTokenRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-describeDelegationTokenRequestDataSerializers: Dict[
-    int, DataClassSerializer[DescribeDelegationTokenRequestData]
-] = {
-    version: DataClassSerializer(DescribeDelegationTokenRequestData, schema)
+describeDelegationTokenRequestDataSerializers: Dict[int, ClassSerializer[DescribeDelegationTokenRequestData]] = {
+    version: ClassSerializer(DescribeDelegationTokenRequestData, schema)
     for version, schema in describeDelegationTokenRequestDataSchemas.items()
 }
+
+describeDelegationTokenRequestDataSerializers[-1] = describeDelegationTokenRequestDataSerializers[1]

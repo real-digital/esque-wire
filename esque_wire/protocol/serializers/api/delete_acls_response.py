@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.delete_acls_response import (
-    DeleteAclsResponseData,
-    FilterResponse,
-    MatchingAcl,
-)
+from ...structs.api.delete_acls_response import DeleteAclsResponseData, FilterResponse, MatchingAcl
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     aclOperationSerializer,
@@ -51,10 +47,11 @@ matchingAclSchemas: Dict[int, Schema] = {
 }
 
 
-matchingAclSerializers: Dict[int, DataClassSerializer[MatchingAcl]] = {
-    version: DataClassSerializer(MatchingAcl, schema)
-    for version, schema in matchingAclSchemas.items()
+matchingAclSerializers: Dict[int, ClassSerializer[MatchingAcl]] = {
+    version: ClassSerializer(MatchingAcl, schema) for version, schema in matchingAclSchemas.items()
 }
+
+matchingAclSerializers[-1] = matchingAclSerializers[1]
 
 
 filterResponseSchemas: Dict[int, Schema] = {
@@ -71,27 +68,22 @@ filterResponseSchemas: Dict[int, Schema] = {
 }
 
 
-filterResponseSerializers: Dict[int, DataClassSerializer[FilterResponse]] = {
-    version: DataClassSerializer(FilterResponse, schema)
-    for version, schema in filterResponseSchemas.items()
+filterResponseSerializers: Dict[int, ClassSerializer[FilterResponse]] = {
+    version: ClassSerializer(FilterResponse, schema) for version, schema in filterResponseSchemas.items()
 }
+
+filterResponseSerializers[-1] = filterResponseSerializers[1]
 
 
 deleteAclsResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("throttle_time_ms", int32Serializer),
-        ("filter_responses", ArraySerializer(filterResponseSerializers[0])),
-    ],
-    1: [
-        ("throttle_time_ms", int32Serializer),
-        ("filter_responses", ArraySerializer(filterResponseSerializers[1])),
-    ],
+    0: [("throttle_time_ms", int32Serializer), ("filter_responses", ArraySerializer(filterResponseSerializers[0]))],
+    1: [("throttle_time_ms", int32Serializer), ("filter_responses", ArraySerializer(filterResponseSerializers[1]))],
 }
 
 
-deleteAclsResponseDataSerializers: Dict[
-    int, DataClassSerializer[DeleteAclsResponseData]
-] = {
-    version: DataClassSerializer(DeleteAclsResponseData, schema)
+deleteAclsResponseDataSerializers: Dict[int, ClassSerializer[DeleteAclsResponseData]] = {
+    version: ClassSerializer(DeleteAclsResponseData, schema)
     for version, schema in deleteAclsResponseDataSchemas.items()
 }
+
+deleteAclsResponseDataSerializers[-1] = deleteAclsResponseDataSerializers[1]

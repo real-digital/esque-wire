@@ -7,7 +7,7 @@ from ...structs.api.leader_and_isr_response import LeaderAndIsrResponseData, Par
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     errorCodeSerializer,
     int32Serializer,
@@ -16,49 +16,29 @@ from ._main_serializers import (
 
 
 partitionSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partition", int32Serializer),
-        ("error_code", errorCodeSerializer),
-    ],
-    1: [
-        ("topic", stringSerializer),
-        ("partition", int32Serializer),
-        ("error_code", errorCodeSerializer),
-    ],
-    2: [
-        ("topic", stringSerializer),
-        ("partition", int32Serializer),
-        ("error_code", errorCodeSerializer),
-    ],
+    0: [("topic", stringSerializer), ("partition", int32Serializer), ("error_code", errorCodeSerializer)],
+    1: [("topic", stringSerializer), ("partition", int32Serializer), ("error_code", errorCodeSerializer)],
+    2: [("topic", stringSerializer), ("partition", int32Serializer), ("error_code", errorCodeSerializer)],
 }
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[2]
 
 
 leaderAndIsrResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("error_code", errorCodeSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[0])),
-    ],
-    1: [
-        ("error_code", errorCodeSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[1])),
-    ],
-    2: [
-        ("error_code", errorCodeSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[2])),
-    ],
+    0: [("error_code", errorCodeSerializer), ("partitions", ArraySerializer(partitionSerializers[0]))],
+    1: [("error_code", errorCodeSerializer), ("partitions", ArraySerializer(partitionSerializers[1]))],
+    2: [("error_code", errorCodeSerializer), ("partitions", ArraySerializer(partitionSerializers[2]))],
 }
 
 
-leaderAndIsrResponseDataSerializers: Dict[
-    int, DataClassSerializer[LeaderAndIsrResponseData]
-] = {
-    version: DataClassSerializer(LeaderAndIsrResponseData, schema)
+leaderAndIsrResponseDataSerializers: Dict[int, ClassSerializer[LeaderAndIsrResponseData]] = {
+    version: ClassSerializer(LeaderAndIsrResponseData, schema)
     for version, schema in leaderAndIsrResponseDataSchemas.items()
 }
+
+leaderAndIsrResponseDataSerializers[-1] = leaderAndIsrResponseDataSerializers[2]

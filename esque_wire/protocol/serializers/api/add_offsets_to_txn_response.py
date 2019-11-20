@@ -5,12 +5,7 @@
 from typing import Dict
 from ...structs.api.add_offsets_to_txn_response import AddOffsetsToTxnResponseData
 
-from ._main_serializers import (
-    DataClassSerializer,
-    Schema,
-    errorCodeSerializer,
-    int32Serializer,
-)
+from ._main_serializers import ClassSerializer, Schema, errorCodeSerializer, int32Serializer
 
 
 addOffsetsToTxnResponseDataSchemas: Dict[int, Schema] = {
@@ -19,9 +14,9 @@ addOffsetsToTxnResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-addOffsetsToTxnResponseDataSerializers: Dict[
-    int, DataClassSerializer[AddOffsetsToTxnResponseData]
-] = {
-    version: DataClassSerializer(AddOffsetsToTxnResponseData, schema)
+addOffsetsToTxnResponseDataSerializers: Dict[int, ClassSerializer[AddOffsetsToTxnResponseData]] = {
+    version: ClassSerializer(AddOffsetsToTxnResponseData, schema)
     for version, schema in addOffsetsToTxnResponseDataSchemas.items()
 }
+
+addOffsetsToTxnResponseDataSerializers[-1] = addOffsetsToTxnResponseDataSerializers[1]

@@ -7,7 +7,7 @@ from ...structs.api.create_acls_request import CreateAclsRequestData, Creation
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     aclOperationSerializer,
@@ -40,10 +40,11 @@ creationSchemas: Dict[int, Schema] = {
 }
 
 
-creationSerializers: Dict[int, DataClassSerializer[Creation]] = {
-    version: DataClassSerializer(Creation, schema)
-    for version, schema in creationSchemas.items()
+creationSerializers: Dict[int, ClassSerializer[Creation]] = {
+    version: ClassSerializer(Creation, schema) for version, schema in creationSchemas.items()
 }
+
+creationSerializers[-1] = creationSerializers[1]
 
 
 createAclsRequestDataSchemas: Dict[int, Schema] = {
@@ -52,9 +53,8 @@ createAclsRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-createAclsRequestDataSerializers: Dict[
-    int, DataClassSerializer[CreateAclsRequestData]
-] = {
-    version: DataClassSerializer(CreateAclsRequestData, schema)
-    for version, schema in createAclsRequestDataSchemas.items()
+createAclsRequestDataSerializers: Dict[int, ClassSerializer[CreateAclsRequestData]] = {
+    version: ClassSerializer(CreateAclsRequestData, schema) for version, schema in createAclsRequestDataSchemas.items()
 }
+
+createAclsRequestDataSerializers[-1] = createAclsRequestDataSerializers[1]

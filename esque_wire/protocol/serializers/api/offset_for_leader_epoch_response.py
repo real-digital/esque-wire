@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.offset_for_leader_epoch_response import (
-    OffsetForLeaderEpochResponseData,
-    Partition,
-    Topic,
-)
+from ...structs.api.offset_for_leader_epoch_response import OffsetForLeaderEpochResponseData, Partition, Topic
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     errorCodeSerializer,
@@ -49,61 +45,39 @@ partitionSchemas: Dict[int, Schema] = {
 }
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[3]
 
 
 topicSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[0])),
-    ],
-    1: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[1])),
-    ],
-    2: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[2])),
-    ],
-    3: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[3])),
-    ],
+    0: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[0]))],
+    1: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[1]))],
+    2: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[2]))],
+    3: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[3]))],
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[3]
 
 
 offsetForLeaderEpochResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("topics", ArraySerializer(topicSerializers[0])),
-        ("throttle_time_ms", DummySerializer(0)),
-    ],
-    1: [
-        ("topics", ArraySerializer(topicSerializers[1])),
-        ("throttle_time_ms", DummySerializer(0)),
-    ],
-    2: [
-        ("throttle_time_ms", int32Serializer),
-        ("topics", ArraySerializer(topicSerializers[2])),
-    ],
-    3: [
-        ("throttle_time_ms", int32Serializer),
-        ("topics", ArraySerializer(topicSerializers[3])),
-    ],
+    0: [("topics", ArraySerializer(topicSerializers[0])), ("throttle_time_ms", DummySerializer(0))],
+    1: [("topics", ArraySerializer(topicSerializers[1])), ("throttle_time_ms", DummySerializer(0))],
+    2: [("throttle_time_ms", int32Serializer), ("topics", ArraySerializer(topicSerializers[2]))],
+    3: [("throttle_time_ms", int32Serializer), ("topics", ArraySerializer(topicSerializers[3]))],
 }
 
 
-offsetForLeaderEpochResponseDataSerializers: Dict[
-    int, DataClassSerializer[OffsetForLeaderEpochResponseData]
-] = {
-    version: DataClassSerializer(OffsetForLeaderEpochResponseData, schema)
+offsetForLeaderEpochResponseDataSerializers: Dict[int, ClassSerializer[OffsetForLeaderEpochResponseData]] = {
+    version: ClassSerializer(OffsetForLeaderEpochResponseData, schema)
     for version, schema in offsetForLeaderEpochResponseDataSchemas.items()
 }
+
+offsetForLeaderEpochResponseDataSerializers[-1] = offsetForLeaderEpochResponseDataSerializers[3]

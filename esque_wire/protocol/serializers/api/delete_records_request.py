@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.delete_records_request import (
-    DeleteRecordsRequestData,
-    Partition,
-    Topic,
-)
+from ...structs.api.delete_records_request import DeleteRecordsRequestData, Partition, Topic
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     int32Serializer,
     int64Serializer,
@@ -25,28 +21,24 @@ partitionSchemas: Dict[int, Schema] = {
 }
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[1]
 
 
 topicSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[0])),
-    ],
-    1: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[1])),
-    ],
+    0: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[0]))],
+    1: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[1]))],
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[1]
 
 
 deleteRecordsRequestDataSchemas: Dict[int, Schema] = {
@@ -55,9 +47,9 @@ deleteRecordsRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-deleteRecordsRequestDataSerializers: Dict[
-    int, DataClassSerializer[DeleteRecordsRequestData]
-] = {
-    version: DataClassSerializer(DeleteRecordsRequestData, schema)
+deleteRecordsRequestDataSerializers: Dict[int, ClassSerializer[DeleteRecordsRequestData]] = {
+    version: ClassSerializer(DeleteRecordsRequestData, schema)
     for version, schema in deleteRecordsRequestDataSchemas.items()
 }
+
+deleteRecordsRequestDataSerializers[-1] = deleteRecordsRequestDataSerializers[1]

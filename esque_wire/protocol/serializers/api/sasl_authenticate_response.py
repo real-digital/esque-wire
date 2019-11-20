@@ -6,7 +6,7 @@ from typing import Dict
 from ...structs.api.sasl_authenticate_response import SaslAuthenticateResponseData
 
 from ._main_serializers import (
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     bytesSerializer,
@@ -32,9 +32,9 @@ saslAuthenticateResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-saslAuthenticateResponseDataSerializers: Dict[
-    int, DataClassSerializer[SaslAuthenticateResponseData]
-] = {
-    version: DataClassSerializer(SaslAuthenticateResponseData, schema)
+saslAuthenticateResponseDataSerializers: Dict[int, ClassSerializer[SaslAuthenticateResponseData]] = {
+    version: ClassSerializer(SaslAuthenticateResponseData, schema)
     for version, schema in saslAuthenticateResponseDataSchemas.items()
 }
+
+saslAuthenticateResponseDataSerializers[-1] = saslAuthenticateResponseDataSerializers[1]

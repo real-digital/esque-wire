@@ -6,7 +6,7 @@ from typing import Dict
 from ...structs.api.heartbeat_request import HeartbeatRequestData
 
 from ._main_serializers import (
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     int32Serializer,
@@ -43,9 +43,8 @@ heartbeatRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-heartbeatRequestDataSerializers: Dict[
-    int, DataClassSerializer[HeartbeatRequestData]
-] = {
-    version: DataClassSerializer(HeartbeatRequestData, schema)
-    for version, schema in heartbeatRequestDataSchemas.items()
+heartbeatRequestDataSerializers: Dict[int, ClassSerializer[HeartbeatRequestData]] = {
+    version: ClassSerializer(HeartbeatRequestData, schema) for version, schema in heartbeatRequestDataSchemas.items()
 }
+
+heartbeatRequestDataSerializers[-1] = heartbeatRequestDataSerializers[3]

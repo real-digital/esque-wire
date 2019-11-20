@@ -1,30 +1,29 @@
-from dataclasses import dataclass
+from typing import ClassVar
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class AddOffsetsToTxnRequestData(RequestData):
-    """
-    :param transactional_id: The transactional id corresponding to the transaction.
-    :type transactional_id: str
-    :param producer_id: Current producer id in use by the transactional id.
-    :type producer_id: int
-    :param producer_epoch: Current epoch associated with the producer id.
-    :type producer_epoch: int
-    :param group_id: The unique group identifier
-    :type group_id: str
-    """
 
     transactional_id: str
     producer_id: int
     producer_epoch: int
     group_id: str
+    api_key: ClassVar[ApiKey] = ApiKey.ADD_OFFSETS_TO_TXN
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, transactional_id: str, producer_id: int, producer_epoch: int, group_id: str):
         """
-        :return: the api key for this API: `ApiKey.ADD_OFFSETS_TO_TXN` (`ApiKey(25)`)
+        :param transactional_id: The transactional id corresponding to the transaction.
+        :type transactional_id: str
+        :param producer_id: Current producer id in use by the transactional id.
+        :type producer_id: int
+        :param producer_epoch: Current epoch associated with the producer id.
+        :type producer_epoch: int
+        :param group_id: The unique group identifier
+        :type group_id: str
         """
-        return ApiKey.ADD_OFFSETS_TO_TXN
+        self.transactional_id = transactional_id
+        self.producer_id = producer_id
+        self.producer_epoch = producer_epoch
+        self.group_id = group_id

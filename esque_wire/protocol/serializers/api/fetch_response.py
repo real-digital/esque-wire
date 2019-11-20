@@ -13,7 +13,7 @@ from ...structs.api.fetch_response import (
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     errorCodeSerializer,
@@ -36,10 +36,11 @@ abortedTransactionSchemas: Dict[int, Schema] = {
 }
 
 
-abortedTransactionSerializers: Dict[int, DataClassSerializer[AbortedTransaction]] = {
-    version: DataClassSerializer(AbortedTransaction, schema)
-    for version, schema in abortedTransactionSchemas.items()
+abortedTransactionSerializers: Dict[int, ClassSerializer[AbortedTransaction]] = {
+    version: ClassSerializer(AbortedTransaction, schema) for version, schema in abortedTransactionSchemas.items()
 }
+
+abortedTransactionSerializers[-1] = abortedTransactionSerializers[11]
 
 
 partitionHeaderSchemas: Dict[int, Schema] = {
@@ -49,10 +50,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
         ("high_watermark", int64Serializer),
         ("last_stable_offset", DummySerializer(int64Serializer.default)),
         ("log_start_offset", DummySerializer(int64Serializer.default)),
-        (
-            "aborted_transactions",
-            DummySerializer(ArraySerializer(abortedTransactionSerializers[0]).default),
-        ),
+        ("aborted_transactions", DummySerializer(ArraySerializer(abortedTransactionSerializers[-1]).default)),
         ("preferred_read_replica", DummySerializer(int32Serializer.default)),
     ],
     1: [
@@ -61,10 +59,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
         ("high_watermark", int64Serializer),
         ("last_stable_offset", DummySerializer(int64Serializer.default)),
         ("log_start_offset", DummySerializer(int64Serializer.default)),
-        (
-            "aborted_transactions",
-            DummySerializer(ArraySerializer(abortedTransactionSerializers[0]).default),
-        ),
+        ("aborted_transactions", DummySerializer(ArraySerializer(abortedTransactionSerializers[-1]).default)),
         ("preferred_read_replica", DummySerializer(int32Serializer.default)),
     ],
     2: [
@@ -73,10 +68,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
         ("high_watermark", int64Serializer),
         ("last_stable_offset", DummySerializer(int64Serializer.default)),
         ("log_start_offset", DummySerializer(int64Serializer.default)),
-        (
-            "aborted_transactions",
-            DummySerializer(ArraySerializer(abortedTransactionSerializers[0]).default),
-        ),
+        ("aborted_transactions", DummySerializer(ArraySerializer(abortedTransactionSerializers[-1]).default)),
         ("preferred_read_replica", DummySerializer(int32Serializer.default)),
     ],
     3: [
@@ -85,10 +77,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
         ("high_watermark", int64Serializer),
         ("last_stable_offset", DummySerializer(int64Serializer.default)),
         ("log_start_offset", DummySerializer(int64Serializer.default)),
-        (
-            "aborted_transactions",
-            DummySerializer(ArraySerializer(abortedTransactionSerializers[0]).default),
-        ),
+        ("aborted_transactions", DummySerializer(ArraySerializer(abortedTransactionSerializers[-1]).default)),
         ("preferred_read_replica", DummySerializer(int32Serializer.default)),
     ],
     4: [
@@ -166,126 +155,57 @@ partitionHeaderSchemas: Dict[int, Schema] = {
 }
 
 
-partitionHeaderSerializers: Dict[int, DataClassSerializer[PartitionHeader]] = {
-    version: DataClassSerializer(PartitionHeader, schema)
-    for version, schema in partitionHeaderSchemas.items()
+partitionHeaderSerializers: Dict[int, ClassSerializer[PartitionHeader]] = {
+    version: ClassSerializer(PartitionHeader, schema) for version, schema in partitionHeaderSchemas.items()
 }
+
+partitionHeaderSerializers[-1] = partitionHeaderSerializers[11]
 
 
 partitionResponseSchemas: Dict[int, Schema] = {
-    0: [
-        ("partition_header", partitionHeaderSerializers[0]),
-        ("record_set", nullableBytesSerializer),
-    ],
-    1: [
-        ("partition_header", partitionHeaderSerializers[1]),
-        ("record_set", nullableBytesSerializer),
-    ],
-    2: [
-        ("partition_header", partitionHeaderSerializers[2]),
-        ("record_set", nullableBytesSerializer),
-    ],
-    3: [
-        ("partition_header", partitionHeaderSerializers[3]),
-        ("record_set", nullableBytesSerializer),
-    ],
-    4: [
-        ("partition_header", partitionHeaderSerializers[4]),
-        ("record_set", nullableBytesSerializer),
-    ],
-    5: [
-        ("partition_header", partitionHeaderSerializers[5]),
-        ("record_set", nullableBytesSerializer),
-    ],
-    6: [
-        ("partition_header", partitionHeaderSerializers[6]),
-        ("record_set", nullableBytesSerializer),
-    ],
-    7: [
-        ("partition_header", partitionHeaderSerializers[7]),
-        ("record_set", nullableBytesSerializer),
-    ],
-    8: [
-        ("partition_header", partitionHeaderSerializers[8]),
-        ("record_set", nullableBytesSerializer),
-    ],
-    9: [
-        ("partition_header", partitionHeaderSerializers[9]),
-        ("record_set", nullableBytesSerializer),
-    ],
-    10: [
-        ("partition_header", partitionHeaderSerializers[10]),
-        ("record_set", nullableBytesSerializer),
-    ],
-    11: [
-        ("partition_header", partitionHeaderSerializers[11]),
-        ("record_set", nullableBytesSerializer),
-    ],
+    0: [("partition_header", partitionHeaderSerializers[0]), ("record_set", nullableBytesSerializer)],
+    1: [("partition_header", partitionHeaderSerializers[1]), ("record_set", nullableBytesSerializer)],
+    2: [("partition_header", partitionHeaderSerializers[2]), ("record_set", nullableBytesSerializer)],
+    3: [("partition_header", partitionHeaderSerializers[3]), ("record_set", nullableBytesSerializer)],
+    4: [("partition_header", partitionHeaderSerializers[4]), ("record_set", nullableBytesSerializer)],
+    5: [("partition_header", partitionHeaderSerializers[5]), ("record_set", nullableBytesSerializer)],
+    6: [("partition_header", partitionHeaderSerializers[6]), ("record_set", nullableBytesSerializer)],
+    7: [("partition_header", partitionHeaderSerializers[7]), ("record_set", nullableBytesSerializer)],
+    8: [("partition_header", partitionHeaderSerializers[8]), ("record_set", nullableBytesSerializer)],
+    9: [("partition_header", partitionHeaderSerializers[9]), ("record_set", nullableBytesSerializer)],
+    10: [("partition_header", partitionHeaderSerializers[10]), ("record_set", nullableBytesSerializer)],
+    11: [("partition_header", partitionHeaderSerializers[11]), ("record_set", nullableBytesSerializer)],
 }
 
 
-partitionResponseSerializers: Dict[int, DataClassSerializer[PartitionResponse]] = {
-    version: DataClassSerializer(PartitionResponse, schema)
-    for version, schema in partitionResponseSchemas.items()
+partitionResponseSerializers: Dict[int, ClassSerializer[PartitionResponse]] = {
+    version: ClassSerializer(PartitionResponse, schema) for version, schema in partitionResponseSchemas.items()
 }
+
+partitionResponseSerializers[-1] = partitionResponseSerializers[11]
 
 
 responseSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[0])),
-    ],
-    1: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[1])),
-    ],
-    2: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[2])),
-    ],
-    3: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[3])),
-    ],
-    4: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[4])),
-    ],
-    5: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[5])),
-    ],
-    6: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[6])),
-    ],
-    7: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[7])),
-    ],
-    8: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[8])),
-    ],
-    9: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[9])),
-    ],
-    10: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[10])),
-    ],
-    11: [
-        ("topic", stringSerializer),
-        ("partition_responses", ArraySerializer(partitionResponseSerializers[11])),
-    ],
+    0: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[0]))],
+    1: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[1]))],
+    2: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[2]))],
+    3: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[3]))],
+    4: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[4]))],
+    5: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[5]))],
+    6: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[6]))],
+    7: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[7]))],
+    8: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[8]))],
+    9: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[9]))],
+    10: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[10]))],
+    11: [("topic", stringSerializer), ("partition_responses", ArraySerializer(partitionResponseSerializers[11]))],
 }
 
 
-responseSerializers: Dict[int, DataClassSerializer[Response]] = {
-    version: DataClassSerializer(Response, schema)
-    for version, schema in responseSchemas.items()
+responseSerializers: Dict[int, ClassSerializer[Response]] = {
+    version: ClassSerializer(Response, schema) for version, schema in responseSchemas.items()
 }
+
+responseSerializers[-1] = responseSerializers[11]
 
 
 fetchResponseDataSchemas: Dict[int, Schema] = {
@@ -364,7 +284,8 @@ fetchResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-fetchResponseDataSerializers: Dict[int, DataClassSerializer[FetchResponseData]] = {
-    version: DataClassSerializer(FetchResponseData, schema)
-    for version, schema in fetchResponseDataSchemas.items()
+fetchResponseDataSerializers: Dict[int, ClassSerializer[FetchResponseData]] = {
+    version: ClassSerializer(FetchResponseData, schema) for version, schema in fetchResponseDataSchemas.items()
 }
+
+fetchResponseDataSerializers[-1] = fetchResponseDataSerializers[11]

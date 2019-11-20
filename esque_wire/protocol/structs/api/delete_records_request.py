@@ -1,51 +1,53 @@
-from typing import List
-from dataclasses import dataclass
+from typing import ClassVar, List
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class Partition:
-    """
-    :param partition: Topic partition id
-    :type partition: int
-    :param offset: The offset before which the messages will be deleted. -1 means high-watermark for the partition.
-    :type offset: int
-    """
 
     partition: int
     offset: int
 
+    def __init__(self, partition: int, offset: int):
+        """
+        :param partition: Topic partition id
+        :type partition: int
+        :param offset: The offset before which the messages will be deleted. -1 means high-watermark for the partition.
+        :type offset: int
+        """
+        self.partition = partition
+        self.offset = offset
 
-@dataclass
+
 class Topic:
-    """
-    :param topic: Name of topic
-    :type topic: str
-    :param partitions: None
-    :type partitions: List[Partition]
-    """
 
     topic: str
     partitions: List[Partition]
 
+    def __init__(self, topic: str, partitions: List[Partition]):
+        """
+        :param topic: Name of topic
+        :type topic: str
+        :param partitions: None
+        :type partitions: List[Partition]
+        """
+        self.topic = topic
+        self.partitions = partitions
 
-@dataclass
+
 class DeleteRecordsRequestData(RequestData):
-    """
-    :param topics: None
-    :type topics: List[Topic]
-    :param timeout: The maximum time to await a response in ms.
-    :type timeout: int
-    """
 
     topics: List[Topic]
     timeout: int
+    api_key: ClassVar[ApiKey] = ApiKey.DELETE_RECORDS
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, topics: List[Topic], timeout: int):
         """
-        :return: the api key for this API: `ApiKey.DELETE_RECORDS` (`ApiKey(21)`)
+        :param topics: None
+        :type topics: List[Topic]
+        :param timeout: The maximum time to await a response in ms.
+        :type timeout: int
         """
-        return ApiKey.DELETE_RECORDS
+        self.topics = topics
+        self.timeout = timeout

@@ -7,7 +7,7 @@ from ...structs.api.join_group_request import JoinGroupRequestData, Protocol
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     bytesSerializer,
@@ -27,10 +27,11 @@ protocolSchemas: Dict[int, Schema] = {
 }
 
 
-protocolSerializers: Dict[int, DataClassSerializer[Protocol]] = {
-    version: DataClassSerializer(Protocol, schema)
-    for version, schema in protocolSchemas.items()
+protocolSerializers: Dict[int, ClassSerializer[Protocol]] = {
+    version: ClassSerializer(Protocol, schema) for version, schema in protocolSchemas.items()
 }
+
+protocolSerializers[-1] = protocolSerializers[5]
 
 
 joinGroupRequestDataSchemas: Dict[int, Schema] = {
@@ -91,9 +92,8 @@ joinGroupRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-joinGroupRequestDataSerializers: Dict[
-    int, DataClassSerializer[JoinGroupRequestData]
-] = {
-    version: DataClassSerializer(JoinGroupRequestData, schema)
-    for version, schema in joinGroupRequestDataSchemas.items()
+joinGroupRequestDataSerializers: Dict[int, ClassSerializer[JoinGroupRequestData]] = {
+    version: ClassSerializer(JoinGroupRequestData, schema) for version, schema in joinGroupRequestDataSchemas.items()
 }
+
+joinGroupRequestDataSerializers[-1] = joinGroupRequestDataSerializers[5]

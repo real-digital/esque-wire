@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.incremental_alter_configs_request import (
-    Config,
-    IncrementalAlterConfigsRequestData,
-    Resource,
-)
+from ...structs.api.incremental_alter_configs_request import Config, IncrementalAlterConfigsRequestData, Resource
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     booleanSerializer,
     int8Serializer,
@@ -22,18 +18,15 @@ from ._main_serializers import (
 
 
 configSchemas: Dict[int, Schema] = {
-    0: [
-        ("name", stringSerializer),
-        ("config_operation", int8Serializer),
-        ("value", nullableStringSerializer),
-    ]
+    0: [("name", stringSerializer), ("config_operation", int8Serializer), ("value", nullableStringSerializer)]
 }
 
 
-configSerializers: Dict[int, DataClassSerializer[Config]] = {
-    version: DataClassSerializer(Config, schema)
-    for version, schema in configSchemas.items()
+configSerializers: Dict[int, ClassSerializer[Config]] = {
+    version: ClassSerializer(Config, schema) for version, schema in configSchemas.items()
 }
+
+configSerializers[-1] = configSerializers[0]
 
 
 resourceSchemas: Dict[int, Schema] = {
@@ -45,23 +38,21 @@ resourceSchemas: Dict[int, Schema] = {
 }
 
 
-resourceSerializers: Dict[int, DataClassSerializer[Resource]] = {
-    version: DataClassSerializer(Resource, schema)
-    for version, schema in resourceSchemas.items()
+resourceSerializers: Dict[int, ClassSerializer[Resource]] = {
+    version: ClassSerializer(Resource, schema) for version, schema in resourceSchemas.items()
 }
+
+resourceSerializers[-1] = resourceSerializers[0]
 
 
 incrementalAlterConfigsRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("resources", ArraySerializer(resourceSerializers[0])),
-        ("validate_only", booleanSerializer),
-    ]
+    0: [("resources", ArraySerializer(resourceSerializers[0])), ("validate_only", booleanSerializer)]
 }
 
 
-incrementalAlterConfigsRequestDataSerializers: Dict[
-    int, DataClassSerializer[IncrementalAlterConfigsRequestData]
-] = {
-    version: DataClassSerializer(IncrementalAlterConfigsRequestData, schema)
+incrementalAlterConfigsRequestDataSerializers: Dict[int, ClassSerializer[IncrementalAlterConfigsRequestData]] = {
+    version: ClassSerializer(IncrementalAlterConfigsRequestData, schema)
     for version, schema in incrementalAlterConfigsRequestDataSchemas.items()
 }
+
+incrementalAlterConfigsRequestDataSerializers[-1] = incrementalAlterConfigsRequestDataSerializers[0]

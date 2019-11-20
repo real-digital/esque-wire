@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.describe_acls_response import (
-    Acl,
-    DescribeAclsResponseData,
-    Resource,
-)
+from ...structs.api.describe_acls_response import Acl, DescribeAclsResponseData, Resource
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     aclOperationSerializer,
@@ -41,9 +37,11 @@ aclSchemas: Dict[int, Schema] = {
 }
 
 
-aclSerializers: Dict[int, DataClassSerializer[Acl]] = {
-    version: DataClassSerializer(Acl, schema) for version, schema in aclSchemas.items()
+aclSerializers: Dict[int, ClassSerializer[Acl]] = {
+    version: ClassSerializer(Acl, schema) for version, schema in aclSchemas.items()
 }
+
+aclSerializers[-1] = aclSerializers[1]
 
 
 resourceSchemas: Dict[int, Schema] = {
@@ -62,10 +60,11 @@ resourceSchemas: Dict[int, Schema] = {
 }
 
 
-resourceSerializers: Dict[int, DataClassSerializer[Resource]] = {
-    version: DataClassSerializer(Resource, schema)
-    for version, schema in resourceSchemas.items()
+resourceSerializers: Dict[int, ClassSerializer[Resource]] = {
+    version: ClassSerializer(Resource, schema) for version, schema in resourceSchemas.items()
 }
+
+resourceSerializers[-1] = resourceSerializers[1]
 
 
 describeAclsResponseDataSchemas: Dict[int, Schema] = {
@@ -84,9 +83,9 @@ describeAclsResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-describeAclsResponseDataSerializers: Dict[
-    int, DataClassSerializer[DescribeAclsResponseData]
-] = {
-    version: DataClassSerializer(DescribeAclsResponseData, schema)
+describeAclsResponseDataSerializers: Dict[int, ClassSerializer[DescribeAclsResponseData]] = {
+    version: ClassSerializer(DescribeAclsResponseData, schema)
     for version, schema in describeAclsResponseDataSchemas.items()
 }
+
+describeAclsResponseDataSerializers[-1] = describeAclsResponseDataSerializers[1]

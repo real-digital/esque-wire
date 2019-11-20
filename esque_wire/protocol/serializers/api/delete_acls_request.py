@@ -7,7 +7,7 @@ from ...structs.api.delete_acls_request import DeleteAclsRequestData, Filter
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     aclOperationSerializer,
@@ -40,10 +40,11 @@ filterSchemas: Dict[int, Schema] = {
 }
 
 
-filterSerializers: Dict[int, DataClassSerializer[Filter]] = {
-    version: DataClassSerializer(Filter, schema)
-    for version, schema in filterSchemas.items()
+filterSerializers: Dict[int, ClassSerializer[Filter]] = {
+    version: ClassSerializer(Filter, schema) for version, schema in filterSchemas.items()
 }
+
+filterSerializers[-1] = filterSerializers[1]
 
 
 deleteAclsRequestDataSchemas: Dict[int, Schema] = {
@@ -52,9 +53,8 @@ deleteAclsRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-deleteAclsRequestDataSerializers: Dict[
-    int, DataClassSerializer[DeleteAclsRequestData]
-] = {
-    version: DataClassSerializer(DeleteAclsRequestData, schema)
-    for version, schema in deleteAclsRequestDataSchemas.items()
+deleteAclsRequestDataSerializers: Dict[int, ClassSerializer[DeleteAclsRequestData]] = {
+    version: ClassSerializer(DeleteAclsRequestData, schema) for version, schema in deleteAclsRequestDataSchemas.items()
 }
+
+deleteAclsRequestDataSerializers[-1] = deleteAclsRequestDataSerializers[1]

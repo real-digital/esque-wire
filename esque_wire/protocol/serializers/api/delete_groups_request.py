@@ -5,12 +5,7 @@
 from typing import Dict
 from ...structs.api.delete_groups_request import DeleteGroupsRequestData
 
-from ._main_serializers import (
-    ArraySerializer,
-    DataClassSerializer,
-    Schema,
-    stringSerializer,
-)
+from ._main_serializers import ArraySerializer, ClassSerializer, Schema, stringSerializer
 
 
 deleteGroupsRequestDataSchemas: Dict[int, Schema] = {
@@ -19,9 +14,9 @@ deleteGroupsRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-deleteGroupsRequestDataSerializers: Dict[
-    int, DataClassSerializer[DeleteGroupsRequestData]
-] = {
-    version: DataClassSerializer(DeleteGroupsRequestData, schema)
+deleteGroupsRequestDataSerializers: Dict[int, ClassSerializer[DeleteGroupsRequestData]] = {
+    version: ClassSerializer(DeleteGroupsRequestData, schema)
     for version, schema in deleteGroupsRequestDataSchemas.items()
 }
+
+deleteGroupsRequestDataSerializers[-1] = deleteGroupsRequestDataSerializers[1]

@@ -28,22 +28,14 @@ class BrokerConnection:
     def _query_api_versions(self) -> None:
         request = self.send(ApiVersionsRequestData())
         all_server_supported_versions = {
-            ApiKey(support_range.api_key): support_range
-            for support_range in request.response_data.api_versions
+            ApiKey(support_range.api_key): support_range for support_range in request.response_data.api_versions
         }
         server_api_keys = set(all_server_supported_versions)
         client_api_keys = set(SUPPORTED_API_VERSIONS)
         for api_key in server_api_keys | client_api_keys:
-            client_supported_version = SUPPORTED_API_VERSIONS.get(
-                api_key, ApiVersion(api_key, -2, -1)
-            )
-            server_supported_version = all_server_supported_versions.get(
-                api_key, ApiVersion(api_key, -4, -3)
-            )
-            effective_version = min(
-                client_supported_version.max_version,
-                server_supported_version.max_version,
-            )
+            client_supported_version = SUPPORTED_API_VERSIONS.get(api_key, ApiVersion(api_key, -2, -1))
+            server_supported_version = all_server_supported_versions.get(api_key, ApiVersion(api_key, -4, -3))
+            effective_version = min(client_supported_version.max_version, server_supported_version.max_version)
 
             # TODO messages say something like server only supports api ... up to version -4
             #  better say server doesn't support api ... PERIOD
@@ -89,9 +81,7 @@ class BrokerConnection:
         return self.send_many([request_data])[0]
 
     def send_many(self, request_data_to_send: List[RequestData]) -> List[Request]:
-        requests_to_send = [
-            self._request_from_data(data) for data in request_data_to_send
-        ]
+        requests_to_send = [self._request_from_data(data) for data in request_data_to_send]
 
         answered_requests: List[Request] = []
 
@@ -123,14 +113,9 @@ class BrokerConnection:
             pass
 
     def _request_from_data(self, request_data: RequestData) -> Request:
-        api_key = request_data.api_key()
+        api_key = request_data.api_key
         api_version = self.api_versions[api_key]
-        return Request.from_request_data(
-            request_data,
-            api_version,
-            next(self._correlation_id_counter),
-            self.client_id,
-        )
+        return Request.from_request_data(request_data, api_version, next(self._correlation_id_counter), self.client_id)
 
     def close(self):
         self.kafka_io.close()
@@ -144,9 +129,7 @@ class BrokerConnection:
 
 class KafkaIO:
     def __init__(self, in_stream: BinaryIO, out_stream: BinaryIO):
-        self._in_flight: "queue.Queue[Request]" = queue.Queue(
-            maxsize=10
-        )  # TODO make this configurable
+        self._in_flight: "queue.Queue[Request]" = queue.Queue(maxsize=10)  # TODO make this configurable
         self._in_stream: BinaryIO = in_stream
         self._out_stream: BinaryIO = out_stream
 

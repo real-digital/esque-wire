@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.write_txn_markers_request import (
-    Topic,
-    TransactionMarker,
-    WriteTxnMarkersRequestData,
-)
+from ...structs.api.write_txn_markers_request import Topic, TransactionMarker, WriteTxnMarkersRequestData
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     booleanSerializer,
     int16Serializer,
@@ -21,15 +17,14 @@ from ._main_serializers import (
 )
 
 
-topicSchemas: Dict[int, Schema] = {
-    0: [("topic", stringSerializer), ("partitions", ArraySerializer(int32Serializer))]
-}
+topicSchemas: Dict[int, Schema] = {0: [("topic", stringSerializer), ("partitions", ArraySerializer(int32Serializer))]}
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[0]
 
 
 transactionMarkerSchemas: Dict[int, Schema] = {
@@ -43,10 +38,11 @@ transactionMarkerSchemas: Dict[int, Schema] = {
 }
 
 
-transactionMarkerSerializers: Dict[int, DataClassSerializer[TransactionMarker]] = {
-    version: DataClassSerializer(TransactionMarker, schema)
-    for version, schema in transactionMarkerSchemas.items()
+transactionMarkerSerializers: Dict[int, ClassSerializer[TransactionMarker]] = {
+    version: ClassSerializer(TransactionMarker, schema) for version, schema in transactionMarkerSchemas.items()
 }
+
+transactionMarkerSerializers[-1] = transactionMarkerSerializers[0]
 
 
 writeTxnMarkersRequestDataSchemas: Dict[int, Schema] = {
@@ -54,9 +50,9 @@ writeTxnMarkersRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-writeTxnMarkersRequestDataSerializers: Dict[
-    int, DataClassSerializer[WriteTxnMarkersRequestData]
-] = {
-    version: DataClassSerializer(WriteTxnMarkersRequestData, schema)
+writeTxnMarkersRequestDataSerializers: Dict[int, ClassSerializer[WriteTxnMarkersRequestData]] = {
+    version: ClassSerializer(WriteTxnMarkersRequestData, schema)
     for version, schema in writeTxnMarkersRequestDataSchemas.items()
 }
+
+writeTxnMarkersRequestDataSerializers[-1] = writeTxnMarkersRequestDataSerializers[0]

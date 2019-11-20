@@ -1,48 +1,49 @@
-from typing import List
-from dataclasses import dataclass
+from typing import ClassVar, List
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class Topic:
-    """
-    :param topic: Name of topic
-    :type topic: str
-    :param partitions: List of partition ids of the topic.
-    :type partitions: List[int]
-    """
 
     topic: str
     partitions: List[int]
 
+    def __init__(self, topic: str, partitions: List[int]):
+        """
+        :param topic: Name of topic
+        :type topic: str
+        :param partitions: List of partition ids of the topic.
+        :type partitions: List[int]
+        """
+        self.topic = topic
+        self.partitions = partitions
 
-@dataclass
+
 class LogDir:
-    """
-    :param log_dir: The absolute log directory path.
-    :type log_dir: str
-    :param topics: None
-    :type topics: List[Topic]
-    """
 
     log_dir: str
     topics: List[Topic]
 
+    def __init__(self, log_dir: str, topics: List[Topic]):
+        """
+        :param log_dir: The absolute log directory path.
+        :type log_dir: str
+        :param topics: None
+        :type topics: List[Topic]
+        """
+        self.log_dir = log_dir
+        self.topics = topics
 
-@dataclass
+
 class AlterReplicaLogDirsRequestData(RequestData):
-    """
-    :param log_dirs: None
-    :type log_dirs: List[LogDir]
-    """
 
     log_dirs: List[LogDir]
+    api_key: ClassVar[ApiKey] = ApiKey.ALTER_REPLICA_LOG_DIRS
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, log_dirs: List[LogDir]):
         """
-        :return: the api key for this API: `ApiKey.ALTER_REPLICA_LOG_DIRS` (`ApiKey(34)`)
+        :param log_dirs: None
+        :type log_dirs: List[LogDir]
         """
-        return ApiKey.ALTER_REPLICA_LOG_DIRS
+        self.log_dirs = log_dirs

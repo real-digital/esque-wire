@@ -7,7 +7,7 @@ from ...structs.api.stop_replica_request import Partition, StopReplicaRequestDat
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     booleanSerializer,
@@ -23,17 +23,15 @@ partitionSchemas: Dict[int, Schema] = {
         (None, int32Serializer),
         ("partition_ids", DummySerializer(ArraySerializer(int32Serializer).default)),
     ],
-    1: [
-        ("topic", stringSerializer),
-        ("partition_ids", ArraySerializer(int32Serializer)),
-    ],
+    1: [("topic", stringSerializer), ("partition_ids", ArraySerializer(int32Serializer))],
 }
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[1]
 
 
 stopReplicaRequestDataSchemas: Dict[int, Schema] = {
@@ -54,9 +52,9 @@ stopReplicaRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-stopReplicaRequestDataSerializers: Dict[
-    int, DataClassSerializer[StopReplicaRequestData]
-] = {
-    version: DataClassSerializer(StopReplicaRequestData, schema)
+stopReplicaRequestDataSerializers: Dict[int, ClassSerializer[StopReplicaRequestData]] = {
+    version: ClassSerializer(StopReplicaRequestData, schema)
     for version, schema in stopReplicaRequestDataSchemas.items()
 }
+
+stopReplicaRequestDataSerializers[-1] = stopReplicaRequestDataSerializers[1]

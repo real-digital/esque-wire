@@ -6,7 +6,7 @@ from typing import Dict
 from ...structs.api.find_coordinator_response import FindCoordinatorResponseData
 
 from ._main_serializers import (
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     errorCodeSerializer,
@@ -44,9 +44,9 @@ findCoordinatorResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-findCoordinatorResponseDataSerializers: Dict[
-    int, DataClassSerializer[FindCoordinatorResponseData]
-] = {
-    version: DataClassSerializer(FindCoordinatorResponseData, schema)
+findCoordinatorResponseDataSerializers: Dict[int, ClassSerializer[FindCoordinatorResponseData]] = {
+    version: ClassSerializer(FindCoordinatorResponseData, schema)
     for version, schema in findCoordinatorResponseDataSchemas.items()
 }
+
+findCoordinatorResponseDataSerializers[-1] = findCoordinatorResponseDataSerializers[2]

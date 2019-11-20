@@ -183,7 +183,7 @@ class DummyTypeDef(TypeDef):
         if self.has_default:
             default_def = repr(self.default)
         else:
-            default_def = self.element_type.serializer_variable_name()
+            default_def = self.element_type.serializer_variable_name(-1)
             default_def += ".default"
         return f"DummySerializer({default_def})"
 
@@ -228,7 +228,7 @@ class StructTypeDef(TypeDef):
     def serializer_dict_name(self, include_type=False) -> str:
         name = f"{ lower_first(self.name) }Serializers"
         if include_type:
-            name += f": Dict[int, DataClassSerializer[{self.name}]]"
+            name += f": Dict[int, ClassSerializer[{self.name}]]"
         return name
 
     def serializer_variable_name(self, version=0) -> str:
@@ -236,12 +236,12 @@ class StructTypeDef(TypeDef):
 
     @property
     def serializer_import_name(self) -> str:
-        return "DataClassSerializer"
+        return "ClassSerializer"
 
     def serializer_definition(self, version=0, schema=None) -> str:
         if schema is None:
             schema = self.schema_variable_name(version)
-        return f"DataClassSerializer({self.name}, {schema})"
+        return f"ClassSerializer({self.name}, {schema})"
 
     def make_compatible_to(self, other_struct: "StructTypeDef") -> None:
         self._skip_extra_fields(other_struct)
@@ -449,7 +449,7 @@ class Api:
         return sorted(serializers - {None})
 
     def get_type_imports(self, direction: Direction) -> List[str]:
-        type_hints = set()
+        type_hints = {"ClassVar"}
         for version_pair in self.api_versions.values():
             schema = version_pair[direction]
             for field_type in schema.schema.traverse_types():

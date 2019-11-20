@@ -7,7 +7,7 @@ from ...structs.api.list_groups_response import Group, ListGroupsResponseData
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     errorCodeSerializer,
@@ -23,10 +23,11 @@ groupSchemas: Dict[int, Schema] = {
 }
 
 
-groupSerializers: Dict[int, DataClassSerializer[Group]] = {
-    version: DataClassSerializer(Group, schema)
-    for version, schema in groupSchemas.items()
+groupSerializers: Dict[int, ClassSerializer[Group]] = {
+    version: ClassSerializer(Group, schema) for version, schema in groupSchemas.items()
 }
+
+groupSerializers[-1] = groupSerializers[2]
 
 
 listGroupsResponseDataSchemas: Dict[int, Schema] = {
@@ -48,9 +49,9 @@ listGroupsResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-listGroupsResponseDataSerializers: Dict[
-    int, DataClassSerializer[ListGroupsResponseData]
-] = {
-    version: DataClassSerializer(ListGroupsResponseData, schema)
+listGroupsResponseDataSerializers: Dict[int, ClassSerializer[ListGroupsResponseData]] = {
+    version: ClassSerializer(ListGroupsResponseData, schema)
     for version, schema in listGroupsResponseDataSchemas.items()
 }
+
+listGroupsResponseDataSerializers[-1] = listGroupsResponseDataSerializers[2]

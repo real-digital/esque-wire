@@ -1,35 +1,33 @@
-from typing import List
-from dataclasses import dataclass
+from typing import ClassVar, List
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class Owner:
-    """
-    :param principal_type: principalType of the Kafka principal
-    :type principal_type: str
-    :param name: name of the Kafka principal
-    :type name: str
-    """
 
     principal_type: str
     name: str
 
+    def __init__(self, principal_type: str, name: str):
+        """
+        :param principal_type: principalType of the Kafka principal
+        :type principal_type: str
+        :param name: name of the Kafka principal
+        :type name: str
+        """
+        self.principal_type = principal_type
+        self.name = name
 
-@dataclass
+
 class DescribeDelegationTokenRequestData(RequestData):
-    """
-    :param owners: An array of token owners.
-    :type owners: List[Owner]
-    """
 
     owners: List[Owner]
+    api_key: ClassVar[ApiKey] = ApiKey.DESCRIBE_DELEGATION_TOKEN
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, owners: List[Owner]):
         """
-        :return: the api key for this API: `ApiKey.DESCRIBE_DELEGATION_TOKEN` (`ApiKey(41)`)
+        :param owners: An array of token owners.
+        :type owners: List[Owner]
         """
-        return ApiKey.DESCRIBE_DELEGATION_TOKEN
+        self.owners = owners

@@ -1,4 +1,4 @@
-from .generic import Schema, DataClassSerializer
+from .generic import Schema, ClassSerializer
 from .constants import apiKeySerializer
 from .primitive import int16Serializer, int32Serializer, nullableStringSerializer
 from ..structs.header import RequestHeader, ResponseHeader
@@ -10,8 +10,8 @@ requestHeaderSchema: Schema = [
     ("client_id", nullableStringSerializer),
 ]
 
-requestHeaderSerializer = DataClassSerializer(RequestHeader, requestHeaderSchema)
+requestHeaderSerializer = ClassSerializer(RequestHeader, requestHeaderSchema)
 
 responseHeaderSchema: Schema = [("correlation_id", int32Serializer)]
 
-responseHeaderSerializer = DataClassSerializer(ResponseHeader, responseHeaderSchema)
+responseHeaderSerializer = ClassSerializer(ResponseHeader, responseHeaderSchema)

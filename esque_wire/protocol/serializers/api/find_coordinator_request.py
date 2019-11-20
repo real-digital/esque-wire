@@ -5,28 +5,19 @@
 from typing import Dict
 from ...structs.api.find_coordinator_request import FindCoordinatorRequestData
 
-from ._main_serializers import (
-    DataClassSerializer,
-    DummySerializer,
-    Schema,
-    int8Serializer,
-    stringSerializer,
-)
+from ._main_serializers import ClassSerializer, DummySerializer, Schema, int8Serializer, stringSerializer
 
 
 findCoordinatorRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("key", stringSerializer),
-        ("key_type", DummySerializer(int8Serializer.default)),
-    ],
+    0: [("key", stringSerializer), ("key_type", DummySerializer(int8Serializer.default))],
     1: [("key", stringSerializer), ("key_type", int8Serializer)],
     2: [("key", stringSerializer), ("key_type", int8Serializer)],
 }
 
 
-findCoordinatorRequestDataSerializers: Dict[
-    int, DataClassSerializer[FindCoordinatorRequestData]
-] = {
-    version: DataClassSerializer(FindCoordinatorRequestData, schema)
+findCoordinatorRequestDataSerializers: Dict[int, ClassSerializer[FindCoordinatorRequestData]] = {
+    version: ClassSerializer(FindCoordinatorRequestData, schema)
     for version, schema in findCoordinatorRequestDataSchemas.items()
 }
+
+findCoordinatorRequestDataSerializers[-1] = findCoordinatorRequestDataSerializers[2]

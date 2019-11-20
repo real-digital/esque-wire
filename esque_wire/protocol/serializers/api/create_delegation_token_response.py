@@ -3,13 +3,10 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.create_delegation_token_response import (
-    CreateDelegationTokenResponseData,
-    Owner,
-)
+from ...structs.api.create_delegation_token_response import CreateDelegationTokenResponseData, Owner
 
 from ._main_serializers import (
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     bytesSerializer,
     errorCodeSerializer,
@@ -25,10 +22,11 @@ ownerSchemas: Dict[int, Schema] = {
 }
 
 
-ownerSerializers: Dict[int, DataClassSerializer[Owner]] = {
-    version: DataClassSerializer(Owner, schema)
-    for version, schema in ownerSchemas.items()
+ownerSerializers: Dict[int, ClassSerializer[Owner]] = {
+    version: ClassSerializer(Owner, schema) for version, schema in ownerSchemas.items()
 }
+
+ownerSerializers[-1] = ownerSerializers[1]
 
 
 createDelegationTokenResponseDataSchemas: Dict[int, Schema] = {
@@ -55,9 +53,9 @@ createDelegationTokenResponseDataSchemas: Dict[int, Schema] = {
 }
 
 
-createDelegationTokenResponseDataSerializers: Dict[
-    int, DataClassSerializer[CreateDelegationTokenResponseData]
-] = {
-    version: DataClassSerializer(CreateDelegationTokenResponseData, schema)
+createDelegationTokenResponseDataSerializers: Dict[int, ClassSerializer[CreateDelegationTokenResponseData]] = {
+    version: ClassSerializer(CreateDelegationTokenResponseData, schema)
     for version, schema in createDelegationTokenResponseDataSchemas.items()
 }
+
+createDelegationTokenResponseDataSerializers[-1] = createDelegationTokenResponseDataSerializers[1]

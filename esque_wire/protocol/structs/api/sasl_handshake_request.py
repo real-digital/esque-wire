@@ -1,21 +1,17 @@
-from dataclasses import dataclass
+from typing import ClassVar
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class SaslHandshakeRequestData(RequestData):
-    """
-    :param mechanism: The SASL mechanism chosen by the client.
-    :type mechanism: str
-    """
 
     mechanism: str
+    api_key: ClassVar[ApiKey] = ApiKey.SASL_HANDSHAKE
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    def __init__(self, mechanism: str):
         """
-        :return: the api key for this API: `ApiKey.SASL_HANDSHAKE` (`ApiKey(17)`)
+        :param mechanism: The SASL mechanism chosen by the client.
+        :type mechanism: str
         """
-        return ApiKey.SASL_HANDSHAKE
+        self.mechanism = mechanism

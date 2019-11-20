@@ -3,16 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.leader_and_isr_request import (
-    LeaderAndIsrRequestData,
-    LiveLeader,
-    PartitionState,
-    TopicState,
-)
+from ...structs.api.leader_and_isr_request import LeaderAndIsrRequestData, LiveLeader, PartitionState, TopicState
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     booleanSerializer,
@@ -29,10 +24,11 @@ liveLeaderSchemas: Dict[int, Schema] = {
 }
 
 
-liveLeaderSerializers: Dict[int, DataClassSerializer[LiveLeader]] = {
-    version: DataClassSerializer(LiveLeader, schema)
-    for version, schema in liveLeaderSchemas.items()
+liveLeaderSerializers: Dict[int, ClassSerializer[LiveLeader]] = {
+    version: ClassSerializer(LiveLeader, schema) for version, schema in liveLeaderSchemas.items()
 }
+
+liveLeaderSerializers[-1] = liveLeaderSerializers[2]
 
 
 partitionStateSchemas: Dict[int, Schema] = {
@@ -71,24 +67,23 @@ partitionStateSchemas: Dict[int, Schema] = {
 }
 
 
-partitionStateSerializers: Dict[int, DataClassSerializer[PartitionState]] = {
-    version: DataClassSerializer(PartitionState, schema)
-    for version, schema in partitionStateSchemas.items()
+partitionStateSerializers: Dict[int, ClassSerializer[PartitionState]] = {
+    version: ClassSerializer(PartitionState, schema) for version, schema in partitionStateSchemas.items()
 }
+
+partitionStateSerializers[-1] = partitionStateSerializers[2]
 
 
 topicStateSchemas: Dict[int, Schema] = {
-    2: [
-        ("topic", stringSerializer),
-        ("partition_states", ArraySerializer(partitionStateSerializers[2])),
-    ]
+    2: [("topic", stringSerializer), ("partition_states", ArraySerializer(partitionStateSerializers[2]))]
 }
 
 
-topicStateSerializers: Dict[int, DataClassSerializer[TopicState]] = {
-    version: DataClassSerializer(TopicState, schema)
-    for version, schema in topicStateSchemas.items()
+topicStateSerializers: Dict[int, ClassSerializer[TopicState]] = {
+    version: ClassSerializer(TopicState, schema) for version, schema in topicStateSchemas.items()
 }
+
+topicStateSerializers[-1] = topicStateSerializers[2]
 
 
 leaderAndIsrRequestDataSchemas: Dict[int, Schema] = {
@@ -98,10 +93,7 @@ leaderAndIsrRequestDataSchemas: Dict[int, Schema] = {
         (None, ArraySerializer(partitionStateSerializers[0])),
         ("live_leaders", ArraySerializer(liveLeaderSerializers[0])),
         ("broker_epoch", DummySerializer(int64Serializer.default)),
-        (
-            "topic_states",
-            DummySerializer(ArraySerializer(topicStateSerializers[0]).default),
-        ),
+        ("topic_states", DummySerializer(ArraySerializer(topicStateSerializers[-1]).default)),
     ],
     1: [
         ("controller_id", int32Serializer),
@@ -109,10 +101,7 @@ leaderAndIsrRequestDataSchemas: Dict[int, Schema] = {
         (None, ArraySerializer(partitionStateSerializers[1])),
         ("live_leaders", ArraySerializer(liveLeaderSerializers[1])),
         ("broker_epoch", DummySerializer(int64Serializer.default)),
-        (
-            "topic_states",
-            DummySerializer(ArraySerializer(topicStateSerializers[0]).default),
-        ),
+        ("topic_states", DummySerializer(ArraySerializer(topicStateSerializers[-1]).default)),
     ],
     2: [
         ("controller_id", int32Serializer),
@@ -124,9 +113,9 @@ leaderAndIsrRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-leaderAndIsrRequestDataSerializers: Dict[
-    int, DataClassSerializer[LeaderAndIsrRequestData]
-] = {
-    version: DataClassSerializer(LeaderAndIsrRequestData, schema)
+leaderAndIsrRequestDataSerializers: Dict[int, ClassSerializer[LeaderAndIsrRequestData]] = {
+    version: ClassSerializer(LeaderAndIsrRequestData, schema)
     for version, schema in leaderAndIsrRequestDataSchemas.items()
 }
+
+leaderAndIsrRequestDataSerializers[-1] = leaderAndIsrRequestDataSerializers[2]

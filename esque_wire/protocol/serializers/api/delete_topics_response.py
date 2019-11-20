@@ -7,7 +7,7 @@ from ...structs.api.delete_topics_response import DeleteTopicsResponseData, Resp
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     errorCodeSerializer,
@@ -24,10 +24,11 @@ responseSchemas: Dict[int, Schema] = {
 }
 
 
-responseSerializers: Dict[int, DataClassSerializer[Response]] = {
-    version: DataClassSerializer(Response, schema)
-    for version, schema in responseSchemas.items()
+responseSerializers: Dict[int, ClassSerializer[Response]] = {
+    version: ClassSerializer(Response, schema) for version, schema in responseSchemas.items()
 }
+
+responseSerializers[-1] = responseSerializers[3]
 
 
 deleteTopicsResponseDataSchemas: Dict[int, Schema] = {
@@ -35,24 +36,15 @@ deleteTopicsResponseDataSchemas: Dict[int, Schema] = {
         ("responses", ArraySerializer(responseSerializers[0])),
         ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
-    1: [
-        ("throttle_time_ms", int32Serializer),
-        ("responses", ArraySerializer(responseSerializers[1])),
-    ],
-    2: [
-        ("throttle_time_ms", int32Serializer),
-        ("responses", ArraySerializer(responseSerializers[2])),
-    ],
-    3: [
-        ("throttle_time_ms", int32Serializer),
-        ("responses", ArraySerializer(responseSerializers[3])),
-    ],
+    1: [("throttle_time_ms", int32Serializer), ("responses", ArraySerializer(responseSerializers[1]))],
+    2: [("throttle_time_ms", int32Serializer), ("responses", ArraySerializer(responseSerializers[2]))],
+    3: [("throttle_time_ms", int32Serializer), ("responses", ArraySerializer(responseSerializers[3]))],
 }
 
 
-deleteTopicsResponseDataSerializers: Dict[
-    int, DataClassSerializer[DeleteTopicsResponseData]
-] = {
-    version: DataClassSerializer(DeleteTopicsResponseData, schema)
+deleteTopicsResponseDataSerializers: Dict[int, ClassSerializer[DeleteTopicsResponseData]] = {
+    version: ClassSerializer(DeleteTopicsResponseData, schema)
     for version, schema in deleteTopicsResponseDataSchemas.items()
 }
+
+deleteTopicsResponseDataSerializers[-1] = deleteTopicsResponseDataSerializers[3]

@@ -7,7 +7,7 @@ from ...structs.api.create_topics_response import CreateTopicsResponseData, Topi
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     errorCodeSerializer,
@@ -23,28 +23,17 @@ topicSchemas: Dict[int, Schema] = {
         ("error_code", errorCodeSerializer),
         ("error_message", DummySerializer(nullableStringSerializer.default)),
     ],
-    1: [
-        ("name", stringSerializer),
-        ("error_code", errorCodeSerializer),
-        ("error_message", nullableStringSerializer),
-    ],
-    2: [
-        ("name", stringSerializer),
-        ("error_code", errorCodeSerializer),
-        ("error_message", nullableStringSerializer),
-    ],
-    3: [
-        ("name", stringSerializer),
-        ("error_code", errorCodeSerializer),
-        ("error_message", nullableStringSerializer),
-    ],
+    1: [("name", stringSerializer), ("error_code", errorCodeSerializer), ("error_message", nullableStringSerializer)],
+    2: [("name", stringSerializer), ("error_code", errorCodeSerializer), ("error_message", nullableStringSerializer)],
+    3: [("name", stringSerializer), ("error_code", errorCodeSerializer), ("error_message", nullableStringSerializer)],
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[3]
 
 
 createTopicsResponseDataSchemas: Dict[int, Schema] = {
@@ -56,20 +45,14 @@ createTopicsResponseDataSchemas: Dict[int, Schema] = {
         ("topics", ArraySerializer(topicSerializers[1])),
         ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
-    2: [
-        ("throttle_time_ms", int32Serializer),
-        ("topics", ArraySerializer(topicSerializers[2])),
-    ],
-    3: [
-        ("throttle_time_ms", int32Serializer),
-        ("topics", ArraySerializer(topicSerializers[3])),
-    ],
+    2: [("throttle_time_ms", int32Serializer), ("topics", ArraySerializer(topicSerializers[2]))],
+    3: [("throttle_time_ms", int32Serializer), ("topics", ArraySerializer(topicSerializers[3]))],
 }
 
 
-createTopicsResponseDataSerializers: Dict[
-    int, DataClassSerializer[CreateTopicsResponseData]
-] = {
-    version: DataClassSerializer(CreateTopicsResponseData, schema)
+createTopicsResponseDataSerializers: Dict[int, ClassSerializer[CreateTopicsResponseData]] = {
+    version: ClassSerializer(CreateTopicsResponseData, schema)
     for version, schema in createTopicsResponseDataSchemas.items()
 }
+
+createTopicsResponseDataSerializers[-1] = createTopicsResponseDataSerializers[3]

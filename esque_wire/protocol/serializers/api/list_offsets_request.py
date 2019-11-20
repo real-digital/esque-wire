@@ -7,7 +7,7 @@ from ...structs.api.list_offsets_request import ListOffsetsRequestData, Partitio
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     DummySerializer,
     Schema,
     int32Serializer,
@@ -39,57 +39,33 @@ partitionSchemas: Dict[int, Schema] = {
         ("timestamp", int64Serializer),
         ("current_leader_epoch", DummySerializer(int32Serializer.default)),
     ],
-    4: [
-        ("partition", int32Serializer),
-        ("current_leader_epoch", int32Serializer),
-        ("timestamp", int64Serializer),
-    ],
-    5: [
-        ("partition", int32Serializer),
-        ("current_leader_epoch", int32Serializer),
-        ("timestamp", int64Serializer),
-    ],
+    4: [("partition", int32Serializer), ("current_leader_epoch", int32Serializer), ("timestamp", int64Serializer)],
+    5: [("partition", int32Serializer), ("current_leader_epoch", int32Serializer), ("timestamp", int64Serializer)],
 }
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[5]
 
 
 topicSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[0])),
-    ],
-    1: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[1])),
-    ],
-    2: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[2])),
-    ],
-    3: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[3])),
-    ],
-    4: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[4])),
-    ],
-    5: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[5])),
-    ],
+    0: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[0]))],
+    1: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[1]))],
+    2: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[2]))],
+    3: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[3]))],
+    4: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[4]))],
+    5: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[5]))],
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[5]
 
 
 listOffsetsRequestDataSchemas: Dict[int, Schema] = {
@@ -126,9 +102,9 @@ listOffsetsRequestDataSchemas: Dict[int, Schema] = {
 }
 
 
-listOffsetsRequestDataSerializers: Dict[
-    int, DataClassSerializer[ListOffsetsRequestData]
-] = {
-    version: DataClassSerializer(ListOffsetsRequestData, schema)
+listOffsetsRequestDataSerializers: Dict[int, ClassSerializer[ListOffsetsRequestData]] = {
+    version: ClassSerializer(ListOffsetsRequestData, schema)
     for version, schema in listOffsetsRequestDataSchemas.items()
 }
+
+listOffsetsRequestDataSerializers[-1] = listOffsetsRequestDataSerializers[5]

@@ -1,17 +1,13 @@
-from dataclasses import dataclass
+from typing import ClassVar
 
 from ...constants import ApiKey
 from ..base import RequestData
 
 
-@dataclass
 class ApiVersionsRequestData(RequestData):
-    """
-    """
 
-    @staticmethod
-    def api_key() -> ApiKey:
+    api_key: ClassVar[ApiKey] = ApiKey.API_VERSIONS
+
+    def __init__(self):
         """
-        :return: the api key for this API: `ApiKey.API_VERSIONS` (`ApiKey(18)`)
         """
-        return ApiKey.API_VERSIONS

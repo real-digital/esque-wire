@@ -3,15 +3,11 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.delete_records_response import (
-    DeleteRecordsResponseData,
-    Partition,
-    Topic,
-)
+from ...structs.api.delete_records_response import DeleteRecordsResponseData, Partition, Topic
 
 from ._main_serializers import (
     ArraySerializer,
-    DataClassSerializer,
+    ClassSerializer,
     Schema,
     errorCodeSerializer,
     int32Serializer,
@@ -21,58 +17,40 @@ from ._main_serializers import (
 
 
 partitionSchemas: Dict[int, Schema] = {
-    0: [
-        ("partition", int32Serializer),
-        ("low_watermark", int64Serializer),
-        ("error_code", errorCodeSerializer),
-    ],
-    1: [
-        ("partition", int32Serializer),
-        ("low_watermark", int64Serializer),
-        ("error_code", errorCodeSerializer),
-    ],
+    0: [("partition", int32Serializer), ("low_watermark", int64Serializer), ("error_code", errorCodeSerializer)],
+    1: [("partition", int32Serializer), ("low_watermark", int64Serializer), ("error_code", errorCodeSerializer)],
 }
 
 
-partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema)
-    for version, schema in partitionSchemas.items()
+partitionSerializers: Dict[int, ClassSerializer[Partition]] = {
+    version: ClassSerializer(Partition, schema) for version, schema in partitionSchemas.items()
 }
+
+partitionSerializers[-1] = partitionSerializers[1]
 
 
 topicSchemas: Dict[int, Schema] = {
-    0: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[0])),
-    ],
-    1: [
-        ("topic", stringSerializer),
-        ("partitions", ArraySerializer(partitionSerializers[1])),
-    ],
+    0: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[0]))],
+    1: [("topic", stringSerializer), ("partitions", ArraySerializer(partitionSerializers[1]))],
 }
 
 
-topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema)
-    for version, schema in topicSchemas.items()
+topicSerializers: Dict[int, ClassSerializer[Topic]] = {
+    version: ClassSerializer(Topic, schema) for version, schema in topicSchemas.items()
 }
+
+topicSerializers[-1] = topicSerializers[1]
 
 
 deleteRecordsResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ("throttle_time_ms", int32Serializer),
-        ("topics", ArraySerializer(topicSerializers[0])),
-    ],
-    1: [
-        ("throttle_time_ms", int32Serializer),
-        ("topics", ArraySerializer(topicSerializers[1])),
-    ],
+    0: [("throttle_time_ms", int32Serializer), ("topics", ArraySerializer(topicSerializers[0]))],
+    1: [("throttle_time_ms", int32Serializer), ("topics", ArraySerializer(topicSerializers[1]))],
 }
 
 
-deleteRecordsResponseDataSerializers: Dict[
-    int, DataClassSerializer[DeleteRecordsResponseData]
-] = {
-    version: DataClassSerializer(DeleteRecordsResponseData, schema)
+deleteRecordsResponseDataSerializers: Dict[int, ClassSerializer[DeleteRecordsResponseData]] = {
+    version: ClassSerializer(DeleteRecordsResponseData, schema)
     for version, schema in deleteRecordsResponseDataSchemas.items()
 }
+
+deleteRecordsResponseDataSerializers[-1] = deleteRecordsResponseDataSerializers[1]
