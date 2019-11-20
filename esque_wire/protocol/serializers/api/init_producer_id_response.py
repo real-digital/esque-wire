@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.init_producer_id_response import InitProducerIdResponseData
 
+from ...structs.api.init_producer_id_response import InitProducerIdResponseData
 from ._main_serializers import (
     ClassSerializer,
     Schema,
@@ -13,7 +13,6 @@ from ._main_serializers import (
     int32Serializer,
     int64Serializer,
 )
-
 
 initProducerIdResponseDataSchemas: Dict[int, Schema] = {
     0: [

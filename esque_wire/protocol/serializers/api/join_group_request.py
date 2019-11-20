@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.join_group_request import JoinGroupRequestData, Protocol
 
+from ...structs.api.join_group_request import JoinGroupRequestData, Protocol
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -15,7 +15,6 @@ from ._main_serializers import (
     nullableStringSerializer,
     stringSerializer,
 )
-
 
 protocolSchemas: Dict[int, Schema] = {
     0: [("name", stringSerializer), ("metadata", bytesSerializer)],

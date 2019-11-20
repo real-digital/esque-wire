@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.create_topics_request import Assignment, Config, CreateTopicsRequestData, Topic
 
+from ...structs.api.create_topics_request import Assignment, Config, CreateTopicsRequestData, Topic
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -16,7 +16,6 @@ from ._main_serializers import (
     nullableStringSerializer,
     stringSerializer,
 )
-
 
 configSchemas: Dict[int, Schema] = {
     0: [("name", stringSerializer), ("value", nullableStringSerializer)],

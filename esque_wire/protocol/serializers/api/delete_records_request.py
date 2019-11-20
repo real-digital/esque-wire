@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.delete_records_request import DeleteRecordsRequestData, Partition, Topic
 
+from ...structs.api.delete_records_request import DeleteRecordsRequestData, Partition, Topic
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -13,7 +13,6 @@ from ._main_serializers import (
     int64Serializer,
     stringSerializer,
 )
-
 
 partitionSchemas: Dict[int, Schema] = {
     0: [("partition", int32Serializer), ("offset", int64Serializer)],

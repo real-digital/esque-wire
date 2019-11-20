@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.elect_preferred_leaders_request import ElectPreferredLeadersRequestData, TopicPartition
-
 from ._main_serializers import ArraySerializer, ClassSerializer, Schema, int32Serializer, stringSerializer
-
 
 topicPartitionSchemas: Dict[int, Schema] = {
     0: [("topic", stringSerializer), ("partition_id", ArraySerializer(int32Serializer))]

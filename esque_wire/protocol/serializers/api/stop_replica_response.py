@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.stop_replica_response import Partition, StopReplicaResponseData
 
+from ...structs.api.stop_replica_response import Partition, StopReplicaResponseData
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -13,7 +13,6 @@ from ._main_serializers import (
     int32Serializer,
     stringSerializer,
 )
-
 
 partitionSchemas: Dict[int, Schema] = {
     0: [("topic", stringSerializer), ("partition", int32Serializer), ("error_code", errorCodeSerializer)],

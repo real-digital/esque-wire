@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.api_versions_request import ApiVersionsRequestData
-
 from ._main_serializers import ClassSerializer, Schema
-
 
 apiVersionsRequestDataSchemas: Dict[int, Schema] = {0: [], 1: [], 2: []}
 

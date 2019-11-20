@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.describe_configs_request import DescribeConfigsRequestData, Resource
 
+from ...structs.api.describe_configs_request import DescribeConfigsRequestData, Resource
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -14,7 +14,6 @@ from ._main_serializers import (
     resourceTypeSerializer,
     stringSerializer,
 )
-
 
 resourceSchemas: Dict[int, Schema] = {
     0: [

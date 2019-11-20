@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.leave_group_request import LeaveGroupRequestData
-
 from ._main_serializers import ClassSerializer, Schema, stringSerializer
-
 
 leaveGroupRequestDataSchemas: Dict[int, Schema] = {
     0: [("group_id", stringSerializer), ("member_id", stringSerializer)],

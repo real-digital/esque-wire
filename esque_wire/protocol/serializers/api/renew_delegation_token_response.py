@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.renew_delegation_token_response import RenewDelegationTokenResponseData
-
 from ._main_serializers import ClassSerializer, Schema, errorCodeSerializer, int32Serializer, int64Serializer
-
 
 renewDelegationTokenResponseDataSchemas: Dict[int, Schema] = {
     0: [

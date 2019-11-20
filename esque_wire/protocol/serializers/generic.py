@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import BinaryIO, Dict, Tuple, List, Type, TypeVar, Optional, Any
+from typing import Any, BinaryIO, Dict, List, Optional, Tuple, Type, TypeVar
 
 from .base import BaseSerializer
 from .primitive import int32Serializer

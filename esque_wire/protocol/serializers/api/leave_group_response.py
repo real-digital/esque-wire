@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.leave_group_response import LeaveGroupResponseData
-
 from ._main_serializers import ClassSerializer, DummySerializer, Schema, errorCodeSerializer, int32Serializer
-
 
 leaveGroupResponseDataSchemas: Dict[int, Schema] = {
     0: [("error_code", errorCodeSerializer), ("throttle_time_ms", DummySerializer(int32Serializer.default))],

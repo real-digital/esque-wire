@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.describe_log_dirs_response import DescribeLogDirsResponseData, LogDir, Partition, Topic
 
+from ...structs.api.describe_log_dirs_response import DescribeLogDirsResponseData, LogDir, Partition, Topic
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -15,7 +15,6 @@ from ._main_serializers import (
     int64Serializer,
     stringSerializer,
 )
-
 
 partitionSchemas: Dict[int, Schema] = {
     0: [

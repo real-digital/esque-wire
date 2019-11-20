@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.renew_delegation_token_request import RenewDelegationTokenRequestData
-
 from ._main_serializers import ClassSerializer, Schema, bytesSerializer, int64Serializer
-
 
 renewDelegationTokenRequestDataSchemas: Dict[int, Schema] = {
     0: [("hmac", bytesSerializer), ("renew_time_period", int64Serializer)],

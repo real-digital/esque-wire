@@ -3,6 +3,7 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.fetch_response import (
     AbortedTransaction,
     FetchResponseData,
@@ -10,7 +11,6 @@ from ...structs.api.fetch_response import (
     PartitionResponse,
     Response,
 )
-
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -22,7 +22,6 @@ from ._main_serializers import (
     nullableBytesSerializer,
     stringSerializer,
 )
-
 
 abortedTransactionSchemas: Dict[int, Schema] = {
     4: [("producer_id", int64Serializer), ("first_offset", int64Serializer)],

@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.delete_topics_request import DeleteTopicsRequestData
-
 from ._main_serializers import ArraySerializer, ClassSerializer, Schema, int32Serializer, stringSerializer
-
 
 deleteTopicsRequestDataSchemas: Dict[int, Schema] = {
     0: [("topic_names", ArraySerializer(stringSerializer)), ("timeout_ms", int32Serializer)],

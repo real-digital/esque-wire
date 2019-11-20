@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.delete_groups_request import DeleteGroupsRequestData
-
 from ._main_serializers import ArraySerializer, ClassSerializer, Schema, stringSerializer
-
 
 deleteGroupsRequestDataSchemas: Dict[int, Schema] = {
     0: [("groups", ArraySerializer(stringSerializer))],

@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.delete_topics_response import DeleteTopicsResponseData, Response
 
+from ...structs.api.delete_topics_response import DeleteTopicsResponseData, Response
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -14,7 +14,6 @@ from ._main_serializers import (
     int32Serializer,
     stringSerializer,
 )
-
 
 responseSchemas: Dict[int, Schema] = {
     0: [("name", stringSerializer), ("error_code", errorCodeSerializer)],

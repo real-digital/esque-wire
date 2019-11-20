@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.metadata_request import MetadataRequestData, Topic
 
+from ...structs.api.metadata_request import MetadataRequestData, Topic
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -13,7 +13,6 @@ from ._main_serializers import (
     booleanSerializer,
     stringSerializer,
 )
-
 
 topicSchemas: Dict[int, Schema] = {
     0: [("name", stringSerializer)],

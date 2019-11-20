@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.alter_configs_request import AlterConfigsRequestData, ConfigEntry, Resource
 
+from ...structs.api.alter_configs_request import AlterConfigsRequestData, ConfigEntry, Resource
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -14,7 +14,6 @@ from ._main_serializers import (
     resourceTypeSerializer,
     stringSerializer,
 )
-
 
 configEntrySchemas: Dict[int, Schema] = {
     0: [("config_name", stringSerializer), ("config_value", nullableStringSerializer)],

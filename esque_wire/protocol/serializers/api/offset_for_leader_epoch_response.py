@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.offset_for_leader_epoch_response import OffsetForLeaderEpochResponseData, Partition, Topic
 
+from ...structs.api.offset_for_leader_epoch_response import OffsetForLeaderEpochResponseData, Partition, Topic
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -15,7 +15,6 @@ from ._main_serializers import (
     int64Serializer,
     stringSerializer,
 )
-
 
 partitionSchemas: Dict[int, Schema] = {
     0: [

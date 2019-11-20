@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.delete_acls_request import DeleteAclsRequestData, Filter
 
+from ...structs.api.delete_acls_request import DeleteAclsRequestData, Filter
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -16,7 +16,6 @@ from ._main_serializers import (
     nullableStringSerializer,
     resourceTypeSerializer,
 )
-
 
 filterSchemas: Dict[int, Schema] = {
     0: [

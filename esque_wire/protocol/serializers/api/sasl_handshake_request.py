@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.sasl_handshake_request import SaslHandshakeRequestData
-
 from ._main_serializers import ClassSerializer, Schema, stringSerializer
-
 
 saslHandshakeRequestDataSchemas: Dict[int, Schema] = {
     0: [("mechanism", stringSerializer)],

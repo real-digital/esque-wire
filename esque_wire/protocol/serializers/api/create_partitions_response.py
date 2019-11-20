@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.create_partitions_response import CreatePartitionsResponseData, TopicError
 
+from ...structs.api.create_partitions_response import CreatePartitionsResponseData, TopicError
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -14,7 +14,6 @@ from ._main_serializers import (
     nullableStringSerializer,
     stringSerializer,
 )
-
 
 topicErrorSchemas: Dict[int, Schema] = {
     0: [("topic", stringSerializer), ("error_code", errorCodeSerializer), ("error_message", nullableStringSerializer)],

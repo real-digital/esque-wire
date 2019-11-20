@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.init_producer_id_request import InitProducerIdRequestData
-
 from ._main_serializers import ClassSerializer, Schema, int32Serializer, nullableStringSerializer
-
 
 initProducerIdRequestDataSchemas: Dict[int, Schema] = {
     0: [("transactional_id", nullableStringSerializer), ("transaction_timeout_ms", int32Serializer)],

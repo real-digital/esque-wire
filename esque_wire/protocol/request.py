@@ -1,11 +1,12 @@
 from io import BytesIO
-from typing import BinaryIO, Generic, Optional, TypeVar, cast, Type
+from typing import BinaryIO, Generic, Optional, Type, TypeVar, cast
+
 from .constants import ApiKey
 from .serializers import REQUEST_SERIALIZERS, RESPONSE_SERIALIZERS
 from .serializers.base import BaseSerializer
 from .serializers.header import requestHeaderSerializer, responseHeaderSerializer
-from .structs.header import RequestHeader, ResponseHeader
 from .structs.base import RequestData, ResponseData
+from .structs.header import RequestHeader, ResponseHeader
 
 
 def get_request_serializer(api_key: ApiKey, api_version: int) -> BaseSerializer[RequestData]:

@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.describe_acls_response import Acl, DescribeAclsResponseData, Resource
 
+from ...structs.api.describe_acls_response import Acl, DescribeAclsResponseData, Resource
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -13,13 +13,12 @@ from ._main_serializers import (
     aclOperationSerializer,
     aclPermissionTypeSerializer,
     errorCodeSerializer,
-    int32Serializer,
     int8Serializer,
+    int32Serializer,
     nullableStringSerializer,
     resourceTypeSerializer,
     stringSerializer,
 )
-
 
 aclSchemas: Dict[int, Schema] = {
     0: [

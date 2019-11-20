@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.create_topics_response import CreateTopicsResponseData, Topic
 
+from ...structs.api.create_topics_response import CreateTopicsResponseData, Topic
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -15,7 +15,6 @@ from ._main_serializers import (
     nullableStringSerializer,
     stringSerializer,
 )
-
 
 topicSchemas: Dict[int, Schema] = {
     0: [

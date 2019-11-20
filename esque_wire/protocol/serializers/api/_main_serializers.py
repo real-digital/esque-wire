@@ -3,28 +3,28 @@
 # which would create a circular dependency.
 
 from ..constants import (
-    apiKeySerializer,
     aclOperationSerializer,
-    resourceTypeSerializer,
     aclPermissionTypeSerializer,
-    resourcePatternTypeSerializer,
+    apiKeySerializer,
     errorCodeSerializer,
+    resourcePatternTypeSerializer,
+    resourceTypeSerializer,
 )
-from ..generic import ArraySerializer, ClassSerializer, Schema, DummySerializer
+from ..generic import ArraySerializer, ClassSerializer, DummySerializer, Schema
 from ..primitive import (
     booleanSerializer,
+    bytesSerializer,
     int8Serializer,
     int16Serializer,
     int32Serializer,
-    uint32Serializer,
     int64Serializer,
+    nullableBytesSerializer,
+    nullableStringSerializer,
+    recordsSerializer,
+    stringSerializer,
+    uint32Serializer,
     varIntSerializer,
     varLongSerializer,
-    nullableStringSerializer,
-    stringSerializer,
-    nullableBytesSerializer,
-    bytesSerializer,
-    recordsSerializer,
 )
 
 __all__ = [

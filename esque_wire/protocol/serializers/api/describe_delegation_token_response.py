@@ -3,13 +3,13 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.describe_delegation_token_response import (
     DescribeDelegationTokenResponseData,
     Owner,
     Renewer,
     TokenDetail,
 )
-
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -20,7 +20,6 @@ from ._main_serializers import (
     int64Serializer,
     stringSerializer,
 )
-
 
 renewerSchemas: Dict[int, Schema] = {
     0: [("principal_type", stringSerializer), ("name", stringSerializer)],

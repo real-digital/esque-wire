@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.list_groups_request import ListGroupsRequestData
-
 from ._main_serializers import ClassSerializer, Schema
-
 
 listGroupsRequestDataSchemas: Dict[int, Schema] = {0: [], 1: [], 2: []}
 

@@ -3,19 +3,18 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.fetch_request import FetchRequestData, ForgottenTopicsData, Partition, Topic
 
+from ...structs.api.fetch_request import FetchRequestData, ForgottenTopicsData, Partition, Topic
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
     DummySerializer,
     Schema,
+    int8Serializer,
     int32Serializer,
     int64Serializer,
-    int8Serializer,
     stringSerializer,
 )
-
 
 forgottenTopicsDataSchemas: Dict[int, Schema] = {
     7: [("topic", stringSerializer), ("partitions", ArraySerializer(int32Serializer))],

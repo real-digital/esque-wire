@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.expire_delegation_token_request import ExpireDelegationTokenRequestData
-
 from ._main_serializers import ClassSerializer, Schema, bytesSerializer, int64Serializer
-
 
 expireDelegationTokenRequestDataSchemas: Dict[int, Schema] = {
     0: [("hmac", bytesSerializer), ("expiry_time_period", int64Serializer)],

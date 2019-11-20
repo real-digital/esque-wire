@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.sasl_authenticate_request import SaslAuthenticateRequestData
-
 from ._main_serializers import ClassSerializer, Schema, bytesSerializer
-
 
 saslAuthenticateRequestDataSchemas: Dict[int, Schema] = {
     0: [("auth_bytes", bytesSerializer)],

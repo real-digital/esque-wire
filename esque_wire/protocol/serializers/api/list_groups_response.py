@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.list_groups_response import Group, ListGroupsResponseData
 
+from ...structs.api.list_groups_response import Group, ListGroupsResponseData
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -14,7 +14,6 @@ from ._main_serializers import (
     int32Serializer,
     stringSerializer,
 )
-
 
 groupSchemas: Dict[int, Schema] = {
     0: [("group_id", stringSerializer), ("protocol_type", stringSerializer)],

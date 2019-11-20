@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.delete_groups_response import DeleteGroupsResponseData, GroupErrorCode
 
+from ...structs.api.delete_groups_response import DeleteGroupsResponseData, GroupErrorCode
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -13,7 +13,6 @@ from ._main_serializers import (
     int32Serializer,
     stringSerializer,
 )
-
 
 groupErrorCodeSchemas: Dict[int, Schema] = {
     0: [("group_id", stringSerializer), ("error_code", errorCodeSerializer)],

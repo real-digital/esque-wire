@@ -1,5 +1,5 @@
 from abc import ABCMeta
-from typing import Generic, BinaryIO, TypeVar
+from typing import BinaryIO, Generic, TypeVar
 
 T = TypeVar("T")
 

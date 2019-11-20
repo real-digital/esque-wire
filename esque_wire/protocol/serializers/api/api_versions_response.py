@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.api_versions_response import ApiVersion, ApiVersionsResponseData
 
+from ...structs.api.api_versions_response import ApiVersion, ApiVersionsResponseData
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -15,7 +15,6 @@ from ._main_serializers import (
     int16Serializer,
     int32Serializer,
 )
-
 
 apiVersionSchemas: Dict[int, Schema] = {
     0: [("api_key", apiKeySerializer), ("min_version", int16Serializer), ("max_version", int16Serializer)],

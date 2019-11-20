@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.incremental_alter_configs_response import IncrementalAlterConfigsResponseData, Response
 
+from ...structs.api.incremental_alter_configs_response import IncrementalAlterConfigsResponseData, Response
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -15,7 +15,6 @@ from ._main_serializers import (
     resourceTypeSerializer,
     stringSerializer,
 )
-
 
 responseSchemas: Dict[int, Schema] = {
     0: [

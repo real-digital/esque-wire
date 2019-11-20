@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.end_txn_request import EndTxnRequestData
 
+from ...structs.api.end_txn_request import EndTxnRequestData
 from ._main_serializers import (
     ClassSerializer,
     Schema,
@@ -13,7 +13,6 @@ from ._main_serializers import (
     int64Serializer,
     stringSerializer,
 )
-
 
 endTxnRequestDataSchemas: Dict[int, Schema] = {
     0: [

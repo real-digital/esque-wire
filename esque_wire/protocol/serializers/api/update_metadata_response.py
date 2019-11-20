@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.update_metadata_response import UpdateMetadataResponseData
-
 from ._main_serializers import ClassSerializer, Schema, errorCodeSerializer
-
 
 updateMetadataResponseDataSchemas: Dict[int, Schema] = {
     0: [("error_code", errorCodeSerializer)],

@@ -1,6 +1,7 @@
 import struct
 from enum import Enum
 from typing import Any, BinaryIO, Callable, Dict, Optional, TypeVar
+
 from .base import BaseSerializer
 
 T = TypeVar("T")

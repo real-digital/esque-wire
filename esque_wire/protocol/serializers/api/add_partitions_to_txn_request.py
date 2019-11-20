@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.add_partitions_to_txn_request import AddPartitionsToTxnRequestData, Topic
 
+from ...structs.api.add_partitions_to_txn_request import AddPartitionsToTxnRequestData, Topic
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -14,7 +14,6 @@ from ._main_serializers import (
     int64Serializer,
     stringSerializer,
 )
-
 
 topicSchemas: Dict[int, Schema] = {
     0: [("topic", stringSerializer), ("partitions", ArraySerializer(int32Serializer))],

@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.leader_and_isr_request import LeaderAndIsrRequestData, LiveLeader, PartitionState, TopicState
 
+from ...structs.api.leader_and_isr_request import LeaderAndIsrRequestData, LiveLeader, PartitionState, TopicState
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -15,7 +15,6 @@ from ._main_serializers import (
     int64Serializer,
     stringSerializer,
 )
-
 
 liveLeaderSchemas: Dict[int, Schema] = {
     0: [("id", int32Serializer), ("host", stringSerializer), ("port", int32Serializer)],

@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.find_coordinator_request import FindCoordinatorRequestData
-
 from ._main_serializers import ClassSerializer, DummySerializer, Schema, int8Serializer, stringSerializer
-
 
 findCoordinatorRequestDataSchemas: Dict[int, Schema] = {
     0: [("key", stringSerializer), ("key_type", DummySerializer(int8Serializer.default))],

@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.create_acls_request import CreateAclsRequestData, Creation
 
+from ...structs.api.create_acls_request import CreateAclsRequestData, Creation
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -16,7 +16,6 @@ from ._main_serializers import (
     resourceTypeSerializer,
     stringSerializer,
 )
-
 
 creationSchemas: Dict[int, Schema] = {
     0: [

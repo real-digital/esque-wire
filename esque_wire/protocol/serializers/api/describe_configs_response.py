@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.describe_configs_response import ConfigEntry, ConfigSynonym, DescribeConfigsResponseData, Resource
 
+from ...structs.api.describe_configs_response import ConfigEntry, ConfigSynonym, DescribeConfigsResponseData, Resource
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -12,13 +12,12 @@ from ._main_serializers import (
     Schema,
     booleanSerializer,
     errorCodeSerializer,
-    int32Serializer,
     int8Serializer,
+    int32Serializer,
     nullableStringSerializer,
     resourceTypeSerializer,
     stringSerializer,
 )
-
 
 configSynonymSchemas: Dict[int, Schema] = {
     1: [

@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.expire_delegation_token_response import ExpireDelegationTokenResponseData
-
 from ._main_serializers import ClassSerializer, Schema, errorCodeSerializer, int32Serializer, int64Serializer
-
 
 expireDelegationTokenResponseDataSchemas: Dict[int, Schema] = {
     0: [

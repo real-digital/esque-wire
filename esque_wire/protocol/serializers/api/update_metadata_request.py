@@ -3,6 +3,7 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.update_metadata_request import (
     EndPoint,
     LiveBroker,
@@ -10,7 +11,6 @@ from ...structs.api.update_metadata_request import (
     TopicState,
     UpdateMetadataRequestData,
 )
-
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -22,7 +22,6 @@ from ._main_serializers import (
     nullableStringSerializer,
     stringSerializer,
 )
-
 
 endPointSchemas: Dict[int, Schema] = {
     1: [

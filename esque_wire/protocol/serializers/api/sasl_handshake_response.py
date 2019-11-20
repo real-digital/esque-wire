@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.sasl_handshake_response import SaslHandshakeResponseData
-
 from ._main_serializers import ArraySerializer, ClassSerializer, Schema, errorCodeSerializer, stringSerializer
-
 
 saslHandshakeResponseDataSchemas: Dict[int, Schema] = {
     0: [("error_code", errorCodeSerializer), ("mechanisms", ArraySerializer(stringSerializer))],

@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.delete_acls_response import DeleteAclsResponseData, FilterResponse, MatchingAcl
 
+from ...structs.api.delete_acls_response import DeleteAclsResponseData, FilterResponse, MatchingAcl
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -13,13 +13,12 @@ from ._main_serializers import (
     aclOperationSerializer,
     aclPermissionTypeSerializer,
     errorCodeSerializer,
-    int32Serializer,
     int8Serializer,
+    int32Serializer,
     nullableStringSerializer,
     resourceTypeSerializer,
     stringSerializer,
 )
-
 
 matchingAclSchemas: Dict[int, Schema] = {
     0: [

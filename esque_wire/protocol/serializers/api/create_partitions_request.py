@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.create_partitions_request import CreatePartitionsRequestData, NewPartitions, TopicPartition
 
+from ...structs.api.create_partitions_request import CreatePartitionsRequestData, NewPartitions, TopicPartition
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -13,7 +13,6 @@ from ._main_serializers import (
     int32Serializer,
     stringSerializer,
 )
-
 
 newPartitionsSchemas: Dict[int, Schema] = {
     0: [("count", int32Serializer), ("assignment", ArraySerializer(ArraySerializer(int32Serializer)))],

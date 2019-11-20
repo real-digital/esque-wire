@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.controlled_shutdown_response import ControlledShutdownResponseData, RemainingPartition
 
+from ...structs.api.controlled_shutdown_response import ControlledShutdownResponseData, RemainingPartition
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -13,7 +13,6 @@ from ._main_serializers import (
     int32Serializer,
     stringSerializer,
 )
-
 
 remainingPartitionSchemas: Dict[int, Schema] = {
     0: [("topic_name", stringSerializer), ("partition_index", int32Serializer)],

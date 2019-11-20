@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.offset_fetch_request import OffsetFetchRequestData, Partition, Topic
-
 from ._main_serializers import ArraySerializer, ClassSerializer, Schema, int32Serializer, stringSerializer
-
 
 partitionSchemas: Dict[int, Schema] = {
     0: [("partition", int32Serializer)],

@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.sasl_authenticate_response import SaslAuthenticateResponseData
 
+from ...structs.api.sasl_authenticate_response import SaslAuthenticateResponseData
 from ._main_serializers import (
     ClassSerializer,
     DummySerializer,
@@ -14,7 +14,6 @@ from ._main_serializers import (
     int64Serializer,
     nullableStringSerializer,
 )
-
 
 saslAuthenticateResponseDataSchemas: Dict[int, Schema] = {
     0: [

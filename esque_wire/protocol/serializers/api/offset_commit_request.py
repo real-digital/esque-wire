@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.offset_commit_request import OffsetCommitRequestData, Partition, Topic
 
+from ...structs.api.offset_commit_request import OffsetCommitRequestData, Partition, Topic
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -15,7 +15,6 @@ from ._main_serializers import (
     nullableStringSerializer,
     stringSerializer,
 )
-
 
 partitionSchemas: Dict[int, Schema] = {
     0: [

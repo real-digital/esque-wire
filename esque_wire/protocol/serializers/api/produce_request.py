@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.produce_request import Data, ProduceRequestData, TopicData
 
+from ...structs.api.produce_request import Data, ProduceRequestData, TopicData
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -16,7 +16,6 @@ from ._main_serializers import (
     nullableStringSerializer,
     stringSerializer,
 )
-
 
 dataSchemas: Dict[int, Schema] = {
     0: [("partition", int32Serializer), ("record_set", nullableBytesSerializer)],

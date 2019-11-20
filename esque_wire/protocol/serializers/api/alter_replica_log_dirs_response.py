@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.alter_replica_log_dirs_response import AlterReplicaLogDirsResponseData, Partition, Topic
 
+from ...structs.api.alter_replica_log_dirs_response import AlterReplicaLogDirsResponseData, Partition, Topic
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -13,7 +13,6 @@ from ._main_serializers import (
     int32Serializer,
     stringSerializer,
 )
-
 
 partitionSchemas: Dict[int, Schema] = {
     0: [("partition", int32Serializer), ("error_code", errorCodeSerializer)],

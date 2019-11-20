@@ -608,7 +608,12 @@ def render(all_apis: List[Api], constants: Dict) -> None:
             for templater in templaters:
                 templater.render(all_apis, current_api, direction, constants)
 
+    run_isort()
     run_black()
+
+
+def run_isort():
+    subprocess.check_call(["isort", "-rc", str(TARGET_PATH)], cwd=str(PROJECT_ROOT))
 
 
 def run_black():

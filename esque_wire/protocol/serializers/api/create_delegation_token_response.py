@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.create_delegation_token_response import CreateDelegationTokenResponseData, Owner
 
+from ...structs.api.create_delegation_token_response import CreateDelegationTokenResponseData, Owner
 from ._main_serializers import (
     ClassSerializer,
     Schema,
@@ -14,7 +14,6 @@ from ._main_serializers import (
     int64Serializer,
     stringSerializer,
 )
-
 
 ownerSchemas: Dict[int, Schema] = {
     0: [("principal_type", stringSerializer), ("name", stringSerializer)],

@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.heartbeat_response import HeartbeatResponseData
-
 from ._main_serializers import ClassSerializer, DummySerializer, Schema, errorCodeSerializer, int32Serializer
-
 
 heartbeatResponseDataSchemas: Dict[int, Schema] = {
     0: [("error_code", errorCodeSerializer), ("throttle_time_ms", DummySerializer(int32Serializer.default))],

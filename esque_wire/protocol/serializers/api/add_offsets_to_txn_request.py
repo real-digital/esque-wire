@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.add_offsets_to_txn_request import AddOffsetsToTxnRequestData
-
 from ._main_serializers import ClassSerializer, Schema, int16Serializer, int64Serializer, stringSerializer
-
 
 addOffsetsToTxnRequestDataSchemas: Dict[int, Schema] = {
     0: [

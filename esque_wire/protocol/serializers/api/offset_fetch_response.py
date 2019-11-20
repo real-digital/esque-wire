@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.offset_fetch_response import OffsetFetchResponseData, PartitionResponse, Response
 
+from ...structs.api.offset_fetch_response import OffsetFetchResponseData, PartitionResponse, Response
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -16,7 +16,6 @@ from ._main_serializers import (
     nullableStringSerializer,
     stringSerializer,
 )
-
 
 partitionResponseSchemas: Dict[int, Schema] = {
     0: [

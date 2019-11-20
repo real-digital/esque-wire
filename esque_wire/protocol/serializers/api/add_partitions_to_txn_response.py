@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.add_partitions_to_txn_response import AddPartitionsToTxnResponseData, Error, PartitionError
 
+from ...structs.api.add_partitions_to_txn_response import AddPartitionsToTxnResponseData, Error, PartitionError
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -13,7 +13,6 @@ from ._main_serializers import (
     int32Serializer,
     stringSerializer,
 )
-
 
 partitionErrorSchemas: Dict[int, Schema] = {
     0: [("partition", int32Serializer), ("error_code", errorCodeSerializer)],

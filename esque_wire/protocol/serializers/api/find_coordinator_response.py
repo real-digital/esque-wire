@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.find_coordinator_response import FindCoordinatorResponseData
 
+from ...structs.api.find_coordinator_response import FindCoordinatorResponseData
 from ._main_serializers import (
     ClassSerializer,
     DummySerializer,
@@ -14,7 +14,6 @@ from ._main_serializers import (
     nullableStringSerializer,
     stringSerializer,
 )
-
 
 findCoordinatorResponseDataSchemas: Dict[int, Schema] = {
     0: [

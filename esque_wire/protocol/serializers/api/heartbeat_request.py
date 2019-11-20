@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.heartbeat_request import HeartbeatRequestData
 
+from ...structs.api.heartbeat_request import HeartbeatRequestData
 from ._main_serializers import (
     ClassSerializer,
     DummySerializer,
@@ -13,7 +13,6 @@ from ._main_serializers import (
     nullableStringSerializer,
     stringSerializer,
 )
-
 
 heartbeatRequestDataSchemas: Dict[int, Schema] = {
     0: [

@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.write_txn_markers_request import Topic, TransactionMarker, WriteTxnMarkersRequestData
 
+from ...structs.api.write_txn_markers_request import Topic, TransactionMarker, WriteTxnMarkersRequestData
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -15,7 +15,6 @@ from ._main_serializers import (
     int64Serializer,
     stringSerializer,
 )
-
 
 topicSchemas: Dict[int, Schema] = {0: [("topic", stringSerializer), ("partitions", ArraySerializer(int32Serializer))]}
 

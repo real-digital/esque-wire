@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.controlled_shutdown_request import ControlledShutdownRequestData
-
 from ._main_serializers import ClassSerializer, DummySerializer, Schema, int32Serializer, int64Serializer
-
 
 controlledShutdownRequestDataSchemas: Dict[int, Schema] = {
     0: [("broker_id", int32Serializer), ("broker_epoch", DummySerializer(int64Serializer.default))],

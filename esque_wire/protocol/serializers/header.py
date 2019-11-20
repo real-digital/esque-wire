@@ -1,7 +1,7 @@
-from .generic import Schema, ClassSerializer
-from .constants import apiKeySerializer
-from .primitive import int16Serializer, int32Serializer, nullableStringSerializer
 from ..structs.header import RequestHeader, ResponseHeader
+from .constants import apiKeySerializer
+from .generic import ClassSerializer, Schema
+from .primitive import int16Serializer, int32Serializer, nullableStringSerializer
 
 requestHeaderSchema: Schema = [
     ("api_key", apiKeySerializer),

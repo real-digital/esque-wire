@@ -3,8 +3,8 @@
 ##############################################
 
 from typing import Dict
-from ...structs.api.sync_group_response import SyncGroupResponseData
 
+from ...structs.api.sync_group_response import SyncGroupResponseData
 from ._main_serializers import (
     ClassSerializer,
     DummySerializer,
@@ -13,7 +13,6 @@ from ._main_serializers import (
     errorCodeSerializer,
     int32Serializer,
 )
-
 
 syncGroupResponseDataSchemas: Dict[int, Schema] = {
     0: [

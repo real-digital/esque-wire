@@ -3,12 +3,12 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.elect_preferred_leaders_response import (
     ElectPreferredLeadersResponseData,
     PartitionResult,
     ReplicaElectionResult,
 )
-
 from ._main_serializers import (
     ArraySerializer,
     ClassSerializer,
@@ -18,7 +18,6 @@ from ._main_serializers import (
     nullableStringSerializer,
     stringSerializer,
 )
-
 
 partitionResultSchemas: Dict[int, Schema] = {
     0: [

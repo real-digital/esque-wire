@@ -3,10 +3,9 @@
 ##############################################
 
 from typing import Dict
+
 from ...structs.api.add_offsets_to_txn_response import AddOffsetsToTxnResponseData
-
 from ._main_serializers import ClassSerializer, Schema, errorCodeSerializer, int32Serializer
-
 
 addOffsetsToTxnResponseDataSchemas: Dict[int, Schema] = {
     0: [("throttle_time_ms", int32Serializer), ("error_code", errorCodeSerializer)],
