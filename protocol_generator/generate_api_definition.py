@@ -42,7 +42,7 @@ def main(argv: List[str]):
         "java",
         "-cp", f"{JYTHON_PATH}:{KAFKA_LIB_PATH}/*",
         "org.python.util.jython",
-        str(PARENT_DIR / "jython_schema_generator.py")
+        str(PARENT_DIR / "jython_api_gen.py")
     ])
     log.info("done")
 
