@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -11,7 +11,7 @@ class PartitionResponse:
     :param partition: Topic partition id
     :type partition: int
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param timestamp: The timestamp associated with the returned offset
     :type timestamp: int
     :param offset: The offset found
@@ -21,7 +21,7 @@ class PartitionResponse:
     """
 
     partition: int
-    error_code: int
+    error_code: ErrorCode
     timestamp: int
     offset: int
     leader_epoch: int
@@ -56,6 +56,6 @@ class ListOffsetsResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `2`, the api key for this API.
+        :return: the api key for this API: `ApiKey.LIST_OFFSETS` (`ApiKey(2)`)
         """
         return ApiKey.LIST_OFFSETS

@@ -3,12 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.sync_group_request import (
-    Assignment,
-    SyncGroupRequestData,
-)
+from ...structs.api.sync_group_request import Assignment, SyncGroupRequestData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,

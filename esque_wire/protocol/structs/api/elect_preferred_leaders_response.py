@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -11,13 +11,13 @@ class PartitionResult:
     :param partition_id: The partition id
     :type partition_id: int
     :param error_code: The result error, or zero if there was no error.
-    :type error_code: int
+    :type error_code: ErrorCode
     :param error_message: The result message, or null if there was no error.
     :type error_message: Optional[str]
     """
 
     partition_id: int
-    error_code: int
+    error_code: ErrorCode
     error_message: Optional[str]
 
 
@@ -51,6 +51,6 @@ class ElectPreferredLeadersResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `43`, the api key for this API.
+        :return: the api key for this API: `ApiKey.ELECT_PREFERRED_LEADERS` (`ApiKey(43)`)
         """
         return ApiKey.ELECT_PREFERRED_LEADERS

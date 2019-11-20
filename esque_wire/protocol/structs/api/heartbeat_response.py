@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -11,15 +11,15 @@ class HeartbeatResponseData(ResponseData):
                              or zero if the request did not violate any quota.
     :type throttle_time_ms: int
     :param error_code: The error code, or 0 if there was no error.
-    :type error_code: int
+    :type error_code: ErrorCode
     """
 
     throttle_time_ms: int
-    error_code: int
+    error_code: ErrorCode
 
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `12`, the api key for this API.
+        :return: the api key for this API: `ApiKey.HEARTBEAT` (`ApiKey(12)`)
         """
         return ApiKey.HEARTBEAT

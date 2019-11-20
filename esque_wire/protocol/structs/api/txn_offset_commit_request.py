@@ -63,6 +63,6 @@ class TxnOffsetCommitRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `28`, the api key for this API.
+        :return: the api key for this API: `ApiKey.TXN_OFFSET_COMMIT` (`ApiKey(28)`)
         """
         return ApiKey.TXN_OFFSET_COMMIT

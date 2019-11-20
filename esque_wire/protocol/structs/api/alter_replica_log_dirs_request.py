@@ -43,6 +43,6 @@ class AlterReplicaLogDirsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `34`, the api key for this API.
+        :return: the api key for this API: `ApiKey.ALTER_REPLICA_LOG_DIRS` (`ApiKey(34)`)
         """
         return ApiKey.ALTER_REPLICA_LOG_DIRS

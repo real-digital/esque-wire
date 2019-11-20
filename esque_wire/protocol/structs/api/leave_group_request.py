@@ -19,6 +19,6 @@ class LeaveGroupRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `13`, the api key for this API.
+        :return: the api key for this API: `ApiKey.LEAVE_GROUP` (`ApiKey(13)`)
         """
         return ApiKey.LEAVE_GROUP

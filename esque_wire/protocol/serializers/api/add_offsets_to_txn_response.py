@@ -3,21 +3,19 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.add_offsets_to_txn_response import (
-    AddOffsetsToTxnResponseData,
-)
+from ...structs.api.add_offsets_to_txn_response import AddOffsetsToTxnResponseData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
 )
 
 
 addOffsetsToTxnResponseDataSchemas: Dict[int, Schema] = {
-    0: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
-    1: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
+    0: [("throttle_time_ms", int32Serializer), ("error_code", errorCodeSerializer)],
+    1: [("throttle_time_ms", int32Serializer), ("error_code", errorCodeSerializer)],
 }
 
 

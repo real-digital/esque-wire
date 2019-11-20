@@ -1,7 +1,13 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import (
+    AclOperation,
+    AclPermissionType,
+    ApiKey,
+    ErrorCode,
+    ResourceType,
+)
 from ..base import ResponseData
 
 
@@ -9,11 +15,11 @@ from ..base import ResponseData
 class MatchingAcl:
     """
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param error_message: Response error message
     :type error_message: Optional[str]
     :param resource_type: The resource type
-    :type resource_type: int
+    :type resource_type: ResourceType
     :param resource_name: The resource name
     :type resource_name: str
     :param resource_pattern_type: The resource pattern type
@@ -23,34 +29,34 @@ class MatchingAcl:
     :param host: The ACL host
     :type host: str
     :param operation: The ACL operation
-    :type operation: int
+    :type operation: AclOperation
     :param permission_type: The ACL permission type
-    :type permission_type: int
+    :type permission_type: AclPermissionType
     """
 
-    error_code: int
+    error_code: ErrorCode
     error_message: Optional[str]
-    resource_type: int
+    resource_type: ResourceType
     resource_name: str
     resource_pattern_type: int
     principal: str
     host: str
-    operation: int
-    permission_type: int
+    operation: AclOperation
+    permission_type: AclPermissionType
 
 
 @dataclass
 class FilterResponse:
     """
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param error_message: Response error message
     :type error_message: Optional[str]
     :param matching_acls: The matching ACLs
     :type matching_acls: List[MatchingAcl]
     """
 
-    error_code: int
+    error_code: ErrorCode
     error_message: Optional[str]
     matching_acls: List[MatchingAcl]
 
@@ -71,6 +77,6 @@ class DeleteAclsResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `31`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DELETE_ACLS` (`ApiKey(31)`)
         """
         return ApiKey.DELETE_ACLS

@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -11,13 +11,13 @@ class Topic:
     :param name: The topic name.
     :type name: str
     :param error_code: The error code, or 0 if there was no error.
-    :type error_code: int
+    :type error_code: ErrorCode
     :param error_message: The error message, or null if there was no error.
     :type error_message: Optional[str]
     """
 
     name: str
-    error_code: int
+    error_code: ErrorCode
     error_message: Optional[str]
 
 
@@ -37,6 +37,6 @@ class CreateTopicsResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `19`, the api key for this API.
+        :return: the api key for this API: `ApiKey.CREATE_TOPICS` (`ApiKey(19)`)
         """
         return ApiKey.CREATE_TOPICS

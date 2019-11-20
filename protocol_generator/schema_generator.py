@@ -9,11 +9,8 @@ import subprocess
 
 import inflection
 import jinja2
+from ruamel import yaml
 from jinja2 import StrictUndefined
-
-if sys.version_info < (3, 6):
-    raise RuntimeError("This script needs at least python3.6 to run.")
-
 import dataclasses
 
 PROJECT_ROOT = pathlib.Path(__file__).parent.parent
@@ -29,6 +26,7 @@ class FieldType(str, enum.Enum):
     ARRAY = "ARRAY"
     STRUCT = "STRUCT"
     BOOLEAN = "BOOLEAN"
+    ENUM = "ENUM"
     INT8 = "INT8"
     INT16 = "INT16"
     INT32 = "INT32"
@@ -67,6 +65,8 @@ class TypeDef:
             return ArrayTypeDef.from_dict(data)
         if field_type == FieldType.STRUCT:
             return StructTypeDef.from_dict(data)
+        if field_type == FieldType.ENUM:
+            return EnumTypeDef.from_dict(data)
         return TypeDef(field_type)
 
     @property
@@ -105,10 +105,15 @@ class TypeDef:
     def type_import_name(self) -> Optional[str]:
         if self.field_type in (FieldType.NULLABLE_BYTES, FieldType.NULLABLE_STRING, FieldType.RECORDS):
             return "Optional"
+        return None
 
     @property
     def serializer_import_name(self) -> str:
         return PRIMITIVE_SERIALIZERS[self.field_type]
+
+    @property
+    def constant_import_name(self) -> Optional[str]:
+        return None
 
     def serializer_definition(self, version=0):
         return PRIMITIVE_SERIALIZERS[self.field_type]
@@ -262,6 +267,41 @@ class StructTypeDef(TypeDef):
 
 
 @dataclasses.dataclass
+class EnumTypeDef(TypeDef):
+    enum_class: str
+    # Maybe we'll have to keep the primitive type here (i.e. INT8 or INT16) and create a custom serializer
+    # when the data type is non-default, but I hope that they're always the same for the same enum class.
+    # We define the default types in jython_api_gen.py in order to create the enum serializers in
+    # serializers/constants.py
+
+    @staticmethod
+    def from_dict(data: Dict) -> "EnumTypeDef":
+        return EnumTypeDef(FieldType.ARRAY, enum_class=data["enum_class"])
+
+    @property
+    def type_hint(self) -> str:
+        return self.enum_class
+
+    @property
+    def struct_import_name(self) -> Optional[str]:
+        return self.enum_class
+
+    @property
+    def serializer_import_name(self) -> str:
+        return lower_first(self.enum_class) + "Serializer"
+
+    def serializer_definition(self, version=0):
+        return self.serializer_import_name
+
+    def serializer_variable_name(self, version=0):
+        return self.serializer_import_name
+
+    @property
+    def constant_import_name(self) -> Optional[str]:
+        return self.enum_class
+
+
+@dataclasses.dataclass
 class Field:
     name: str
     doc: str
@@ -406,7 +446,7 @@ class Api:
             schema = version_pair[direction]
             for field_type in schema.schema.traverse_types():
                 serializers.add(field_type.serializer_import_name)
-        return sorted(serializers)
+        return sorted(serializers - {None})
 
     def get_type_imports(self, direction: Direction) -> List[str]:
         type_hints = set()
@@ -415,6 +455,14 @@ class Api:
             for field_type in schema.schema.traverse_types():
                 type_hints.add(field_type.type_import_name)
         return sorted(type_hints - {None})
+
+    def get_constant_imports(self, direction: Direction) -> List[str]:
+        constants = {"ApiKey"}
+        for version_pair in self.api_versions.values():
+            schema = version_pair[direction]
+            for field_type in schema.schema.traverse_types():
+                constants.add(field_type.constant_import_name)
+        return sorted(constants - {None})
 
 
 def main():

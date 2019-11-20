@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -11,15 +11,15 @@ class AddOffsetsToTxnResponseData(ResponseData):
                              if the request did not violate any quota)
     :type throttle_time_ms: int
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     """
 
     throttle_time_ms: int
-    error_code: int
+    error_code: ErrorCode
 
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `25`, the api key for this API.
+        :return: the api key for this API: `ApiKey.ADD_OFFSETS_TO_TXN` (`ApiKey(25)`)
         """
         return ApiKey.ADD_OFFSETS_TO_TXN

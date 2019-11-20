@@ -3,16 +3,15 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.api_versions_response import (
-    ApiVersion,
-    ApiVersionsResponseData,
-)
+from ...structs.api.api_versions_response import ApiVersion, ApiVersionsResponseData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
+    apiKeySerializer,
+    errorCodeSerializer,
     int16Serializer,
     int32Serializer,
 )
@@ -20,17 +19,17 @@ from esque_wire.protocol.serializers import (
 
 apiVersionSchemas: Dict[int, Schema] = {
     0: [
-        ("api_key", int16Serializer),
+        ("api_key", apiKeySerializer),
         ("min_version", int16Serializer),
         ("max_version", int16Serializer),
     ],
     1: [
-        ("api_key", int16Serializer),
+        ("api_key", apiKeySerializer),
         ("min_version", int16Serializer),
         ("max_version", int16Serializer),
     ],
     2: [
-        ("api_key", int16Serializer),
+        ("api_key", apiKeySerializer),
         ("min_version", int16Serializer),
         ("max_version", int16Serializer),
     ],
@@ -45,17 +44,17 @@ apiVersionSerializers: Dict[int, DataClassSerializer[ApiVersion]] = {
 
 apiVersionsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("api_versions", ArraySerializer(apiVersionSerializers[0])),
         ("throttle_time_ms", DummySerializer(0)),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("api_versions", ArraySerializer(apiVersionSerializers[1])),
         ("throttle_time_ms", int32Serializer),
     ],
     2: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("api_versions", ArraySerializer(apiVersionSerializers[2])),
         ("throttle_time_ms", int32Serializer),
     ],

@@ -103,6 +103,6 @@ class FetchRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `1`, the api key for this API.
+        :return: the api key for this API: `ApiKey.FETCH` (`ApiKey(1)`)
         """
         return ApiKey.FETCH

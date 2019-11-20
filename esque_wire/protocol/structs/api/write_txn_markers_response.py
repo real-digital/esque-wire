@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -11,11 +11,11 @@ class Partition:
     :param partition: Topic partition id
     :type partition: int
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     """
 
     partition: int
-    error_code: int
+    error_code: ErrorCode
 
 
 @dataclass
@@ -56,6 +56,6 @@ class WriteTxnMarkersResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `27`, the api key for this API.
+        :return: the api key for this API: `ApiKey.WRITE_TXN_MARKERS` (`ApiKey(27)`)
         """
         return ApiKey.WRITE_TXN_MARKERS

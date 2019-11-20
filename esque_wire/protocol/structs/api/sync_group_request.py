@@ -42,6 +42,6 @@ class SyncGroupRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `14`, the api key for this API.
+        :return: the api key for this API: `ApiKey.SYNC_GROUP` (`ApiKey(14)`)
         """
         return ApiKey.SYNC_GROUP

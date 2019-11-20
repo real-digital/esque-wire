@@ -54,6 +54,6 @@ class ProduceRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `0`, the api key for this API.
+        :return: the api key for this API: `ApiKey.PRODUCE` (`ApiKey(0)`)
         """
         return ApiKey.PRODUCE

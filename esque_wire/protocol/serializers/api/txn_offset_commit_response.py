@@ -3,26 +3,26 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.txn_offset_commit_response import (
+from ...structs.api.txn_offset_commit_response import (
     Partition,
     Topic,
     TxnOffsetCommitResponseData,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     stringSerializer,
 )
 
 
 partitionSchemas: Dict[int, Schema] = {
-    0: [("partition", int32Serializer), ("error_code", int16Serializer)],
-    1: [("partition", int32Serializer), ("error_code", int16Serializer)],
-    2: [("partition", int32Serializer), ("error_code", int16Serializer)],
+    0: [("partition", int32Serializer), ("error_code", errorCodeSerializer)],
+    1: [("partition", int32Serializer), ("error_code", errorCodeSerializer)],
+    2: [("partition", int32Serializer), ("error_code", errorCodeSerializer)],
 }
 
 

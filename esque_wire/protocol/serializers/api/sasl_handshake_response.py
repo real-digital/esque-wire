@@ -3,26 +3,24 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.sasl_handshake_response import (
-    SaslHandshakeResponseData,
-)
+from ...structs.api.sasl_handshake_response import SaslHandshakeResponseData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     stringSerializer,
 )
 
 
 saslHandshakeResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("mechanisms", ArraySerializer(stringSerializer)),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("mechanisms", ArraySerializer(stringSerializer)),
     ],
 }

@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -9,12 +9,12 @@ from ..base import ResponseData
 class CreationResponse:
     """
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param error_message: Response error message
     :type error_message: Optional[str]
     """
 
-    error_code: int
+    error_code: ErrorCode
     error_message: Optional[str]
 
 
@@ -34,6 +34,6 @@ class CreateAclsResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `30`, the api key for this API.
+        :return: the api key for this API: `ApiKey.CREATE_ACLS` (`ApiKey(30)`)
         """
         return ApiKey.CREATE_ACLS

@@ -3,20 +3,18 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.update_metadata_response import (
-    UpdateMetadataResponseData,
-)
+from ...structs.api.update_metadata_response import UpdateMetadataResponseData
 
-from esque_wire.protocol.serializers import DataClassSerializer, Schema, int16Serializer
+from ._main_serializers import DataClassSerializer, Schema, errorCodeSerializer
 
 
 updateMetadataResponseDataSchemas: Dict[int, Schema] = {
-    0: [("error_code", int16Serializer)],
-    1: [("error_code", int16Serializer)],
-    2: [("error_code", int16Serializer)],
-    3: [("error_code", int16Serializer)],
-    4: [("error_code", int16Serializer)],
-    5: [("error_code", int16Serializer)],
+    0: [("error_code", errorCodeSerializer)],
+    1: [("error_code", errorCodeSerializer)],
+    2: [("error_code", errorCodeSerializer)],
+    3: [("error_code", errorCodeSerializer)],
+    4: [("error_code", errorCodeSerializer)],
+    5: [("error_code", errorCodeSerializer)],
 }
 
 

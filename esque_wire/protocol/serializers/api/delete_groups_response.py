@@ -3,24 +3,24 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.delete_groups_response import (
+from ...structs.api.delete_groups_response import (
     DeleteGroupsResponseData,
     GroupErrorCode,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     stringSerializer,
 )
 
 
 groupErrorCodeSchemas: Dict[int, Schema] = {
-    0: [("group_id", stringSerializer), ("error_code", int16Serializer)],
-    1: [("group_id", stringSerializer), ("error_code", int16Serializer)],
+    0: [("group_id", stringSerializer), ("error_code", errorCodeSerializer)],
+    1: [("group_id", stringSerializer), ("error_code", errorCodeSerializer)],
 }
 
 

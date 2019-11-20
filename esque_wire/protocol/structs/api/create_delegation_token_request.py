@@ -35,6 +35,6 @@ class CreateDelegationTokenRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `38`, the api key for this API.
+        :return: the api key for this API: `ApiKey.CREATE_DELEGATION_TOKEN` (`ApiKey(38)`)
         """
         return ApiKey.CREATE_DELEGATION_TOKEN

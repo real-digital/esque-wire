@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -43,14 +43,14 @@ class Topic:
 class LogDir:
     """
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param log_dir: The absolute log directory path.
     :type log_dir: str
     :param topics: None
     :type topics: List[Topic]
     """
 
-    error_code: int
+    error_code: ErrorCode
     log_dir: str
     topics: List[Topic]
 
@@ -71,6 +71,6 @@ class DescribeLogDirsResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `35`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DESCRIBE_LOG_DIRS` (`ApiKey(35)`)
         """
         return ApiKey.DESCRIBE_LOG_DIRS

@@ -3,17 +3,14 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.create_topics_response import (
-    CreateTopicsResponseData,
-    Topic,
-)
+from ...structs.api.create_topics_response import CreateTopicsResponseData, Topic
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     nullableStringSerializer,
     stringSerializer,
@@ -23,22 +20,22 @@ from esque_wire.protocol.serializers import (
 topicSchemas: Dict[int, Schema] = {
     0: [
         ("name", stringSerializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", DummySerializer(nullableStringSerializer.default)),
     ],
     1: [
         ("name", stringSerializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
     ],
     2: [
         ("name", stringSerializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
     ],
     3: [
         ("name", stringSerializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
     ],
 }

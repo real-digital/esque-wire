@@ -3,35 +3,38 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.describe_acls_request import DescribeAclsRequestData
+from ...structs.api.describe_acls_request import DescribeAclsRequestData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     DummySerializer,
     Schema,
+    aclOperationSerializer,
+    aclPermissionTypeSerializer,
     int8Serializer,
     nullableStringSerializer,
+    resourceTypeSerializer,
 )
 
 
 describeAclsRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", nullableStringSerializer),
         ("principal", nullableStringSerializer),
         ("host", nullableStringSerializer),
-        ("operation", int8Serializer),
-        ("permission_type", int8Serializer),
+        ("operation", aclOperationSerializer),
+        ("permission_type", aclPermissionTypeSerializer),
         ("resource_pattern_type_filter", DummySerializer(3)),
     ],
     1: [
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", nullableStringSerializer),
         ("resource_pattern_type_filter", int8Serializer),
         ("principal", nullableStringSerializer),
         ("host", nullableStringSerializer),
-        ("operation", int8Serializer),
-        ("permission_type", int8Serializer),
+        ("operation", aclOperationSerializer),
+        ("permission_type", aclPermissionTypeSerializer),
     ],
 }
 

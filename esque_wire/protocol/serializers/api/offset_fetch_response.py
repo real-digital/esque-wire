@@ -3,18 +3,18 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.offset_fetch_response import (
+from ...structs.api.offset_fetch_response import (
     OffsetFetchResponseData,
     PartitionResponse,
     Response,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     int64Serializer,
     nullableStringSerializer,
@@ -27,35 +27,35 @@ partitionResponseSchemas: Dict[int, Schema] = {
         ("partition", int32Serializer),
         ("offset", int64Serializer),
         ("metadata", nullableStringSerializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("leader_epoch", DummySerializer(int32Serializer.default)),
     ],
     1: [
         ("partition", int32Serializer),
         ("offset", int64Serializer),
         ("metadata", nullableStringSerializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("leader_epoch", DummySerializer(int32Serializer.default)),
     ],
     2: [
         ("partition", int32Serializer),
         ("offset", int64Serializer),
         ("metadata", nullableStringSerializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("leader_epoch", DummySerializer(int32Serializer.default)),
     ],
     3: [
         ("partition", int32Serializer),
         ("offset", int64Serializer),
         ("metadata", nullableStringSerializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("leader_epoch", DummySerializer(int32Serializer.default)),
     ],
     4: [
         ("partition", int32Serializer),
         ("offset", int64Serializer),
         ("metadata", nullableStringSerializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("leader_epoch", DummySerializer(int32Serializer.default)),
     ],
     5: [
@@ -63,7 +63,7 @@ partitionResponseSchemas: Dict[int, Schema] = {
         ("offset", int64Serializer),
         ("leader_epoch", int32Serializer),
         ("metadata", nullableStringSerializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
     ],
 }
 
@@ -112,32 +112,32 @@ offsetFetchResponseDataSchemas: Dict[int, Schema] = {
     0: [
         ("responses", ArraySerializer(responseSerializers[0])),
         ("throttle_time_ms", DummySerializer(0)),
-        ("error_code", DummySerializer(int16Serializer.default)),
+        ("error_code", DummySerializer(errorCodeSerializer.default)),
     ],
     1: [
         ("responses", ArraySerializer(responseSerializers[1])),
         ("throttle_time_ms", DummySerializer(0)),
-        ("error_code", DummySerializer(int16Serializer.default)),
+        ("error_code", DummySerializer(errorCodeSerializer.default)),
     ],
     2: [
         ("responses", ArraySerializer(responseSerializers[2])),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("throttle_time_ms", DummySerializer(0)),
     ],
     3: [
         ("throttle_time_ms", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[3])),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
     ],
     4: [
         ("throttle_time_ms", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[4])),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
     ],
     5: [
         ("throttle_time_ms", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[5])),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
     ],
 }
 

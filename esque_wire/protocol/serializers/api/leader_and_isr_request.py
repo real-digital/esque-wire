@@ -3,14 +3,14 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.leader_and_isr_request import (
+from ...structs.api.leader_and_isr_request import (
     LeaderAndIsrRequestData,
     LiveLeader,
     PartitionState,
     TopicState,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,

@@ -108,6 +108,6 @@ class UpdateMetadataRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `6`, the api key for this API.
+        :return: the api key for this API: `ApiKey.UPDATE_METADATA` (`ApiKey(6)`)
         """
         return ApiKey.UPDATE_METADATA

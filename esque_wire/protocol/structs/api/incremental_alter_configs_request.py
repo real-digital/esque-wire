@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ResourceType
 from ..base import RequestData
 
 
@@ -25,14 +25,14 @@ class Config:
 class Resource:
     """
     :param resource_type: The resource type.
-    :type resource_type: int
+    :type resource_type: ResourceType
     :param resource_name: The resource name.
     :type resource_name: str
     :param configs: The configurations.
     :type configs: List[Config]
     """
 
-    resource_type: int
+    resource_type: ResourceType
     resource_name: str
     configs: List[Config]
 
@@ -52,6 +52,6 @@ class IncrementalAlterConfigsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `44`, the api key for this API.
+        :return: the api key for this API: `ApiKey.INCREMENTAL_ALTER_CONFIGS` (`ApiKey(44)`)
         """
         return ApiKey.INCREMENTAL_ALTER_CONFIGS

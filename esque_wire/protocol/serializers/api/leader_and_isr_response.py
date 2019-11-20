@@ -3,16 +3,13 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.leader_and_isr_response import (
-    LeaderAndIsrResponseData,
-    Partition,
-)
+from ...structs.api.leader_and_isr_response import LeaderAndIsrResponseData, Partition
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     stringSerializer,
 )
@@ -22,17 +19,17 @@ partitionSchemas: Dict[int, Schema] = {
     0: [
         ("topic", stringSerializer),
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
     ],
     1: [
         ("topic", stringSerializer),
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
     ],
     2: [
         ("topic", stringSerializer),
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
     ],
 }
 
@@ -45,15 +42,15 @@ partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
 
 leaderAndIsrResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partitions", ArraySerializer(partitionSerializers[0])),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partitions", ArraySerializer(partitionSerializers[1])),
     ],
     2: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partitions", ArraySerializer(partitionSerializers[2])),
     ],
 }

@@ -3,21 +3,24 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.describe_acls_response import (
+from ...structs.api.describe_acls_response import (
     Acl,
     DescribeAclsResponseData,
     Resource,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    aclOperationSerializer,
+    aclPermissionTypeSerializer,
+    errorCodeSerializer,
     int32Serializer,
     int8Serializer,
     nullableStringSerializer,
+    resourceTypeSerializer,
     stringSerializer,
 )
 
@@ -26,14 +29,14 @@ aclSchemas: Dict[int, Schema] = {
     0: [
         ("principal", stringSerializer),
         ("host", stringSerializer),
-        ("operation", int8Serializer),
-        ("permission_type", int8Serializer),
+        ("operation", aclOperationSerializer),
+        ("permission_type", aclPermissionTypeSerializer),
     ],
     1: [
         ("principal", stringSerializer),
         ("host", stringSerializer),
-        ("operation", int8Serializer),
-        ("permission_type", int8Serializer),
+        ("operation", aclOperationSerializer),
+        ("permission_type", aclPermissionTypeSerializer),
     ],
 }
 
@@ -45,13 +48,13 @@ aclSerializers: Dict[int, DataClassSerializer[Acl]] = {
 
 resourceSchemas: Dict[int, Schema] = {
     0: [
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", stringSerializer),
         ("acls", ArraySerializer(aclSerializers[0])),
         ("resource_pattern_type", DummySerializer(3)),
     ],
     1: [
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", stringSerializer),
         ("resource_pattern_type", int8Serializer),
         ("acls", ArraySerializer(aclSerializers[1])),
@@ -68,13 +71,13 @@ resourceSerializers: Dict[int, DataClassSerializer[Resource]] = {
 describeAclsResponseDataSchemas: Dict[int, Schema] = {
     0: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
         ("resources", ArraySerializer(resourceSerializers[0])),
     ],
     1: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
         ("resources", ArraySerializer(resourceSerializers[1])),
     ],

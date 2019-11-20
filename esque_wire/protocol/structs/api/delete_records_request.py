@@ -46,6 +46,6 @@ class DeleteRecordsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `21`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DELETE_RECORDS` (`ApiKey(21)`)
         """
         return ApiKey.DELETE_RECORDS

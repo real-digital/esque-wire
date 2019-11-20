@@ -33,6 +33,6 @@ class ElectPreferredLeadersRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `43`, the api key for this API.
+        :return: the api key for this API: `ApiKey.ELECT_PREFERRED_LEADERS` (`ApiKey(43)`)
         """
         return ApiKey.ELECT_PREFERRED_LEADERS

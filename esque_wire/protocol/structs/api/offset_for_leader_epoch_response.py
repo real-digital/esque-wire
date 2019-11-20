@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -9,7 +9,7 @@ from ..base import ResponseData
 class Partition:
     """
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param partition: Topic partition id
     :type partition: int
     :param leader_epoch: The leader epoch
@@ -18,7 +18,7 @@ class Partition:
     :type end_offset: int
     """
 
-    error_code: int
+    error_code: ErrorCode
     partition: int
     leader_epoch: int
     end_offset: int
@@ -53,6 +53,6 @@ class OffsetForLeaderEpochResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `23`, the api key for this API.
+        :return: the api key for this API: `ApiKey.OFFSET_FOR_LEADER_EPOCH` (`ApiKey(23)`)
         """
         return ApiKey.OFFSET_FOR_LEADER_EPOCH

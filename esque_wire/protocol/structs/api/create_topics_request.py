@@ -73,6 +73,6 @@ class CreateTopicsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `19`, the api key for this API.
+        :return: the api key for this API: `ApiKey.CREATE_TOPICS` (`ApiKey(19)`)
         """
         return ApiKey.CREATE_TOPICS

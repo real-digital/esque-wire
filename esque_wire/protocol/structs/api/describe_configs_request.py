@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ResourceType
 from ..base import RequestData
 
 
@@ -9,14 +9,14 @@ from ..base import RequestData
 class Resource:
     """
     :param resource_type: None
-    :type resource_type: int
+    :type resource_type: ResourceType
     :param resource_name: None
     :type resource_name: str
     :param config_names: None
     :type config_names: List[str]
     """
 
-    resource_type: int
+    resource_type: ResourceType
     resource_name: str
     config_names: List[str]
 
@@ -36,6 +36,6 @@ class DescribeConfigsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `32`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DESCRIBE_CONFIGS` (`ApiKey(32)`)
         """
         return ApiKey.DESCRIBE_CONFIGS

@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -25,18 +25,18 @@ class ListGroupsResponseData(ResponseData):
                              if the request did not violate any quota)
     :type throttle_time_ms: int
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param groups: None
     :type groups: List[Group]
     """
 
     throttle_time_ms: int
-    error_code: int
+    error_code: ErrorCode
     groups: List[Group]
 
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `16`, the api key for this API.
+        :return: the api key for this API: `ApiKey.LIST_GROUPS` (`ApiKey(16)`)
         """
         return ApiKey.LIST_GROUPS

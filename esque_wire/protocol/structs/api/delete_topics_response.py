@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -11,11 +11,11 @@ class Response:
     :param name: The topic name
     :type name: str
     :param error_code: The deletion error, or 0 if the deletion succeeded.
-    :type error_code: int
+    :type error_code: ErrorCode
     """
 
     name: str
-    error_code: int
+    error_code: ErrorCode
 
 
 @dataclass
@@ -34,6 +34,6 @@ class DeleteTopicsResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `20`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DELETE_TOPICS` (`ApiKey(20)`)
         """
         return ApiKey.DELETE_TOPICS

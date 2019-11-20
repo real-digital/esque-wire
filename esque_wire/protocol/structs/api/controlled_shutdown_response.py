@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -22,17 +22,17 @@ class RemainingPartition:
 class ControlledShutdownResponseData(ResponseData):
     """
     :param error_code: The top-level error code.
-    :type error_code: int
+    :type error_code: ErrorCode
     :param remaining_partitions: The partitions that the broker still leads.
     :type remaining_partitions: List[RemainingPartition]
     """
 
-    error_code: int
+    error_code: ErrorCode
     remaining_partitions: List[RemainingPartition]
 
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `7`, the api key for this API.
+        :return: the api key for this API: `ApiKey.CONTROLLED_SHUTDOWN` (`ApiKey(7)`)
         """
         return ApiKey.CONTROLLED_SHUTDOWN

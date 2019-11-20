@@ -26,6 +26,6 @@ class HeartbeatRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `12`, the api key for this API.
+        :return: the api key for this API: `ApiKey.HEARTBEAT` (`ApiKey(12)`)
         """
         return ApiKey.HEARTBEAT

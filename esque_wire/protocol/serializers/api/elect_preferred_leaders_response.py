@@ -3,17 +3,17 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.elect_preferred_leaders_response import (
+from ...structs.api.elect_preferred_leaders_response import (
     ElectPreferredLeadersResponseData,
     PartitionResult,
     ReplicaElectionResult,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     nullableStringSerializer,
     stringSerializer,
@@ -23,7 +23,7 @@ from esque_wire.protocol.serializers import (
 partitionResultSchemas: Dict[int, Schema] = {
     0: [
         ("partition_id", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
     ]
 }

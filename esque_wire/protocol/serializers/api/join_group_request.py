@@ -3,12 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.join_group_request import (
-    JoinGroupRequestData,
-    Protocol,
-)
+from ...structs.api.join_group_request import JoinGroupRequestData, Protocol
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,

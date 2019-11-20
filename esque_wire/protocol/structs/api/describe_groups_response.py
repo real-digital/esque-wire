@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -31,7 +31,7 @@ class Member:
 class Group:
     """
     :param error_code: The describe error, or 0 if there was no error.
-    :type error_code: int
+    :type error_code: ErrorCode
     :param group_id: The group ID string.
     :type group_id: str
     :param group_state: The group state string, or the empty string.
@@ -46,7 +46,7 @@ class Group:
     :type authorized_operations: int
     """
 
-    error_code: int
+    error_code: ErrorCode
     group_id: str
     group_state: str
     protocol_type: str
@@ -71,6 +71,6 @@ class DescribeGroupsResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `15`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DESCRIBE_GROUPS` (`ApiKey(15)`)
         """
         return ApiKey.DESCRIBE_GROUPS

@@ -3,47 +3,50 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.delete_acls_response import (
+from ...structs.api.delete_acls_response import (
     DeleteAclsResponseData,
     FilterResponse,
     MatchingAcl,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    aclOperationSerializer,
+    aclPermissionTypeSerializer,
+    errorCodeSerializer,
     int32Serializer,
     int8Serializer,
     nullableStringSerializer,
+    resourceTypeSerializer,
     stringSerializer,
 )
 
 
 matchingAclSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", stringSerializer),
         ("principal", stringSerializer),
         ("host", stringSerializer),
-        ("operation", int8Serializer),
-        ("permission_type", int8Serializer),
+        ("operation", aclOperationSerializer),
+        ("permission_type", aclPermissionTypeSerializer),
         ("resource_pattern_type", DummySerializer(3)),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", stringSerializer),
         ("resource_pattern_type", int8Serializer),
         ("principal", stringSerializer),
         ("host", stringSerializer),
-        ("operation", int8Serializer),
-        ("permission_type", int8Serializer),
+        ("operation", aclOperationSerializer),
+        ("permission_type", aclPermissionTypeSerializer),
     ],
 }
 
@@ -56,12 +59,12 @@ matchingAclSerializers: Dict[int, DataClassSerializer[MatchingAcl]] = {
 
 filterResponseSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
         ("matching_acls", ArraySerializer(matchingAclSerializers[0])),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
         ("matching_acls", ArraySerializer(matchingAclSerializers[1])),
     ],

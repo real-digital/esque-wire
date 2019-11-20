@@ -3,13 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.produce_request import (
-    Data,
-    ProduceRequestData,
-    TopicData,
-)
+from ...structs.api.produce_request import Data, ProduceRequestData, TopicData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,

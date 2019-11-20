@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import AclOperation, AclPermissionType, ApiKey, ResourceType
 from ..base import RequestData
 
 
@@ -9,7 +9,7 @@ from ..base import RequestData
 class Creation:
     """
     :param resource_type: The resource type
-    :type resource_type: int
+    :type resource_type: ResourceType
     :param resource_name: The resource name
     :type resource_name: str
     :param resource_pattern_type: The resource pattern type
@@ -19,18 +19,18 @@ class Creation:
     :param host: The ACL host
     :type host: str
     :param operation: The ACL operation
-    :type operation: int
+    :type operation: AclOperation
     :param permission_type: The ACL permission type
-    :type permission_type: int
+    :type permission_type: AclPermissionType
     """
 
-    resource_type: int
+    resource_type: ResourceType
     resource_name: str
     resource_pattern_type: int
     principal: str
     host: str
-    operation: int
-    permission_type: int
+    operation: AclOperation
+    permission_type: AclPermissionType
 
 
 @dataclass
@@ -45,6 +45,6 @@ class CreateAclsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `30`, the api key for this API.
+        :return: the api key for this API: `ApiKey.CREATE_ACLS` (`ApiKey(30)`)
         """
         return ApiKey.CREATE_ACLS

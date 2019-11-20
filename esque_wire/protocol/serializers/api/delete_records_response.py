@@ -3,17 +3,17 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.delete_records_response import (
+from ...structs.api.delete_records_response import (
     DeleteRecordsResponseData,
     Partition,
     Topic,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     int64Serializer,
     stringSerializer,
@@ -24,12 +24,12 @@ partitionSchemas: Dict[int, Schema] = {
     0: [
         ("partition", int32Serializer),
         ("low_watermark", int64Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
     ],
     1: [
         ("partition", int32Serializer),
         ("low_watermark", int64Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
     ],
 }
 

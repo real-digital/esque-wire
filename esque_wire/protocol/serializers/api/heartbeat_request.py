@@ -3,9 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.heartbeat_request import HeartbeatRequestData
+from ...structs.api.heartbeat_request import HeartbeatRequestData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     DummySerializer,
     Schema,

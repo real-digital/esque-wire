@@ -3,16 +3,14 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.sasl_authenticate_response import (
-    SaslAuthenticateResponseData,
-)
+from ...structs.api.sasl_authenticate_response import SaslAuthenticateResponseData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     DummySerializer,
     Schema,
     bytesSerializer,
-    int16Serializer,
+    errorCodeSerializer,
     int64Serializer,
     nullableStringSerializer,
 )
@@ -20,13 +18,13 @@ from esque_wire.protocol.serializers import (
 
 saslAuthenticateResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
         ("auth_bytes", bytesSerializer),
         ("session_lifetime_ms", DummySerializer(int64Serializer.default)),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
         ("auth_bytes", bytesSerializer),
         ("session_lifetime_ms", int64Serializer),

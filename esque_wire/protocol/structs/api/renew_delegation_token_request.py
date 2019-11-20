@@ -19,6 +19,6 @@ class RenewDelegationTokenRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `39`, the api key for this API.
+        :return: the api key for this API: `ApiKey.RENEW_DELEGATION_TOKEN` (`ApiKey(39)`)
         """
         return ApiKey.RENEW_DELEGATION_TOKEN

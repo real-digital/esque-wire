@@ -3,11 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.add_offsets_to_txn_request import (
-    AddOffsetsToTxnRequestData,
-)
+from ...structs.api.add_offsets_to_txn_request import AddOffsetsToTxnRequestData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     Schema,
     int16Serializer,

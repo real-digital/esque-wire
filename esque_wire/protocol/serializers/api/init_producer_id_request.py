@@ -3,11 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.init_producer_id_request import (
-    InitProducerIdRequestData,
-)
+from ...structs.api.init_producer_id_request import InitProducerIdRequestData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     Schema,
     int32Serializer,

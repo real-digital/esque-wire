@@ -19,6 +19,6 @@ class FindCoordinatorRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `10`, the api key for this API.
+        :return: the api key for this API: `ApiKey.FIND_COORDINATOR` (`ApiKey(10)`)
         """
         return ApiKey.FIND_COORDINATOR

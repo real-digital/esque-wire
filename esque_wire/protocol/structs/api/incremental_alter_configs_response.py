@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode, ResourceType
 from ..base import ResponseData
 
 
@@ -9,18 +9,18 @@ from ..base import ResponseData
 class Response:
     """
     :param error_code: The resource error code.
-    :type error_code: int
+    :type error_code: ErrorCode
     :param error_message: The resource error message, or null if there was no error.
     :type error_message: Optional[str]
     :param resource_type: The resource type.
-    :type resource_type: int
+    :type resource_type: ResourceType
     :param resource_name: The resource name.
     :type resource_name: str
     """
 
-    error_code: int
+    error_code: ErrorCode
     error_message: Optional[str]
-    resource_type: int
+    resource_type: ResourceType
     resource_name: str
 
 
@@ -40,6 +40,6 @@ class IncrementalAlterConfigsResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `44`, the api key for this API.
+        :return: the api key for this API: `ApiKey.INCREMENTAL_ALTER_CONFIGS` (`ApiKey(44)`)
         """
         return ApiKey.INCREMENTAL_ALTER_CONFIGS

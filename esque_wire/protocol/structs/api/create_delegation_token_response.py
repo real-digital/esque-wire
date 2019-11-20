@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -21,7 +21,7 @@ class Owner:
 class CreateDelegationTokenResponseData(ResponseData):
     """
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param owner: token owner.
     :type owner: Owner
     :param issue_timestamp: timestamp (in msec) when this token was generated.
@@ -39,7 +39,7 @@ class CreateDelegationTokenResponseData(ResponseData):
     :type throttle_time_ms: int
     """
 
-    error_code: int
+    error_code: ErrorCode
     owner: Owner
     issue_timestamp: int
     expiry_timestamp: int
@@ -51,6 +51,6 @@ class CreateDelegationTokenResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `38`, the api key for this API.
+        :return: the api key for this API: `ApiKey.CREATE_DELEGATION_TOKEN` (`ApiKey(38)`)
         """
         return ApiKey.CREATE_DELEGATION_TOKEN

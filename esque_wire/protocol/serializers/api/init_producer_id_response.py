@@ -3,13 +3,12 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.init_producer_id_response import (
-    InitProducerIdResponseData,
-)
+from ...structs.api.init_producer_id_response import InitProducerIdResponseData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     Schema,
+    errorCodeSerializer,
     int16Serializer,
     int32Serializer,
     int64Serializer,
@@ -19,13 +18,13 @@ from esque_wire.protocol.serializers import (
 initProducerIdResponseDataSchemas: Dict[int, Schema] = {
     0: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("producer_id", int64Serializer),
         ("producer_epoch", int16Serializer),
     ],
     1: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("producer_id", int64Serializer),
         ("producer_epoch", int16Serializer),
     ],

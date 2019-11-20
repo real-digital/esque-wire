@@ -3,13 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.list_offsets_request import (
-    ListOffsetsRequestData,
-    Partition,
-    Topic,
-)
+from ...structs.api.list_offsets_request import ListOffsetsRequestData, Partition, Topic
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,

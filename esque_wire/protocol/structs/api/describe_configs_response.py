@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode, ResourceType
 from ..base import ResponseData
 
 
@@ -50,20 +50,20 @@ class ConfigEntry:
 class Resource:
     """
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param error_message: Response error message
     :type error_message: Optional[str]
     :param resource_type: None
-    :type resource_type: int
+    :type resource_type: ResourceType
     :param resource_name: None
     :type resource_name: str
     :param config_entries: None
     :type config_entries: List[ConfigEntry]
     """
 
-    error_code: int
+    error_code: ErrorCode
     error_message: Optional[str]
-    resource_type: int
+    resource_type: ResourceType
     resource_name: str
     config_entries: List[ConfigEntry]
 
@@ -84,6 +84,6 @@ class DescribeConfigsResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `32`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DESCRIBE_CONFIGS` (`ApiKey(32)`)
         """
         return ApiKey.DESCRIBE_CONFIGS

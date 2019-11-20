@@ -3,9 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.end_txn_request import EndTxnRequestData
+from ...structs.api.end_txn_request import EndTxnRequestData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     Schema,
     booleanSerializer,

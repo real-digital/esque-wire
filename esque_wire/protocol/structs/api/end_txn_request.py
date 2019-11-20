@@ -25,6 +25,6 @@ class EndTxnRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `26`, the api key for this API.
+        :return: the api key for this API: `ApiKey.END_TXN` (`ApiKey(26)`)
         """
         return ApiKey.END_TXN

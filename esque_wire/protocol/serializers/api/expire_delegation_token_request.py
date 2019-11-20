@@ -3,11 +3,11 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.expire_delegation_token_request import (
+from ...structs.api.expire_delegation_token_request import (
     ExpireDelegationTokenRequestData,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     Schema,
     bytesSerializer,

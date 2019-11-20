@@ -3,24 +3,27 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.create_acls_response import (
-    CreateAclsResponseData,
-    CreationResponse,
-)
+from ...structs.api.create_acls_response import CreateAclsResponseData, CreationResponse
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     nullableStringSerializer,
 )
 
 
 creationResponseSchemas: Dict[int, Schema] = {
-    0: [("error_code", int16Serializer), ("error_message", nullableStringSerializer)],
-    1: [("error_code", int16Serializer), ("error_message", nullableStringSerializer)],
+    0: [
+        ("error_code", errorCodeSerializer),
+        ("error_message", nullableStringSerializer),
+    ],
+    1: [
+        ("error_code", errorCodeSerializer),
+        ("error_message", nullableStringSerializer),
+    ],
 }
 
 

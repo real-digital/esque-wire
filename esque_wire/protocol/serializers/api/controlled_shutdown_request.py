@@ -3,11 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.controlled_shutdown_request import (
-    ControlledShutdownRequestData,
-)
+from ...structs.api.controlled_shutdown_request import ControlledShutdownRequestData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     DummySerializer,
     Schema,

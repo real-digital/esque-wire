@@ -20,6 +20,6 @@ class DescribeGroupsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `15`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DESCRIBE_GROUPS` (`ApiKey(15)`)
         """
         return ApiKey.DESCRIBE_GROUPS

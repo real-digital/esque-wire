@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -13,29 +13,29 @@ class Partition:
     :param partition: Topic partition id
     :type partition: int
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     """
 
     topic: str
     partition: int
-    error_code: int
+    error_code: ErrorCode
 
 
 @dataclass
 class LeaderAndIsrResponseData(ResponseData):
     """
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param partitions: Response for the requests partitions
     :type partitions: List[Partition]
     """
 
-    error_code: int
+    error_code: ErrorCode
     partitions: List[Partition]
 
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `4`, the api key for this API.
+        :return: the api key for this API: `ApiKey.LEADER_AND_ISR` (`ApiKey(4)`)
         """
         return ApiKey.LEADER_AND_ISR

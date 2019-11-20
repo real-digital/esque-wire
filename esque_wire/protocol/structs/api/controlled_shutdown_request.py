@@ -19,6 +19,6 @@ class ControlledShutdownRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `7`, the api key for this API.
+        :return: the api key for this API: `ApiKey.CONTROLLED_SHUTDOWN` (`ApiKey(7)`)
         """
         return ApiKey.CONTROLLED_SHUTDOWN

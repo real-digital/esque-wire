@@ -3,13 +3,13 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.alter_replica_log_dirs_request import (
+from ...structs.api.alter_replica_log_dirs_request import (
     AlterReplicaLogDirsRequestData,
     LogDir,
     Topic,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,

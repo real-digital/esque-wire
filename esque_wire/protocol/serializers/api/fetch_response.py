@@ -3,7 +3,7 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.fetch_response import (
+from ...structs.api.fetch_response import (
     AbortedTransaction,
     FetchResponseData,
     PartitionHeader,
@@ -11,12 +11,12 @@ from esque_wire.protocol.structs.fetch_response import (
     Response,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     int64Serializer,
     nullableBytesSerializer,
@@ -45,7 +45,7 @@ abortedTransactionSerializers: Dict[int, DataClassSerializer[AbortedTransaction]
 partitionHeaderSchemas: Dict[int, Schema] = {
     0: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("high_watermark", int64Serializer),
         ("last_stable_offset", DummySerializer(int64Serializer.default)),
         ("log_start_offset", DummySerializer(int64Serializer.default)),
@@ -57,7 +57,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
     ],
     1: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("high_watermark", int64Serializer),
         ("last_stable_offset", DummySerializer(int64Serializer.default)),
         ("log_start_offset", DummySerializer(int64Serializer.default)),
@@ -69,7 +69,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
     ],
     2: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("high_watermark", int64Serializer),
         ("last_stable_offset", DummySerializer(int64Serializer.default)),
         ("log_start_offset", DummySerializer(int64Serializer.default)),
@@ -81,7 +81,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
     ],
     3: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("high_watermark", int64Serializer),
         ("last_stable_offset", DummySerializer(int64Serializer.default)),
         ("log_start_offset", DummySerializer(int64Serializer.default)),
@@ -93,7 +93,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
     ],
     4: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("high_watermark", int64Serializer),
         ("last_stable_offset", int64Serializer),
         ("aborted_transactions", ArraySerializer(abortedTransactionSerializers[4])),
@@ -102,7 +102,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
     ],
     5: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("high_watermark", int64Serializer),
         ("last_stable_offset", int64Serializer),
         ("log_start_offset", int64Serializer),
@@ -111,7 +111,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
     ],
     6: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("high_watermark", int64Serializer),
         ("last_stable_offset", int64Serializer),
         ("log_start_offset", int64Serializer),
@@ -120,7 +120,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
     ],
     7: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("high_watermark", int64Serializer),
         ("last_stable_offset", int64Serializer),
         ("log_start_offset", int64Serializer),
@@ -129,7 +129,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
     ],
     8: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("high_watermark", int64Serializer),
         ("last_stable_offset", int64Serializer),
         ("log_start_offset", int64Serializer),
@@ -138,7 +138,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
     ],
     9: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("high_watermark", int64Serializer),
         ("last_stable_offset", int64Serializer),
         ("log_start_offset", int64Serializer),
@@ -147,7 +147,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
     ],
     10: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("high_watermark", int64Serializer),
         ("last_stable_offset", int64Serializer),
         ("log_start_offset", int64Serializer),
@@ -156,7 +156,7 @@ partitionHeaderSchemas: Dict[int, Schema] = {
     ],
     11: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("high_watermark", int64Serializer),
         ("last_stable_offset", int64Serializer),
         ("log_start_offset", int64Serializer),
@@ -292,72 +292,72 @@ fetchResponseDataSchemas: Dict[int, Schema] = {
     0: [
         ("responses", ArraySerializer(responseSerializers[0])),
         ("throttle_time_ms", DummySerializer(0)),
-        ("error_code", DummySerializer(int16Serializer.default)),
+        ("error_code", DummySerializer(errorCodeSerializer.default)),
         ("session_id", DummySerializer(int32Serializer.default)),
     ],
     1: [
         ("throttle_time_ms", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[1])),
-        ("error_code", DummySerializer(int16Serializer.default)),
+        ("error_code", DummySerializer(errorCodeSerializer.default)),
         ("session_id", DummySerializer(int32Serializer.default)),
     ],
     2: [
         ("throttle_time_ms", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[2])),
-        ("error_code", DummySerializer(int16Serializer.default)),
+        ("error_code", DummySerializer(errorCodeSerializer.default)),
         ("session_id", DummySerializer(int32Serializer.default)),
     ],
     3: [
         ("throttle_time_ms", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[3])),
-        ("error_code", DummySerializer(int16Serializer.default)),
+        ("error_code", DummySerializer(errorCodeSerializer.default)),
         ("session_id", DummySerializer(int32Serializer.default)),
     ],
     4: [
         ("throttle_time_ms", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[4])),
-        ("error_code", DummySerializer(int16Serializer.default)),
+        ("error_code", DummySerializer(errorCodeSerializer.default)),
         ("session_id", DummySerializer(int32Serializer.default)),
     ],
     5: [
         ("throttle_time_ms", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[5])),
-        ("error_code", DummySerializer(int16Serializer.default)),
+        ("error_code", DummySerializer(errorCodeSerializer.default)),
         ("session_id", DummySerializer(int32Serializer.default)),
     ],
     6: [
         ("throttle_time_ms", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[6])),
-        ("error_code", DummySerializer(int16Serializer.default)),
+        ("error_code", DummySerializer(errorCodeSerializer.default)),
         ("session_id", DummySerializer(int32Serializer.default)),
     ],
     7: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("session_id", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[7])),
     ],
     8: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("session_id", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[8])),
     ],
     9: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("session_id", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[9])),
     ],
     10: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("session_id", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[10])),
     ],
     11: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("session_id", int32Serializer),
         ("responses", ArraySerializer(responseSerializers[11])),
     ],

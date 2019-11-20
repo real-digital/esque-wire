@@ -3,15 +3,13 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.find_coordinator_response import (
-    FindCoordinatorResponseData,
-)
+from ...structs.api.find_coordinator_response import FindCoordinatorResponseData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     nullableStringSerializer,
     stringSerializer,
@@ -20,7 +18,7 @@ from esque_wire.protocol.serializers import (
 
 findCoordinatorResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("node_id", int32Serializer),
         ("host", stringSerializer),
         ("port", int32Serializer),
@@ -29,7 +27,7 @@ findCoordinatorResponseDataSchemas: Dict[int, Schema] = {
     ],
     1: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
         ("node_id", int32Serializer),
         ("host", stringSerializer),
@@ -37,7 +35,7 @@ findCoordinatorResponseDataSchemas: Dict[int, Schema] = {
     ],
     2: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
         ("node_id", int32Serializer),
         ("host", stringSerializer),

@@ -1,7 +1,13 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import (
+    AclOperation,
+    AclPermissionType,
+    ApiKey,
+    ErrorCode,
+    ResourceType,
+)
 from ..base import ResponseData
 
 
@@ -13,22 +19,22 @@ class Acl:
     :param host: The ACL host
     :type host: str
     :param operation: The ACL operation
-    :type operation: int
+    :type operation: AclOperation
     :param permission_type: The ACL permission type
-    :type permission_type: int
+    :type permission_type: AclPermissionType
     """
 
     principal: str
     host: str
-    operation: int
-    permission_type: int
+    operation: AclOperation
+    permission_type: AclPermissionType
 
 
 @dataclass
 class Resource:
     """
     :param resource_type: The resource type
-    :type resource_type: int
+    :type resource_type: ResourceType
     :param resource_name: The resource name
     :type resource_name: str
     :param resource_pattern_type: The resource pattern type
@@ -37,7 +43,7 @@ class Resource:
     :type acls: List[Acl]
     """
 
-    resource_type: int
+    resource_type: ResourceType
     resource_name: str
     resource_pattern_type: int
     acls: List[Acl]
@@ -50,7 +56,7 @@ class DescribeAclsResponseData(ResponseData):
                              if the request did not violate any quota)
     :type throttle_time_ms: int
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param error_message: Response error message
     :type error_message: Optional[str]
     :param resources: The resources and their associated ACLs.
@@ -58,13 +64,13 @@ class DescribeAclsResponseData(ResponseData):
     """
 
     throttle_time_ms: int
-    error_code: int
+    error_code: ErrorCode
     error_message: Optional[str]
     resources: List[Resource]
 
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `29`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DESCRIBE_ACLS` (`ApiKey(29)`)
         """
         return ApiKey.DESCRIBE_ACLS

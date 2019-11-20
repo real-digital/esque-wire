@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -11,11 +11,11 @@ class GroupErrorCode:
     :param group_id: The unique group identifier
     :type group_id: str
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     """
 
     group_id: str
-    error_code: int
+    error_code: ErrorCode
 
 
 @dataclass
@@ -34,6 +34,6 @@ class DeleteGroupsResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `42`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DELETE_GROUPS` (`ApiKey(42)`)
         """
         return ApiKey.DELETE_GROUPS

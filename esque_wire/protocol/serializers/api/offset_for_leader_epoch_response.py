@@ -3,18 +3,18 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.offset_for_leader_epoch_response import (
+from ...structs.api.offset_for_leader_epoch_response import (
     OffsetForLeaderEpochResponseData,
     Partition,
     Topic,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     int64Serializer,
     stringSerializer,
@@ -23,25 +23,25 @@ from esque_wire.protocol.serializers import (
 
 partitionSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition", int32Serializer),
         ("end_offset", int64Serializer),
         ("leader_epoch", DummySerializer(int32Serializer.default)),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition", int32Serializer),
         ("leader_epoch", int32Serializer),
         ("end_offset", int64Serializer),
     ],
     2: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition", int32Serializer),
         ("leader_epoch", int32Serializer),
         ("end_offset", int64Serializer),
     ],
     3: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition", int32Serializer),
         ("leader_epoch", int32Serializer),
         ("end_offset", int64Serializer),

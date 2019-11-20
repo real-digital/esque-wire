@@ -3,18 +3,18 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.list_offsets_response import (
+from ...structs.api.list_offsets_response import (
     ListOffsetsResponseData,
     PartitionResponse,
     Response,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     int64Serializer,
     stringSerializer,
@@ -24,7 +24,7 @@ from esque_wire.protocol.serializers import (
 partitionResponseSchemas: Dict[int, Schema] = {
     0: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         (None, ArraySerializer(int64Serializer)),
         ("timestamp", DummySerializer(int64Serializer.default)),
         ("offset", DummySerializer(int64Serializer.default)),
@@ -32,35 +32,35 @@ partitionResponseSchemas: Dict[int, Schema] = {
     ],
     1: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("timestamp", int64Serializer),
         ("offset", int64Serializer),
         ("leader_epoch", DummySerializer(int32Serializer.default)),
     ],
     2: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("timestamp", int64Serializer),
         ("offset", int64Serializer),
         ("leader_epoch", DummySerializer(int32Serializer.default)),
     ],
     3: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("timestamp", int64Serializer),
         ("offset", int64Serializer),
         ("leader_epoch", DummySerializer(int32Serializer.default)),
     ],
     4: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("timestamp", int64Serializer),
         ("offset", int64Serializer),
         ("leader_epoch", int32Serializer),
     ],
     5: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("timestamp", int64Serializer),
         ("offset", int64Serializer),
         ("leader_epoch", int32Serializer),

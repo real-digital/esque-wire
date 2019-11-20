@@ -25,6 +25,6 @@ class AddOffsetsToTxnRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `25`, the api key for this API.
+        :return: the api key for this API: `ApiKey.ADD_OFFSETS_TO_TXN` (`ApiKey(25)`)
         """
         return ApiKey.ADD_OFFSETS_TO_TXN

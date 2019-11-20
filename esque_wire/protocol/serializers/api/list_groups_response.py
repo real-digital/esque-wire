@@ -3,17 +3,14 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.list_groups_response import (
-    Group,
-    ListGroupsResponseData,
-)
+from ...structs.api.list_groups_response import Group, ListGroupsResponseData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     stringSerializer,
 )
@@ -34,18 +31,18 @@ groupSerializers: Dict[int, DataClassSerializer[Group]] = {
 
 listGroupsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("groups", ArraySerializer(groupSerializers[0])),
         ("throttle_time_ms", DummySerializer(0)),
     ],
     1: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("groups", ArraySerializer(groupSerializers[1])),
     ],
     2: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("groups", ArraySerializer(groupSerializers[2])),
     ],
 }

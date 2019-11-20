@@ -3,7 +3,7 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.update_metadata_request import (
+from ...structs.api.update_metadata_request import (
     EndPoint,
     LiveBroker,
     PartitionState,
@@ -11,7 +11,7 @@ from esque_wire.protocol.structs.update_metadata_request import (
     UpdateMetadataRequestData,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,

@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -11,7 +11,7 @@ class PartitionResponse:
     :param partition: Topic partition id
     :type partition: int
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param base_offset: None
     :type base_offset: int
     :param log_append_time: The timestamp returned by broker after appending the messages. If CreateTime is used for
@@ -23,7 +23,7 @@ class PartitionResponse:
     """
 
     partition: int
-    error_code: int
+    error_code: ErrorCode
     base_offset: int
     log_append_time: int
     log_start_offset: int
@@ -58,6 +58,6 @@ class ProduceResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `0`, the api key for this API.
+        :return: the api key for this API: `ApiKey.PRODUCE` (`ApiKey(0)`)
         """
         return ApiKey.PRODUCE

@@ -3,12 +3,12 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.add_partitions_to_txn_request import (
+from ...structs.api.add_partitions_to_txn_request import (
     AddPartitionsToTxnRequestData,
     Topic,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,

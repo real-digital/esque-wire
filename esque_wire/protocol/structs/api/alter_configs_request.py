@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ResourceType
 from ..base import RequestData
 
 
@@ -22,14 +22,14 @@ class ConfigEntry:
 class Resource:
     """
     :param resource_type: None
-    :type resource_type: int
+    :type resource_type: ResourceType
     :param resource_name: None
     :type resource_name: str
     :param config_entries: None
     :type config_entries: List[ConfigEntry]
     """
 
-    resource_type: int
+    resource_type: ResourceType
     resource_name: str
     config_entries: List[ConfigEntry]
 
@@ -49,6 +49,6 @@ class AlterConfigsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `33`, the api key for this API.
+        :return: the api key for this API: `ApiKey.ALTER_CONFIGS` (`ApiKey(33)`)
         """
         return ApiKey.ALTER_CONFIGS

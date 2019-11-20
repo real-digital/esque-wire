@@ -3,25 +3,25 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.heartbeat_response import HeartbeatResponseData
+from ...structs.api.heartbeat_response import HeartbeatResponseData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
 )
 
 
 heartbeatResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
-    1: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
-    2: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
-    3: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
+    1: [("throttle_time_ms", int32Serializer), ("error_code", errorCodeSerializer)],
+    2: [("throttle_time_ms", int32Serializer), ("error_code", errorCodeSerializer)],
+    3: [("throttle_time_ms", int32Serializer), ("error_code", errorCodeSerializer)],
 }
 
 

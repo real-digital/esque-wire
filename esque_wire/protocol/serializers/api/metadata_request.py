@@ -3,9 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.metadata_request import MetadataRequestData, Topic
+from ...structs.api.metadata_request import MetadataRequestData, Topic
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,

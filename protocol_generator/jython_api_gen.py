@@ -12,6 +12,17 @@ from org.apache.kafka.common.resource import ResourceType, PatternType
 from org.apache.kafka.common.acl import AclOperation, AclPermissionType
 
 
+FIELD_NAME_TO_ENUM_CLASS = {
+    "api_key": "ApiKey",
+    "error_code": "ErrorCode",
+    "resource_type": "ResourceType",
+    "resource_pattten_type": "ResourcePatternType",
+    "resource_pattten_type_filter": "ResourcePatternType",
+    "operation": "AclOperation",
+    "permission_type": "AclPermissionType",
+}
+
+
 def main():
     dump_api_definitions()
     dump_constants()
@@ -42,6 +53,8 @@ def resolve_field(field):
     field_dict["default"] = field.defaultValue
     field_dict["has_default"] = field.hasDefaultValue
 
+    if field.name in FIELD_NAME_TO_ENUM_CLASS:
+        make_enum_field(field_dict)
     return field_dict
 
 
@@ -62,6 +75,13 @@ def create_type_data(type_):
     else:
         raise ValueError("Unkown type %s" % type_)
     return field_dict
+
+
+def make_enum_field(field_dict):
+    assert field_dict["name"] in FIELD_NAME_TO_ENUM_CLASS
+    field_dict["primitive_type"] = field_dict["type"]
+    field_dict["type"] = "ENUM"
+    field_dict["enum_class"] = FIELD_NAME_TO_ENUM_CLASS[field_dict["name"]]
 
 
 def dump_constants():

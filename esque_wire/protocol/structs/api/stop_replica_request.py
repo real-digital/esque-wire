@@ -42,6 +42,6 @@ class StopReplicaRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `5`, the api key for this API.
+        :return: the api key for this API: `ApiKey.STOP_REPLICA` (`ApiKey(5)`)
         """
         return ApiKey.STOP_REPLICA

@@ -39,6 +39,6 @@ class AddPartitionsToTxnRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `24`, the api key for this API.
+        :return: the api key for this API: `ApiKey.ADD_PARTITIONS_TO_TXN` (`ApiKey(24)`)
         """
         return ApiKey.ADD_PARTITIONS_TO_TXN

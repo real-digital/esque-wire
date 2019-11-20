@@ -3,16 +3,16 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.create_partitions_response import (
+from ...structs.api.create_partitions_response import (
     CreatePartitionsResponseData,
     TopicError,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     nullableStringSerializer,
     stringSerializer,
@@ -22,12 +22,12 @@ from esque_wire.protocol.serializers import (
 topicErrorSchemas: Dict[int, Schema] = {
     0: [
         ("topic", stringSerializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
     ],
     1: [
         ("topic", stringSerializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
     ],
 }

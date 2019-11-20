@@ -3,19 +3,19 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.describe_log_dirs_response import (
+from ...structs.api.describe_log_dirs_response import (
     DescribeLogDirsResponseData,
     LogDir,
     Partition,
     Topic,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
     booleanSerializer,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     int64Serializer,
     stringSerializer,
@@ -64,12 +64,12 @@ topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
 
 logDirSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("log_dir", stringSerializer),
         ("topics", ArraySerializer(topicSerializers[0])),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("log_dir", stringSerializer),
         ("topics", ArraySerializer(topicSerializers[1])),
     ],

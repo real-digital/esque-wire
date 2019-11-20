@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -11,11 +11,11 @@ class Partition:
     :param partition_index: The partition index.
     :type partition_index: int
     :param error_code: The error code, or 0 if there was no error.
-    :type error_code: int
+    :type error_code: ErrorCode
     """
 
     partition_index: int
-    error_code: int
+    error_code: ErrorCode
 
 
 @dataclass
@@ -47,6 +47,6 @@ class OffsetCommitResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `8`, the api key for this API.
+        :return: the api key for this API: `ApiKey.OFFSET_COMMIT` (`ApiKey(8)`)
         """
         return ApiKey.OFFSET_COMMIT

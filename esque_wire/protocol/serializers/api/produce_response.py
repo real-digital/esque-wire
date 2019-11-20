@@ -3,18 +3,18 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.produce_response import (
+from ...structs.api.produce_response import (
     PartitionResponse,
     ProduceResponseData,
     Response,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     int64Serializer,
     stringSerializer,
@@ -24,56 +24,56 @@ from esque_wire.protocol.serializers import (
 partitionResponseSchemas: Dict[int, Schema] = {
     0: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("base_offset", int64Serializer),
         ("log_append_time", DummySerializer(int64Serializer.default)),
         ("log_start_offset", DummySerializer(-1)),
     ],
     1: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("base_offset", int64Serializer),
         ("log_append_time", DummySerializer(int64Serializer.default)),
         ("log_start_offset", DummySerializer(-1)),
     ],
     2: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("base_offset", int64Serializer),
         ("log_append_time", int64Serializer),
         ("log_start_offset", DummySerializer(-1)),
     ],
     3: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("base_offset", int64Serializer),
         ("log_append_time", int64Serializer),
         ("log_start_offset", DummySerializer(-1)),
     ],
     4: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("base_offset", int64Serializer),
         ("log_append_time", int64Serializer),
         ("log_start_offset", DummySerializer(-1)),
     ],
     5: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("base_offset", int64Serializer),
         ("log_append_time", int64Serializer),
         ("log_start_offset", int64Serializer),
     ],
     6: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("base_offset", int64Serializer),
         ("log_append_time", int64Serializer),
         ("log_start_offset", int64Serializer),
     ],
     7: [
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("base_offset", int64Serializer),
         ("log_append_time", int64Serializer),
         ("log_start_offset", int64Serializer),

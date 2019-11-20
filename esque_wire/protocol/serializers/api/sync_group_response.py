@@ -3,37 +3,37 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.sync_group_response import SyncGroupResponseData
+from ...structs.api.sync_group_response import SyncGroupResponseData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     DummySerializer,
     Schema,
     bytesSerializer,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
 )
 
 
 syncGroupResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("assignment", bytesSerializer),
         ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
     1: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("assignment", bytesSerializer),
     ],
     2: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("assignment", bytesSerializer),
     ],
     3: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("assignment", bytesSerializer),
     ],
 }

@@ -3,11 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.sasl_authenticate_request import (
-    SaslAuthenticateRequestData,
-)
+from ...structs.api.sasl_authenticate_request import SaslAuthenticateRequestData
 
-from esque_wire.protocol.serializers import DataClassSerializer, Schema, bytesSerializer
+from ._main_serializers import DataClassSerializer, Schema, bytesSerializer
 
 
 saslAuthenticateRequestDataSchemas: Dict[int, Schema] = {

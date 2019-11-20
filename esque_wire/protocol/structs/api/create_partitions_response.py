@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -11,13 +11,13 @@ class TopicError:
     :param topic: Name of topic
     :type topic: str
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param error_message: Response error message
     :type error_message: Optional[str]
     """
 
     topic: str
-    error_code: int
+    error_code: ErrorCode
     error_message: Optional[str]
 
 
@@ -37,6 +37,6 @@ class CreatePartitionsResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `37`, the api key for this API.
+        :return: the api key for this API: `ApiKey.CREATE_PARTITIONS` (`ApiKey(37)`)
         """
         return ApiKey.CREATE_PARTITIONS

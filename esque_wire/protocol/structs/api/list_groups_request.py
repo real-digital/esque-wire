@@ -12,6 +12,6 @@ class ListGroupsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `16`, the api key for this API.
+        :return: the api key for this API: `ApiKey.LIST_GROUPS` (`ApiKey(16)`)
         """
         return ApiKey.LIST_GROUPS

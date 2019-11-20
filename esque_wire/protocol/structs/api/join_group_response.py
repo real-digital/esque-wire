@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -28,7 +28,7 @@ class JoinGroupResponseData(ResponseData):
                              or zero if the request did not violate any quota.
     :type throttle_time_ms: int
     :param error_code: The error code, or 0 if there was no error.
-    :type error_code: int
+    :type error_code: ErrorCode
     :param generation_id: The generation ID of the group.
     :type generation_id: int
     :param protocol_name: The group protocol selected by the coordinator.
@@ -42,7 +42,7 @@ class JoinGroupResponseData(ResponseData):
     """
 
     throttle_time_ms: int
-    error_code: int
+    error_code: ErrorCode
     generation_id: int
     protocol_name: str
     leader: str
@@ -52,6 +52,6 @@ class JoinGroupResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `11`, the api key for this API.
+        :return: the api key for this API: `ApiKey.JOIN_GROUP` (`ApiKey(11)`)
         """
         return ApiKey.JOIN_GROUP

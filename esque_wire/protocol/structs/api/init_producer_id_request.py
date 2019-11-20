@@ -21,6 +21,6 @@ class InitProducerIdRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `22`, the api key for this API.
+        :return: the api key for this API: `ApiKey.INIT_PRODUCER_ID` (`ApiKey(22)`)
         """
         return ApiKey.INIT_PRODUCER_ID

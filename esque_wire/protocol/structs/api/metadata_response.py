@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -9,7 +9,7 @@ from ..base import ResponseData
 class Partition:
     """
     :param error_code: The partition error, or 0 if there was no error.
-    :type error_code: int
+    :type error_code: ErrorCode
     :param partition_index: The partition index.
     :type partition_index: int
     :param leader_id: The ID of the leader broker.
@@ -24,7 +24,7 @@ class Partition:
     :type offline_replicas: List[int]
     """
 
-    error_code: int
+    error_code: ErrorCode
     partition_index: int
     leader_id: int
     leader_epoch: int
@@ -37,7 +37,7 @@ class Partition:
 class Topic:
     """
     :param error_code: The topic error, or 0 if there was no error.
-    :type error_code: int
+    :type error_code: ErrorCode
     :param name: The topic name.
     :type name: str
     :param is_internal: True if the topic is internal.
@@ -48,7 +48,7 @@ class Topic:
     :type topic_authorized_operations: int
     """
 
-    error_code: int
+    error_code: ErrorCode
     name: str
     is_internal: bool
     partitions: List[Partition]
@@ -102,6 +102,6 @@ class MetadataResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `3`, the api key for this API.
+        :return: the api key for this API: `ApiKey.METADATA` (`ApiKey(3)`)
         """
         return ApiKey.METADATA

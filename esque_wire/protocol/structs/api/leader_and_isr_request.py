@@ -89,6 +89,6 @@ class LeaderAndIsrRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `4`, the api key for this API.
+        :return: the api key for this API: `ApiKey.LEADER_AND_ISR` (`ApiKey(4)`)
         """
         return ApiKey.LEADER_AND_ISR

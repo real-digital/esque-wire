@@ -3,13 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.leave_group_request import LeaveGroupRequestData
+from ...structs.api.leave_group_request import LeaveGroupRequestData
 
-from esque_wire.protocol.serializers import (
-    DataClassSerializer,
-    Schema,
-    stringSerializer,
-)
+from ._main_serializers import DataClassSerializer, Schema, stringSerializer
 
 
 leaveGroupRequestDataSchemas: Dict[int, Schema] = {

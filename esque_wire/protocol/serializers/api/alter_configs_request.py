@@ -3,19 +3,19 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.alter_configs_request import (
+from ...structs.api.alter_configs_request import (
     AlterConfigsRequestData,
     ConfigEntry,
     Resource,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
     booleanSerializer,
-    int8Serializer,
     nullableStringSerializer,
+    resourceTypeSerializer,
     stringSerializer,
 )
 
@@ -34,12 +34,12 @@ configEntrySerializers: Dict[int, DataClassSerializer[ConfigEntry]] = {
 
 resourceSchemas: Dict[int, Schema] = {
     0: [
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", stringSerializer),
         ("config_entries", ArraySerializer(configEntrySerializers[0])),
     ],
     1: [
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", stringSerializer),
         ("config_entries", ArraySerializer(configEntrySerializers[1])),
     ],

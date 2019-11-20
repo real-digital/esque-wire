@@ -3,18 +3,18 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.write_txn_markers_response import (
+from ...structs.api.write_txn_markers_response import (
     Partition,
     Topic,
     TransactionMarker,
     WriteTxnMarkersResponseData,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     int64Serializer,
     stringSerializer,
@@ -22,7 +22,7 @@ from esque_wire.protocol.serializers import (
 
 
 partitionSchemas: Dict[int, Schema] = {
-    0: [("partition", int32Serializer), ("error_code", int16Serializer)]
+    0: [("partition", int32Serializer), ("error_code", errorCodeSerializer)]
 }
 
 

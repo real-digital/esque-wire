@@ -3,23 +3,24 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.describe_configs_response import (
+from ...structs.api.describe_configs_response import (
     ConfigEntry,
     ConfigSynonym,
     DescribeConfigsResponseData,
     Resource,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
     booleanSerializer,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     int8Serializer,
     nullableStringSerializer,
+    resourceTypeSerializer,
     stringSerializer,
 )
 
@@ -84,23 +85,23 @@ configEntrySerializers: Dict[int, DataClassSerializer[ConfigEntry]] = {
 
 resourceSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", stringSerializer),
         ("config_entries", ArraySerializer(configEntrySerializers[0])),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", stringSerializer),
         ("config_entries", ArraySerializer(configEntrySerializers[1])),
     ],
     2: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("error_message", nullableStringSerializer),
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", stringSerializer),
         ("config_entries", ArraySerializer(configEntrySerializers[2])),
     ],

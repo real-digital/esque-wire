@@ -30,6 +30,6 @@ class DescribeLogDirsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `35`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DESCRIBE_LOG_DIRS` (`ApiKey(35)`)
         """
         return ApiKey.DESCRIBE_LOG_DIRS

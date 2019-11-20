@@ -3,12 +3,12 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.elect_preferred_leaders_request import (
+from ...structs.api.elect_preferred_leaders_request import (
     ElectPreferredLeadersRequestData,
     TopicPartition,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,

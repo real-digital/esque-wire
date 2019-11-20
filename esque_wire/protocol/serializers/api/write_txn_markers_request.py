@@ -3,13 +3,13 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.write_txn_markers_request import (
+from ...structs.api.write_txn_markers_request import (
     Topic,
     TransactionMarker,
     WriteTxnMarkersRequestData,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,

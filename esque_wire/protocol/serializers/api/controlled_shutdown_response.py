@@ -3,16 +3,16 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.controlled_shutdown_response import (
+from ...structs.api.controlled_shutdown_response import (
     ControlledShutdownResponseData,
     RemainingPartition,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     stringSerializer,
 )
@@ -33,15 +33,15 @@ remainingPartitionSerializers: Dict[int, DataClassSerializer[RemainingPartition]
 
 controlledShutdownResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("remaining_partitions", ArraySerializer(remainingPartitionSerializers[0])),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("remaining_partitions", ArraySerializer(remainingPartitionSerializers[1])),
     ],
     2: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("remaining_partitions", ArraySerializer(remainingPartitionSerializers[2])),
     ],
 }

@@ -3,13 +3,13 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.offset_commit_request import (
+from ...structs.api.offset_commit_request import (
     OffsetCommitRequestData,
     Partition,
     Topic,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,

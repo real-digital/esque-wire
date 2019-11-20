@@ -3,11 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.find_coordinator_request import (
-    FindCoordinatorRequestData,
-)
+from ...structs.api.find_coordinator_request import FindCoordinatorRequestData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     DummySerializer,
     Schema,

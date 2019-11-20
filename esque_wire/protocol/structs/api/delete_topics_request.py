@@ -20,6 +20,6 @@ class DeleteTopicsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `20`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DELETE_TOPICS` (`ApiKey(20)`)
         """
         return ApiKey.DELETE_TOPICS

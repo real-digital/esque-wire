@@ -49,6 +49,6 @@ class CreatePartitionsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `37`, the api key for this API.
+        :return: the api key for this API: `ApiKey.CREATE_PARTITIONS` (`ApiKey(37)`)
         """
         return ApiKey.CREATE_PARTITIONS

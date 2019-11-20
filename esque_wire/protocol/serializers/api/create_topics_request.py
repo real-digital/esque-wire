@@ -3,14 +3,14 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.create_topics_request import (
+from ...structs.api.create_topics_request import (
     Assignment,
     Config,
     CreateTopicsRequestData,
     Topic,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,

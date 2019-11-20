@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -64,7 +64,7 @@ class TokenDetail:
 class DescribeDelegationTokenResponseData(ResponseData):
     """
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param token_details: None
     :type token_details: List[TokenDetail]
     :param throttle_time_ms: Duration in milliseconds for which the request was throttled due to quota violation (Zero
@@ -72,13 +72,13 @@ class DescribeDelegationTokenResponseData(ResponseData):
     :type throttle_time_ms: int
     """
 
-    error_code: int
+    error_code: ErrorCode
     token_details: List[TokenDetail]
     throttle_time_ms: int
 
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `41`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DESCRIBE_DELEGATION_TOKEN` (`ApiKey(41)`)
         """
         return ApiKey.DESCRIBE_DELEGATION_TOKEN

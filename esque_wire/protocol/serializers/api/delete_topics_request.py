@@ -3,9 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.delete_topics_request import DeleteTopicsRequestData
+from ...structs.api.delete_topics_request import DeleteTopicsRequestData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,

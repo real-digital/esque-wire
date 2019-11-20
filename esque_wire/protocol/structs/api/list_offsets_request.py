@@ -60,6 +60,6 @@ class ListOffsetsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `2`, the api key for this API.
+        :return: the api key for this API: `ApiKey.LIST_OFFSETS` (`ApiKey(2)`)
         """
         return ApiKey.LIST_OFFSETS

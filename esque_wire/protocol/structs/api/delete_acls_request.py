@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import AclOperation, AclPermissionType, ApiKey, ResourceType
 from ..base import RequestData
 
 
@@ -9,7 +9,7 @@ from ..base import RequestData
 class Filter:
     """
     :param resource_type: The resource type
-    :type resource_type: int
+    :type resource_type: ResourceType
     :param resource_name: The resource name filter
     :type resource_name: Optional[str]
     :param resource_pattern_type_filter: The resource pattern type filter
@@ -19,18 +19,18 @@ class Filter:
     :param host: The ACL host filter
     :type host: Optional[str]
     :param operation: The ACL operation
-    :type operation: int
+    :type operation: AclOperation
     :param permission_type: The ACL permission type
-    :type permission_type: int
+    :type permission_type: AclPermissionType
     """
 
-    resource_type: int
+    resource_type: ResourceType
     resource_name: Optional[str]
     resource_pattern_type_filter: int
     principal: Optional[str]
     host: Optional[str]
-    operation: int
-    permission_type: int
+    operation: AclOperation
+    permission_type: AclPermissionType
 
 
 @dataclass
@@ -45,6 +45,6 @@ class DeleteAclsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `31`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DELETE_ACLS` (`ApiKey(31)`)
         """
         return ApiKey.DELETE_ACLS

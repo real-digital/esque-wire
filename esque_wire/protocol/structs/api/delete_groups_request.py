@@ -17,6 +17,6 @@ class DeleteGroupsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `42`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DELETE_GROUPS` (`ApiKey(42)`)
         """
         return ApiKey.DELETE_GROUPS

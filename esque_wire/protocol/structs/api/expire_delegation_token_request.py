@@ -19,6 +19,6 @@ class ExpireDelegationTokenRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `40`, the api key for this API.
+        :return: the api key for this API: `ApiKey.EXPIRE_DELEGATION_TOKEN` (`ApiKey(40)`)
         """
         return ApiKey.EXPIRE_DELEGATION_TOKEN

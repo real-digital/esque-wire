@@ -50,6 +50,6 @@ class JoinGroupRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `11`, the api key for this API.
+        :return: the api key for this API: `ApiKey.JOIN_GROUP` (`ApiKey(11)`)
         """
         return ApiKey.JOIN_GROUP

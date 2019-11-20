@@ -3,32 +3,32 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.offset_commit_response import (
+from ...structs.api.offset_commit_response import (
     OffsetCommitResponseData,
     Partition,
     Topic,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     stringSerializer,
 )
 
 
 partitionSchemas: Dict[int, Schema] = {
-    0: [("partition_index", int32Serializer), ("error_code", int16Serializer)],
-    1: [("partition_index", int32Serializer), ("error_code", int16Serializer)],
-    2: [("partition_index", int32Serializer), ("error_code", int16Serializer)],
-    3: [("partition_index", int32Serializer), ("error_code", int16Serializer)],
-    4: [("partition_index", int32Serializer), ("error_code", int16Serializer)],
-    5: [("partition_index", int32Serializer), ("error_code", int16Serializer)],
-    6: [("partition_index", int32Serializer), ("error_code", int16Serializer)],
-    7: [("partition_index", int32Serializer), ("error_code", int16Serializer)],
+    0: [("partition_index", int32Serializer), ("error_code", errorCodeSerializer)],
+    1: [("partition_index", int32Serializer), ("error_code", errorCodeSerializer)],
+    2: [("partition_index", int32Serializer), ("error_code", errorCodeSerializer)],
+    3: [("partition_index", int32Serializer), ("error_code", errorCodeSerializer)],
+    4: [("partition_index", int32Serializer), ("error_code", errorCodeSerializer)],
+    5: [("partition_index", int32Serializer), ("error_code", errorCodeSerializer)],
+    6: [("partition_index", int32Serializer), ("error_code", errorCodeSerializer)],
+    7: [("partition_index", int32Serializer), ("error_code", errorCodeSerializer)],
 }
 
 

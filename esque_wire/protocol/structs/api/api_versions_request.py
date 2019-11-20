@@ -12,6 +12,6 @@ class ApiVersionsRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `18`, the api key for this API.
+        :return: the api key for this API: `ApiKey.API_VERSIONS` (`ApiKey(18)`)
         """
         return ApiKey.API_VERSIONS

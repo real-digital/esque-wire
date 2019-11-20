@@ -37,6 +37,6 @@ class MetadataRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `3`, the api key for this API.
+        :return: the api key for this API: `ApiKey.METADATA` (`ApiKey(3)`)
         """
         return ApiKey.METADATA

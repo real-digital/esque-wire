@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -13,12 +13,12 @@ class Partition:
     :param low_watermark: Smallest available offset of all live replicas
     :type low_watermark: int
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     """
 
     partition: int
     low_watermark: int
-    error_code: int
+    error_code: ErrorCode
 
 
 @dataclass
@@ -50,6 +50,6 @@ class DeleteRecordsResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `21`, the api key for this API.
+        :return: the api key for this API: `ApiKey.DELETE_RECORDS` (`ApiKey(21)`)
         """
         return ApiKey.DELETE_RECORDS

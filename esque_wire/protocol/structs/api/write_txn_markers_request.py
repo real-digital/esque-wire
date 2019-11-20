@@ -53,6 +53,6 @@ class WriteTxnMarkersRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `27`, the api key for this API.
+        :return: the api key for this API: `ApiKey.WRITE_TXN_MARKERS` (`ApiKey(27)`)
         """
         return ApiKey.WRITE_TXN_MARKERS

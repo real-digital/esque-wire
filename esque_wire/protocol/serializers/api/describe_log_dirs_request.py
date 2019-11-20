@@ -3,12 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.describe_log_dirs_request import (
-    DescribeLogDirsRequestData,
-    Topic,
-)
+from ...structs.api.describe_log_dirs_request import DescribeLogDirsRequestData, Topic
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,

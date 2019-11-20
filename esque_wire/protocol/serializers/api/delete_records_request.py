@@ -3,13 +3,13 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.delete_records_request import (
+from ...structs.api.delete_records_request import (
     DeleteRecordsRequestData,
     Partition,
     Topic,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,

@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -19,14 +19,14 @@ class PartitionResponse:
     :param metadata: Any associated metadata the client wants to keep.
     :type metadata: Optional[str]
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     """
 
     partition: int
     offset: int
     leader_epoch: int
     metadata: Optional[str]
-    error_code: int
+    error_code: ErrorCode
 
 
 @dataclass
@@ -51,16 +51,16 @@ class OffsetFetchResponseData(ResponseData):
     :param responses: Responses by topic for fetched offsets
     :type responses: List[Response]
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     """
 
     throttle_time_ms: int
     responses: List[Response]
-    error_code: int
+    error_code: ErrorCode
 
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `9`, the api key for this API.
+        :return: the api key for this API: `ApiKey.OFFSET_FETCH` (`ApiKey(9)`)
         """
         return ApiKey.OFFSET_FETCH

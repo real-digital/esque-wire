@@ -3,16 +3,13 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.stop_replica_response import (
-    Partition,
-    StopReplicaResponseData,
-)
+from ...structs.api.stop_replica_response import Partition, StopReplicaResponseData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     stringSerializer,
 )
@@ -22,12 +19,12 @@ partitionSchemas: Dict[int, Schema] = {
     0: [
         ("topic", stringSerializer),
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
     ],
     1: [
         ("topic", stringSerializer),
         ("partition", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
     ],
 }
 
@@ -40,11 +37,11 @@ partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
 
 stopReplicaResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partitions", ArraySerializer(partitionSerializers[0])),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partitions", ArraySerializer(partitionSerializers[1])),
     ],
 }

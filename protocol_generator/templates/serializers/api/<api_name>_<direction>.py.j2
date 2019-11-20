@@ -10,13 +10,13 @@
 
 {% block imports %}
 from typing import Dict
-from esque_wire.protocol.structs.{{ current_api.api_name.lower() }}_{{ direction.name.lower() }} import (
+from ...structs.api.{{ current_api.api_name.lower() }}_{{ direction.name.lower() }} import (
     {%- for struct_name in (latest_schema.structs | sort) %}
     {{ struct_name }},
     {%- endfor %}
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     {%- for serializer in current_api.get_serializer_imports(direction) %}
     {{ serializer }},
     {%- endfor %}

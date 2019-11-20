@@ -3,13 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.sasl_handshake_request import SaslHandshakeRequestData
+from ...structs.api.sasl_handshake_request import SaslHandshakeRequestData
 
-from esque_wire.protocol.serializers import (
-    DataClassSerializer,
-    Schema,
-    stringSerializer,
-)
+from ._main_serializers import DataClassSerializer, Schema, stringSerializer
 
 
 saslHandshakeRequestDataSchemas: Dict[int, Schema] = {

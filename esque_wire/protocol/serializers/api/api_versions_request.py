@@ -3,9 +3,9 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.api_versions_request import ApiVersionsRequestData
+from ...structs.api.api_versions_request import ApiVersionsRequestData
 
-from esque_wire.protocol.serializers import DataClassSerializer, Schema
+from ._main_serializers import DataClassSerializer, Schema
 
 
 apiVersionsRequestDataSchemas: Dict[int, Schema] = {0: [], 1: [], 2: []}

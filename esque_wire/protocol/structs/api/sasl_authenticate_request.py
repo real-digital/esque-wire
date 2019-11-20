@@ -16,6 +16,6 @@ class SaslAuthenticateRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `36`, the api key for this API.
+        :return: the api key for this API: `ApiKey.SASL_AUTHENTICATE` (`ApiKey(36)`)
         """
         return ApiKey.SASL_AUTHENTICATE

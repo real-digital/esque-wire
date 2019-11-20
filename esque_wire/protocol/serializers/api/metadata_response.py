@@ -3,20 +3,20 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.metadata_response import (
+from ...structs.api.metadata_response import (
     Broker,
     MetadataResponseData,
     Partition,
     Topic,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
     booleanSerializer,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     nullableStringSerializer,
     stringSerializer,
@@ -25,7 +25,7 @@ from esque_wire.protocol.serializers import (
 
 partitionSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition_index", int32Serializer),
         ("leader_id", int32Serializer),
         ("replica_nodes", ArraySerializer(int32Serializer)),
@@ -34,7 +34,7 @@ partitionSchemas: Dict[int, Schema] = {
         ("offline_replicas", DummySerializer(ArraySerializer(int32Serializer).default)),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition_index", int32Serializer),
         ("leader_id", int32Serializer),
         ("replica_nodes", ArraySerializer(int32Serializer)),
@@ -43,7 +43,7 @@ partitionSchemas: Dict[int, Schema] = {
         ("offline_replicas", DummySerializer(ArraySerializer(int32Serializer).default)),
     ],
     2: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition_index", int32Serializer),
         ("leader_id", int32Serializer),
         ("replica_nodes", ArraySerializer(int32Serializer)),
@@ -52,7 +52,7 @@ partitionSchemas: Dict[int, Schema] = {
         ("offline_replicas", DummySerializer(ArraySerializer(int32Serializer).default)),
     ],
     3: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition_index", int32Serializer),
         ("leader_id", int32Serializer),
         ("replica_nodes", ArraySerializer(int32Serializer)),
@@ -61,7 +61,7 @@ partitionSchemas: Dict[int, Schema] = {
         ("offline_replicas", DummySerializer(ArraySerializer(int32Serializer).default)),
     ],
     4: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition_index", int32Serializer),
         ("leader_id", int32Serializer),
         ("replica_nodes", ArraySerializer(int32Serializer)),
@@ -70,7 +70,7 @@ partitionSchemas: Dict[int, Schema] = {
         ("offline_replicas", DummySerializer(ArraySerializer(int32Serializer).default)),
     ],
     5: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition_index", int32Serializer),
         ("leader_id", int32Serializer),
         ("replica_nodes", ArraySerializer(int32Serializer)),
@@ -79,7 +79,7 @@ partitionSchemas: Dict[int, Schema] = {
         ("leader_epoch", DummySerializer(int32Serializer.default)),
     ],
     6: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition_index", int32Serializer),
         ("leader_id", int32Serializer),
         ("replica_nodes", ArraySerializer(int32Serializer)),
@@ -88,7 +88,7 @@ partitionSchemas: Dict[int, Schema] = {
         ("leader_epoch", DummySerializer(int32Serializer.default)),
     ],
     7: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition_index", int32Serializer),
         ("leader_id", int32Serializer),
         ("leader_epoch", int32Serializer),
@@ -97,7 +97,7 @@ partitionSchemas: Dict[int, Schema] = {
         ("offline_replicas", ArraySerializer(int32Serializer)),
     ],
     8: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("partition_index", int32Serializer),
         ("leader_id", int32Serializer),
         ("leader_epoch", int32Serializer),
@@ -116,63 +116,63 @@ partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
 
 topicSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("name", stringSerializer),
         ("partitions", ArraySerializer(partitionSerializers[0])),
         ("is_internal", DummySerializer(booleanSerializer.default)),
         ("topic_authorized_operations", DummySerializer(int32Serializer.default)),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("name", stringSerializer),
         ("is_internal", booleanSerializer),
         ("partitions", ArraySerializer(partitionSerializers[1])),
         ("topic_authorized_operations", DummySerializer(int32Serializer.default)),
     ],
     2: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("name", stringSerializer),
         ("is_internal", booleanSerializer),
         ("partitions", ArraySerializer(partitionSerializers[2])),
         ("topic_authorized_operations", DummySerializer(int32Serializer.default)),
     ],
     3: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("name", stringSerializer),
         ("is_internal", booleanSerializer),
         ("partitions", ArraySerializer(partitionSerializers[3])),
         ("topic_authorized_operations", DummySerializer(int32Serializer.default)),
     ],
     4: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("name", stringSerializer),
         ("is_internal", booleanSerializer),
         ("partitions", ArraySerializer(partitionSerializers[4])),
         ("topic_authorized_operations", DummySerializer(int32Serializer.default)),
     ],
     5: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("name", stringSerializer),
         ("is_internal", booleanSerializer),
         ("partitions", ArraySerializer(partitionSerializers[5])),
         ("topic_authorized_operations", DummySerializer(int32Serializer.default)),
     ],
     6: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("name", stringSerializer),
         ("is_internal", booleanSerializer),
         ("partitions", ArraySerializer(partitionSerializers[6])),
         ("topic_authorized_operations", DummySerializer(int32Serializer.default)),
     ],
     7: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("name", stringSerializer),
         ("is_internal", booleanSerializer),
         ("partitions", ArraySerializer(partitionSerializers[7])),
         ("topic_authorized_operations", DummySerializer(int32Serializer.default)),
     ],
     8: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("name", stringSerializer),
         ("is_internal", booleanSerializer),
         ("partitions", ArraySerializer(partitionSerializers[8])),

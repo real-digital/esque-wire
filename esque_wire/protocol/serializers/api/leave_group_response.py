@@ -3,24 +3,24 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.leave_group_response import LeaveGroupResponseData
+from ...structs.api.leave_group_response import LeaveGroupResponseData
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     DummySerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
 )
 
 
 leaveGroupResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
-    1: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
-    2: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
+    1: [("throttle_time_ms", int32Serializer), ("error_code", errorCodeSerializer)],
+    2: [("throttle_time_ms", int32Serializer), ("error_code", errorCodeSerializer)],
 }
 
 

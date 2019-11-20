@@ -1,7 +1,7 @@
 from typing import Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -12,7 +12,7 @@ class FindCoordinatorResponseData(ResponseData):
                              or zero if the request did not violate any quota.
     :type throttle_time_ms: int
     :param error_code: The error code, or 0 if there was no error.
-    :type error_code: int
+    :type error_code: ErrorCode
     :param error_message: The error message, or null if there was no error.
     :type error_message: Optional[str]
     :param node_id: The node id.
@@ -24,7 +24,7 @@ class FindCoordinatorResponseData(ResponseData):
     """
 
     throttle_time_ms: int
-    error_code: int
+    error_code: ErrorCode
     error_message: Optional[str]
     node_id: int
     host: str
@@ -33,6 +33,6 @@ class FindCoordinatorResponseData(ResponseData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `10`, the api key for this API.
+        :return: the api key for this API: `ApiKey.FIND_COORDINATOR` (`ApiKey(10)`)
         """
         return ApiKey.FIND_COORDINATOR

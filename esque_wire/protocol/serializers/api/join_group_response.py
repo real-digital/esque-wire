@@ -3,18 +3,15 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.join_group_response import (
-    JoinGroupResponseData,
-    Member,
-)
+from ...structs.api.join_group_response import JoinGroupResponseData, Member
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
     bytesSerializer,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     nullableStringSerializer,
     stringSerializer,
@@ -63,7 +60,7 @@ memberSerializers: Dict[int, DataClassSerializer[Member]] = {
 
 joinGroupResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("generation_id", int32Serializer),
         ("protocol_name", stringSerializer),
         ("leader", stringSerializer),
@@ -72,7 +69,7 @@ joinGroupResponseDataSchemas: Dict[int, Schema] = {
         ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("generation_id", int32Serializer),
         ("protocol_name", stringSerializer),
         ("leader", stringSerializer),
@@ -82,7 +79,7 @@ joinGroupResponseDataSchemas: Dict[int, Schema] = {
     ],
     2: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("generation_id", int32Serializer),
         ("protocol_name", stringSerializer),
         ("leader", stringSerializer),
@@ -91,7 +88,7 @@ joinGroupResponseDataSchemas: Dict[int, Schema] = {
     ],
     3: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("generation_id", int32Serializer),
         ("protocol_name", stringSerializer),
         ("leader", stringSerializer),
@@ -100,7 +97,7 @@ joinGroupResponseDataSchemas: Dict[int, Schema] = {
     ],
     4: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("generation_id", int32Serializer),
         ("protocol_name", stringSerializer),
         ("leader", stringSerializer),
@@ -109,7 +106,7 @@ joinGroupResponseDataSchemas: Dict[int, Schema] = {
     ],
     5: [
         ("throttle_time_ms", int32Serializer),
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("generation_id", int32Serializer),
         ("protocol_name", stringSerializer),
         ("leader", stringSerializer),

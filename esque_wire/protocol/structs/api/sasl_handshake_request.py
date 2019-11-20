@@ -16,6 +16,6 @@ class SaslHandshakeRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `17`, the api key for this API.
+        :return: the api key for this API: `ApiKey.SASL_HANDSHAKE` (`ApiKey(17)`)
         """
         return ApiKey.SASL_HANDSHAKE

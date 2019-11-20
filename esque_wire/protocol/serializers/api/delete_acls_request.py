@@ -3,39 +3,39 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.delete_acls_request import (
-    DeleteAclsRequestData,
-    Filter,
-)
+from ...structs.api.delete_acls_request import DeleteAclsRequestData, Filter
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     ArraySerializer,
     DataClassSerializer,
     DummySerializer,
     Schema,
+    aclOperationSerializer,
+    aclPermissionTypeSerializer,
     int8Serializer,
     nullableStringSerializer,
+    resourceTypeSerializer,
 )
 
 
 filterSchemas: Dict[int, Schema] = {
     0: [
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", nullableStringSerializer),
         ("principal", nullableStringSerializer),
         ("host", nullableStringSerializer),
-        ("operation", int8Serializer),
-        ("permission_type", int8Serializer),
+        ("operation", aclOperationSerializer),
+        ("permission_type", aclPermissionTypeSerializer),
         ("resource_pattern_type_filter", DummySerializer(3)),
     ],
     1: [
-        ("resource_type", int8Serializer),
+        ("resource_type", resourceTypeSerializer),
         ("resource_name", nullableStringSerializer),
         ("resource_pattern_type_filter", int8Serializer),
         ("principal", nullableStringSerializer),
         ("host", nullableStringSerializer),
-        ("operation", int8Serializer),
-        ("permission_type", int8Serializer),
+        ("operation", aclOperationSerializer),
+        ("permission_type", aclPermissionTypeSerializer),
     ],
 }
 

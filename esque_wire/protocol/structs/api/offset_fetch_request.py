@@ -43,6 +43,6 @@ class OffsetFetchRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `9`, the api key for this API.
+        :return: the api key for this API: `ApiKey.OFFSET_FETCH` (`ApiKey(9)`)
         """
         return ApiKey.OFFSET_FETCH

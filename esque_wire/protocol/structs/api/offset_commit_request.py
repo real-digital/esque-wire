@@ -61,6 +61,6 @@ class OffsetCommitRequestData(RequestData):
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `8`, the api key for this API.
+        :return: the api key for this API: `ApiKey.OFFSET_COMMIT` (`ApiKey(8)`)
         """
         return ApiKey.OFFSET_COMMIT

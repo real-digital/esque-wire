@@ -3,14 +3,14 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.renew_delegation_token_response import (
+from ...structs.api.renew_delegation_token_response import (
     RenewDelegationTokenResponseData,
 )
 
-from esque_wire.protocol.serializers import (
+from ._main_serializers import (
     DataClassSerializer,
     Schema,
-    int16Serializer,
+    errorCodeSerializer,
     int32Serializer,
     int64Serializer,
 )
@@ -18,12 +18,12 @@ from esque_wire.protocol.serializers import (
 
 renewDelegationTokenResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("expiry_timestamp", int64Serializer),
         ("throttle_time_ms", int32Serializer),
     ],
     1: [
-        ("error_code", int16Serializer),
+        ("error_code", errorCodeSerializer),
         ("expiry_timestamp", int64Serializer),
         ("throttle_time_ms", int32Serializer),
     ],

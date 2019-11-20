@@ -1,7 +1,7 @@
 from typing import List, Optional
 from dataclasses import dataclass
 
-from ...constants import ApiKey
+from ...constants import ApiKey, ErrorCode
 from ..base import ResponseData
 
 
@@ -24,7 +24,7 @@ class PartitionHeader:
     :param partition: Topic partition id
     :type partition: int
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param high_watermark: Last committed offset.
     :type high_watermark: int
     :param last_stable_offset: The last stable offset (or LSO) of the partition. This is the last offset such that the
@@ -40,7 +40,7 @@ class PartitionHeader:
     """
 
     partition: int
-    error_code: int
+    error_code: ErrorCode
     high_watermark: int
     last_stable_offset: int
     log_start_offset: int
@@ -81,7 +81,7 @@ class FetchResponseData(ResponseData):
                              if the request did not violate any quota)
     :type throttle_time_ms: int
     :param error_code: Response error code
-    :type error_code: int
+    :type error_code: ErrorCode
     :param session_id: The fetch session ID
     :type session_id: int
     :param responses: None
@@ -89,13 +89,13 @@ class FetchResponseData(ResponseData):
     """
 
     throttle_time_ms: int
-    error_code: int
+    error_code: ErrorCode
     session_id: int
     responses: List[Response]
 
     @staticmethod
     def api_key() -> ApiKey:
         """
-        :return: `1`, the api key for this API.
+        :return: the api key for this API: `ApiKey.FETCH` (`ApiKey(1)`)
         """
         return ApiKey.FETCH
