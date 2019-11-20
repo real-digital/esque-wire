@@ -2,107 +2,14 @@ import itertools as it
 import queue
 import socket
 import warnings
-from typing import BinaryIO, Dict, List, Tuple, overload
+from typing import BinaryIO, Dict, List, Tuple
 
-from .api import (
-    ApiKey,
-    ApiVersions,
-    Request,
-    RequestData,
-    ResponseData,
-    SUPPORTED_API_VERSIONS,
-    ProduceRequestData,
-    ProduceResponseData,
-    FetchRequestData,
-    FetchResponseData,
-    ListOffsetsRequestData,
-    ListOffsetsResponseData,
-    MetadataRequestData,
-    MetadataResponseData,
-    LeaderAndIsrRequestData,
-    LeaderAndIsrResponseData,
-    StopReplicaRequestData,
-    StopReplicaResponseData,
-    UpdateMetadataRequestData,
-    UpdateMetadataResponseData,
-    ControlledShutdownRequestData,
-    ControlledShutdownResponseData,
-    OffsetCommitRequestData,
-    OffsetCommitResponseData,
-    OffsetFetchRequestData,
-    OffsetFetchResponseData,
-    FindCoordinatorRequestData,
-    FindCoordinatorResponseData,
-    JoinGroupRequestData,
-    JoinGroupResponseData,
-    HeartbeatRequestData,
-    HeartbeatResponseData,
-    LeaveGroupRequestData,
-    LeaveGroupResponseData,
-    SyncGroupRequestData,
-    SyncGroupResponseData,
-    DescribeGroupsRequestData,
-    DescribeGroupsResponseData,
-    ListGroupsRequestData,
-    ListGroupsResponseData,
-    SaslHandshakeRequestData,
-    SaslHandshakeResponseData,
-    ApiVersionsRequestData,
-    ApiVersionsResponseData,
-    CreateTopicsRequestData,
-    CreateTopicsResponseData,
-    DeleteTopicsRequestData,
-    DeleteTopicsResponseData,
-    DeleteRecordsRequestData,
-    DeleteRecordsResponseData,
-    InitProducerIdRequestData,
-    InitProducerIdResponseData,
-    OffsetForLeaderEpochRequestData,
-    OffsetForLeaderEpochResponseData,
-    AddPartitionsToTxnRequestData,
-    AddPartitionsToTxnResponseData,
-    AddOffsetsToTxnRequestData,
-    AddOffsetsToTxnResponseData,
-    EndTxnRequestData,
-    EndTxnResponseData,
-    WriteTxnMarkersRequestData,
-    WriteTxnMarkersResponseData,
-    TxnOffsetCommitRequestData,
-    TxnOffsetCommitResponseData,
-    DescribeAclsRequestData,
-    DescribeAclsResponseData,
-    CreateAclsRequestData,
-    CreateAclsResponseData,
-    DeleteAclsRequestData,
-    DeleteAclsResponseData,
-    DescribeConfigsRequestData,
-    DescribeConfigsResponseData,
-    AlterConfigsRequestData,
-    AlterConfigsResponseData,
-    AlterReplicaLogDirsRequestData,
-    AlterReplicaLogDirsResponseData,
-    DescribeLogDirsRequestData,
-    DescribeLogDirsResponseData,
-    SaslAuthenticateRequestData,
-    SaslAuthenticateResponseData,
-    CreatePartitionsRequestData,
-    CreatePartitionsResponseData,
-    CreateDelegationTokenRequestData,
-    CreateDelegationTokenResponseData,
-    RenewDelegationTokenRequestData,
-    RenewDelegationTokenResponseData,
-    ExpireDelegationTokenRequestData,
-    ExpireDelegationTokenResponseData,
-    DescribeDelegationTokenRequestData,
-    DescribeDelegationTokenResponseData,
-    DeleteGroupsRequestData,
-    DeleteGroupsResponseData,
-    ElectPreferredLeadersRequestData,
-    ElectPreferredLeadersResponseData,
-    IncrementalAlterConfigsRequestData,
-    IncrementalAlterConfigsResponseData,
-)
-from .serializers import int32Serializer
+from .request import Request
+from .structs.base import RequestData
+from .serializers import int32Serializer, SUPPORTED_API_VERSIONS
+from .constants import ApiKey
+from .structs.api import ApiVersionsRequestData
+from .structs.api.api_versions_response import ApiVersion
 
 
 class ApiNotSupportedWarning(UserWarning):
@@ -128,10 +35,10 @@ class BrokerConnection:
         client_api_keys = set(SUPPORTED_API_VERSIONS)
         for api_key in server_api_keys | client_api_keys:
             client_supported_version = SUPPORTED_API_VERSIONS.get(
-                api_key, ApiVersions(api_key, -2, -1)
+                api_key, ApiVersion(api_key, -2, -1)
             )
             server_supported_version = all_server_supported_versions.get(
-                api_key, ApiVersions(api_key, -4, -3)
+                api_key, ApiVersion(api_key, -4, -3)
             )
             effective_version = min(
                 client_supported_version.max_version,
@@ -178,281 +85,7 @@ class BrokerConnection:
                     )
             self.api_versions[api_key] = effective_version
 
-    @overload
-    def send(
-        self, data: ProduceRequestData
-    ) -> Request[ProduceRequestData, ProduceResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: FetchRequestData
-    ) -> Request[FetchRequestData, FetchResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: ListOffsetsRequestData
-    ) -> Request[ListOffsetsRequestData, ListOffsetsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: MetadataRequestData
-    ) -> Request[MetadataRequestData, MetadataResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: LeaderAndIsrRequestData
-    ) -> Request[LeaderAndIsrRequestData, LeaderAndIsrResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: StopReplicaRequestData
-    ) -> Request[StopReplicaRequestData, StopReplicaResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: UpdateMetadataRequestData
-    ) -> Request[UpdateMetadataRequestData, UpdateMetadataResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: ControlledShutdownRequestData
-    ) -> Request[ControlledShutdownRequestData, ControlledShutdownResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: OffsetCommitRequestData
-    ) -> Request[OffsetCommitRequestData, OffsetCommitResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: OffsetFetchRequestData
-    ) -> Request[OffsetFetchRequestData, OffsetFetchResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: FindCoordinatorRequestData
-    ) -> Request[FindCoordinatorRequestData, FindCoordinatorResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: JoinGroupRequestData
-    ) -> Request[JoinGroupRequestData, JoinGroupResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: HeartbeatRequestData
-    ) -> Request[HeartbeatRequestData, HeartbeatResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: LeaveGroupRequestData
-    ) -> Request[LeaveGroupRequestData, LeaveGroupResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: SyncGroupRequestData
-    ) -> Request[SyncGroupRequestData, SyncGroupResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: DescribeGroupsRequestData
-    ) -> Request[DescribeGroupsRequestData, DescribeGroupsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: ListGroupsRequestData
-    ) -> Request[ListGroupsRequestData, ListGroupsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: SaslHandshakeRequestData
-    ) -> Request[SaslHandshakeRequestData, SaslHandshakeResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: ApiVersionsRequestData
-    ) -> Request[ApiVersionsRequestData, ApiVersionsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: CreateTopicsRequestData
-    ) -> Request[CreateTopicsRequestData, CreateTopicsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: DeleteTopicsRequestData
-    ) -> Request[DeleteTopicsRequestData, DeleteTopicsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: DeleteRecordsRequestData
-    ) -> Request[DeleteRecordsRequestData, DeleteRecordsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: InitProducerIdRequestData
-    ) -> Request[InitProducerIdRequestData, InitProducerIdResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: OffsetForLeaderEpochRequestData
-    ) -> Request[OffsetForLeaderEpochRequestData, OffsetForLeaderEpochResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: AddPartitionsToTxnRequestData
-    ) -> Request[AddPartitionsToTxnRequestData, AddPartitionsToTxnResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: AddOffsetsToTxnRequestData
-    ) -> Request[AddOffsetsToTxnRequestData, AddOffsetsToTxnResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: EndTxnRequestData
-    ) -> Request[EndTxnRequestData, EndTxnResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: WriteTxnMarkersRequestData
-    ) -> Request[WriteTxnMarkersRequestData, WriteTxnMarkersResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: TxnOffsetCommitRequestData
-    ) -> Request[TxnOffsetCommitRequestData, TxnOffsetCommitResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: DescribeAclsRequestData
-    ) -> Request[DescribeAclsRequestData, DescribeAclsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: CreateAclsRequestData
-    ) -> Request[CreateAclsRequestData, CreateAclsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: DeleteAclsRequestData
-    ) -> Request[DeleteAclsRequestData, DeleteAclsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: DescribeConfigsRequestData
-    ) -> Request[DescribeConfigsRequestData, DescribeConfigsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: AlterConfigsRequestData
-    ) -> Request[AlterConfigsRequestData, AlterConfigsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: AlterReplicaLogDirsRequestData
-    ) -> Request[AlterReplicaLogDirsRequestData, AlterReplicaLogDirsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: DescribeLogDirsRequestData
-    ) -> Request[DescribeLogDirsRequestData, DescribeLogDirsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: SaslAuthenticateRequestData
-    ) -> Request[SaslAuthenticateRequestData, SaslAuthenticateResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: CreatePartitionsRequestData
-    ) -> Request[CreatePartitionsRequestData, CreatePartitionsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: CreateDelegationTokenRequestData
-    ) -> Request[CreateDelegationTokenRequestData, CreateDelegationTokenResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: RenewDelegationTokenRequestData
-    ) -> Request[RenewDelegationTokenRequestData, RenewDelegationTokenResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: ExpireDelegationTokenRequestData
-    ) -> Request[ExpireDelegationTokenRequestData, ExpireDelegationTokenResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: DescribeDelegationTokenRequestData
-    ) -> Request[
-        DescribeDelegationTokenRequestData, DescribeDelegationTokenResponseData
-    ]:
-        ...
-
-    @overload
-    def send(
-        self, data: DeleteGroupsRequestData
-    ) -> Request[DeleteGroupsRequestData, DeleteGroupsResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: ElectPreferredLeadersRequestData
-    ) -> Request[ElectPreferredLeadersRequestData, ElectPreferredLeadersResponseData]:
-        ...
-
-    @overload
-    def send(
-        self, data: IncrementalAlterConfigsRequestData
-    ) -> Request[
-        IncrementalAlterConfigsRequestData, IncrementalAlterConfigsResponseData
-    ]:
-        ...
-
-    def send(self, request_data: RequestData) -> Request[RequestData, ResponseData]:
+    def send(self, request_data: RequestData) -> Request:
         return self.send_many([request_data])[0]
 
     def send_many(self, request_data_to_send: List[RequestData]) -> List[Request]:
@@ -460,27 +93,28 @@ class BrokerConnection:
             self._request_from_data(data) for data in request_data_to_send
         ]
 
-        received_requests: List[Request] = []
+        answered_requests: List[Request] = []
 
         len_ = len(request_data_to_send)
         if len_ == 0:
             return []
 
-        while len(received_requests) < len_:
+        while len(answered_requests) < len_:
             self._try_send_and_pop_from(requests_to_send)
-            self._try_receive_and_append_to(received_requests)
-        return received_requests
+            self._try_receive_and_append_to(answered_requests)
+        return answered_requests
 
     def _try_send_and_pop_from(self, requests_to_send: List[Request]) -> None:
-        if requests_to_send:
-            try:
-                self.kafka_io.send(requests_to_send[0])
-                del requests_to_send[0]
+        if len(requests_to_send) == 0:
+            return
+        try:
+            self.kafka_io.send(requests_to_send[0])
+            del requests_to_send[0]
 
-                if not requests_to_send:  # we're now empty, flush all messages
-                    self.kafka_io.flush()
-            except queue.Full:  # make sure we flush so some messages can be read to make place for new ones
+            if len(requests_to_send) == 0:  # we're now empty, flush all messages
                 self.kafka_io.flush()
+        except queue.Full:  # make sure we flush so some messages can be read to make place for new ones
+            self.kafka_io.flush()
 
     def _try_receive_and_append_to(self, received_requests: List[Request]) -> None:
         try:
@@ -559,4 +193,4 @@ class KafkaIO:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        return self.close()
+        self.close()

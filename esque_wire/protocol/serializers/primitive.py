@@ -1,17 +1,7 @@
 import struct
-from abc import ABCMeta
 from enum import Enum
-from typing import (
-    Any,
-    BinaryIO,
-    Callable,
-    Dict,
-    Generic,
-    List,
-    Optional,
-    Tuple,
-    TypeVar,
-)
+from typing import Any, BinaryIO, Callable, Dict, Optional, TypeVar
+from .base import BaseSerializer
 
 T = TypeVar("T")
 

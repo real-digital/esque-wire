@@ -1,5 +1,6 @@
-from esque_wire.protocol import ApiVersionsRequestData, BrokerConnection
-from esque_wire.protocol.api.metadata import MetadataRequestData
+from esque_wire.protocol.structs.api import ApiVersionsRequestData
+from esque_wire.protocol.connection import BrokerConnection
+from esque_wire.protocol.structs.api import MetadataRequestData
 
 
 def test_api_versions(kafka_server):

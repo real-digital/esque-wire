@@ -105,8 +105,25 @@ from .constants import (
     resourcePatternTypeSerializer,
     errorCodeSerializer,
 )
+from .generic import ArraySerializer, DataClassSerializer, DummySerializer, Schema
+from .primitive import (
+    booleanSerializer,
+    int8Serializer,
+    int16Serializer,
+    int32Serializer,
+    uint32Serializer,
+    int64Serializer,
+    varIntSerializer,
+    varLongSerializer,
+    nullableStringSerializer,
+    stringSerializer,
+    nullableBytesSerializer,
+    bytesSerializer,
+    recordsSerializer,
+)
 from ..constants import ApiKey
 from ..structs.base import RequestData, ResponseData
+from ..structs.api.api_versions_response import ApiVersion
 
 REQUEST_SERIALIZERS: Dict[ApiKey, Dict[int, BaseSerializer[RequestData]]] = {
     ApiKey.PRODUCE: produceRequestDataSerializers,
@@ -202,4 +219,9 @@ RESPONSE_SERIALIZERS: Dict[ApiKey, Dict[int, BaseSerializer[ResponseData]]] = {
     ApiKey.DELETE_GROUPS: deleteGroupsResponseDataSerializers,
     ApiKey.ELECT_PREFERRED_LEADERS: electPreferredLeadersResponseDataSerializers,
     ApiKey.INCREMENTAL_ALTER_CONFIGS: incrementalAlterConfigsResponseDataSerializers,
+}
+
+SUPPORTED_API_VERSIONS: Dict[ApiKey, ApiVersion] = {
+    api_key: ApiVersion(api_key, min(serializers.keys()), max(serializers.keys()))
+    for api_key, serializers in REQUEST_SERIALIZERS.items()
 }

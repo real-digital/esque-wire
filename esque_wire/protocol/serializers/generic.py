@@ -50,10 +50,10 @@ class ArraySerializer(BaseSerializer[T]):
         return []
 
 
-class DataClassSerializer(DictSerializer[T]):
-    def __init__(self, tuple_class: Type[T], schema: Schema):
-        super().__init__(schema)
-        self.data_class: Type[T] = tuple_class
+class DataClassSerializer(BaseSerializer[T]):
+    def __init__(self, data_class: Type[T], schema: Schema):
+        self._schema = schema.copy()
+        self.data_class: Type[T] = data_class
 
     def encode(self, value: T) -> bytes:
         return b"".join(
@@ -62,10 +62,14 @@ class DataClassSerializer(DictSerializer[T]):
         )
 
     def read(self, buffer: BinaryIO) -> T:
-        data = super().read(buffer)
-        data.pop(
-            None, None
-        )  # None fields are supposed to be ignored, pop the field if one is there
+        data = {}
+        for field, serializer in self._schema:
+            if field is None:
+                # None fields are legacy, they're present and have
+                # to be read but are not part of the data structure anymore
+                serializer.read(buffer)
+            else:
+                data[field] = serializer.read(buffer)
         return self.data_class(**data)
 
     @property

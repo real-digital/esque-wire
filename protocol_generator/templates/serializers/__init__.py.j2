@@ -15,8 +15,30 @@ from .constants import (
     {{ name | lower_first}}Serializer,
 {%- endfor %}
 )
+from .generic import (
+    ArraySerializer,
+    DataClassSerializer,
+    DummySerializer,
+    Schema,
+)
+from .primitive import (
+    booleanSerializer,
+    int8Serializer,
+    int16Serializer,
+    int32Serializer,
+    uint32Serializer,
+    int64Serializer,
+    varIntSerializer,
+    varLongSerializer,
+    nullableStringSerializer,
+    stringSerializer,
+    nullableBytesSerializer,
+    bytesSerializer,
+    recordsSerializer,
+)
 from ..constants import ApiKey
 from ..structs.base import RequestData, ResponseData
+from ..structs.api.api_versions_response import ApiVersion
 {% endblock %}
 
 {% block content %}
@@ -30,5 +52,10 @@ RESPONSE_SERIALIZERS: Dict[ApiKey, Dict[int, BaseSerializer[ResponseData]]] = {
 {%- for api in all_apis %}
     ApiKey.{{ api.api_name }}: {{ api.latest_schema_pair[Direction.RESPONSE].schema.serializer_dict_name() }},
 {%- endfor %}
+}
+
+SUPPORTED_API_VERSIONS: Dict[ApiKey, ApiVersion] = {
+    api_key: ApiVersion(api_key, min(serializers.keys()), max(serializers.keys()))
+    for api_key, serializers in REQUEST_SERIALIZERS.items()
 }
 {% endblock %}
