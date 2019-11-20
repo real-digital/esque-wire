@@ -1,13 +1,7 @@
-
-from typing import Dict, List, Optional
-
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -22,16 +16,15 @@ class EndTxnRequestData(RequestData):
     :param transaction_result: The result of the transaction (0 = ABORT, 1 = COMMIT)
     :type transaction_result: bool
     """
-    
+
     transactional_id: str
     producer_id: int
     producer_epoch: int
     transaction_result: bool
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `26`, the api key for this API.
         """
         return ApiKey.END_TXN
-

@@ -96,9 +96,9 @@ from .api import (
     incrementalAlterConfigsRequestDataSerializers,
     incrementalAlterConfigsResponseDataSerializers,
 )
-from .primitive import BaseSerializer
+from .base import BaseSerializer
 from ..constants import ApiKey
-from ..structs import RequestData, ResponseData
+from ..structs.base import RequestData, ResponseData
 
 REQUEST_SERIALIZERS: Dict[ApiKey, Dict[int, BaseSerializer[RequestData]]] = {
     ApiKey.PRODUCE: produceRequestDataSerializers,

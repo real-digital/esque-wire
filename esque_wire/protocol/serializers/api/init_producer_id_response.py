@@ -18,22 +18,23 @@ from esque_wire.protocol.serializers import (
 
 initProducerIdResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-        ('producer_id', int64Serializer),
-        ('producer_epoch', int16Serializer),
+        ("throttle_time_ms", int32Serializer),
+        ("error_code", int16Serializer),
+        ("producer_id", int64Serializer),
+        ("producer_epoch", int16Serializer),
     ],
     1: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-        ('producer_id', int64Serializer),
-        ('producer_epoch', int16Serializer),
+        ("throttle_time_ms", int32Serializer),
+        ("error_code", int16Serializer),
+        ("producer_id", int64Serializer),
+        ("producer_epoch", int16Serializer),
     ],
 }
 
 
-initProducerIdResponseDataSerializers: Dict[int, DataClassSerializer[InitProducerIdResponseData]] = {
-    version: DataClassSerializer(InitProducerIdResponseData, schema) for version, schema
-    in initProducerIdResponseDataSchemas.items()
+initProducerIdResponseDataSerializers: Dict[
+    int, DataClassSerializer[InitProducerIdResponseData]
+] = {
+    version: DataClassSerializer(InitProducerIdResponseData, schema)
+    for version, schema in initProducerIdResponseDataSchemas.items()
 }
-

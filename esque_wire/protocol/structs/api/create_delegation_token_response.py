@@ -1,13 +1,7 @@
-
-from typing import Dict, List, Optional
-
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -18,7 +12,7 @@ class Owner:
     :param name: name of the Kafka principal
     :type name: str
     """
-    
+
     principal_type: str
     name: str
 
@@ -44,7 +38,7 @@ class CreateDelegationTokenResponseData(ResponseData):
                              if the request did not violate any quota)
     :type throttle_time_ms: int
     """
-    
+
     error_code: int
     owner: Owner
     issue_timestamp: int
@@ -55,9 +49,8 @@ class CreateDelegationTokenResponseData(ResponseData):
     throttle_time_ms: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `38`, the api key for this API.
         """
         return ApiKey.CREATE_DELEGATION_TOKEN
-

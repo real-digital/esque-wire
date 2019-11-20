@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -23,7 +18,7 @@ class Partition:
     :param timestamp: The target timestamp for the partition.
     :type timestamp: int
     """
-    
+
     partition: int
     current_leader_epoch: int
     timestamp: int
@@ -37,7 +32,7 @@ class Topic:
     :param partitions: Partitions to list offsets.
     :type partitions: List[Partition]
     """
-    
+
     topic: str
     partitions: List[Partition]
 
@@ -57,15 +52,14 @@ class ListOffsetsRequestData(RequestData):
     :param topics: Topics to list offsets.
     :type topics: List[Topic]
     """
-    
+
     replica_id: int
     isolation_level: int
     topics: List[Topic]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `2`, the api key for this API.
         """
         return ApiKey.LIST_OFFSETS
-

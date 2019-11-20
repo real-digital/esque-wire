@@ -19,37 +19,32 @@ from esque_wire.protocol.serializers import (
 
 
 creationResponseSchemas: Dict[int, Schema] = {
-    0: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-    ],
-    1: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-    ],
+    0: [("error_code", int16Serializer), ("error_message", nullableStringSerializer)],
+    1: [("error_code", int16Serializer), ("error_message", nullableStringSerializer)],
 }
 
 
 creationResponseSerializers: Dict[int, DataClassSerializer[CreationResponse]] = {
-    version: DataClassSerializer(CreationResponse, schema) for version, schema
-    in creationResponseSchemas.items()
+    version: DataClassSerializer(CreationResponse, schema)
+    for version, schema in creationResponseSchemas.items()
 }
 
 
 createAclsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('throttle_time_ms', int32Serializer),
-        ('creation_responses', ArraySerializer(creationResponseSerializers[0])),
+        ("throttle_time_ms", int32Serializer),
+        ("creation_responses", ArraySerializer(creationResponseSerializers[0])),
     ],
     1: [
-        ('throttle_time_ms', int32Serializer),
-        ('creation_responses', ArraySerializer(creationResponseSerializers[1])),
+        ("throttle_time_ms", int32Serializer),
+        ("creation_responses", ArraySerializer(creationResponseSerializers[1])),
     ],
 }
 
 
-createAclsResponseDataSerializers: Dict[int, DataClassSerializer[CreateAclsResponseData]] = {
-    version: DataClassSerializer(CreateAclsResponseData, schema) for version, schema
-    in createAclsResponseDataSchemas.items()
+createAclsResponseDataSerializers: Dict[
+    int, DataClassSerializer[CreateAclsResponseData]
+] = {
+    version: DataClassSerializer(CreateAclsResponseData, schema)
+    for version, schema in createAclsResponseDataSchemas.items()
 }
-

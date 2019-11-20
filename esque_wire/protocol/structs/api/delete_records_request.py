@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Partition:
     :param offset: The offset before which the messages will be deleted. -1 means high-watermark for the partition.
     :type offset: int
     """
-    
+
     partition: int
     offset: int
 
@@ -31,7 +26,7 @@ class Topic:
     :param partitions: None
     :type partitions: List[Partition]
     """
-    
+
     topic: str
     partitions: List[Partition]
 
@@ -44,14 +39,13 @@ class DeleteRecordsRequestData(RequestData):
     :param timeout: The maximum time to await a response in ms.
     :type timeout: int
     """
-    
+
     topics: List[Topic]
     timeout: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `21`, the api key for this API.
         """
         return ApiKey.DELETE_RECORDS
-

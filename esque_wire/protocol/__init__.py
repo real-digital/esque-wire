@@ -1,7 +1,7 @@
 from .connection import BrokerConnection
 from io import BytesIO
 from typing import BinaryIO, Dict, Generic, Optional, TypeVar
-from .structs.api_versions_response import ApiVersion
+from .structs.api.api_versions_response import ApiVersion
 from .constants import ApiKey
 from .serializers import REQUEST_SERIALIZERS, RESPONSE_SERIALIZERS
 from .serializers.primitive import BaseSerializer
@@ -15,11 +15,15 @@ SUPPORTED_API_VERSIONS: Dict[ApiKey, ApiVersion] = {
 }
 
 
-def get_request_serializer(api_key: ApiKey, api_version: int) -> BaseSerializer[RequestData]:
+def get_request_serializer(
+    api_key: ApiKey, api_version: int
+) -> BaseSerializer[RequestData]:
     return REQUEST_SERIALIZERS[api_key][api_version]
 
 
-def get_response_serializer(api_key: ApiKey, api_version: int) -> BaseSerializer[ResponseData]:
+def get_response_serializer(
+    api_key: ApiKey, api_version: int
+) -> BaseSerializer[ResponseData]:
     return RESPONSE_SERIALIZERS[api_key][api_version]
 
 
@@ -45,7 +49,9 @@ class Request(Generic[Req, Res]):
 
     def read_response(self, buffer: BinaryIO) -> "Request":
         self.response_header = responseHeaderSerializer.read(buffer)
-        assert self.response_header.correlation_id == self.correlation_id, "Request and response order got messed up!"
+        assert (
+            self.response_header.correlation_id == self.correlation_id
+        ), "Request and response order got messed up!"
         self.response_data = self.response_serializer.read(buffer)
         return self
 
@@ -67,10 +73,17 @@ class Request(Generic[Req, Res]):
 
     @classmethod
     def from_request_data(
-        cls, request_data: Req, api_version: int, correlation_id: int, client_id: Optional[str]
+        cls,
+        request_data: Req,
+        api_version: int,
+        correlation_id: int,
+        client_id: Optional[str],
     ) -> "Request":
         request_data = request_data
         header = RequestHeader(
-            api_key=request_data.api_key(), api_version=api_version, correlation_id=correlation_id, client_id=client_id
+            api_key=request_data.api_key(),
+            api_version=api_version,
+            correlation_id=correlation_id,
+            client_id=client_id,
         )
         return Request(request_data, header)

@@ -3,9 +3,7 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.delete_groups_request import (
-    DeleteGroupsRequestData,
-)
+from esque_wire.protocol.structs.delete_groups_request import DeleteGroupsRequestData
 
 from esque_wire.protocol.serializers import (
     ArraySerializer,
@@ -16,17 +14,14 @@ from esque_wire.protocol.serializers import (
 
 
 deleteGroupsRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('groups', ArraySerializer(stringSerializer)),
-    ],
-    1: [
-        ('groups', ArraySerializer(stringSerializer)),
-    ],
+    0: [("groups", ArraySerializer(stringSerializer))],
+    1: [("groups", ArraySerializer(stringSerializer))],
 }
 
 
-deleteGroupsRequestDataSerializers: Dict[int, DataClassSerializer[DeleteGroupsRequestData]] = {
-    version: DataClassSerializer(DeleteGroupsRequestData, schema) for version, schema
-    in deleteGroupsRequestDataSchemas.items()
+deleteGroupsRequestDataSerializers: Dict[
+    int, DataClassSerializer[DeleteGroupsRequestData]
+] = {
+    version: DataClassSerializer(DeleteGroupsRequestData, schema)
+    for version, schema in deleteGroupsRequestDataSchemas.items()
 }
-

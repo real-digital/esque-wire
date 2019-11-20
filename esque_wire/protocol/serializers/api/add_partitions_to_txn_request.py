@@ -20,41 +20,36 @@ from esque_wire.protocol.serializers import (
 
 
 topicSchemas: Dict[int, Schema] = {
-    0: [
-        ('topic', stringSerializer),
-        ('partitions', ArraySerializer(int32Serializer)),
-    ],
-    1: [
-        ('topic', stringSerializer),
-        ('partitions', ArraySerializer(int32Serializer)),
-    ],
+    0: [("topic", stringSerializer), ("partitions", ArraySerializer(int32Serializer))],
+    1: [("topic", stringSerializer), ("partitions", ArraySerializer(int32Serializer))],
 }
 
 
 topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema) for version, schema
-    in topicSchemas.items()
+    version: DataClassSerializer(Topic, schema)
+    for version, schema in topicSchemas.items()
 }
 
 
 addPartitionsToTxnRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('transactional_id', stringSerializer),
-        ('producer_id', int64Serializer),
-        ('producer_epoch', int16Serializer),
-        ('topics', ArraySerializer(topicSerializers[0])),
+        ("transactional_id", stringSerializer),
+        ("producer_id", int64Serializer),
+        ("producer_epoch", int16Serializer),
+        ("topics", ArraySerializer(topicSerializers[0])),
     ],
     1: [
-        ('transactional_id', stringSerializer),
-        ('producer_id', int64Serializer),
-        ('producer_epoch', int16Serializer),
-        ('topics', ArraySerializer(topicSerializers[1])),
+        ("transactional_id", stringSerializer),
+        ("producer_id", int64Serializer),
+        ("producer_epoch", int16Serializer),
+        ("topics", ArraySerializer(topicSerializers[1])),
     ],
 }
 
 
-addPartitionsToTxnRequestDataSerializers: Dict[int, DataClassSerializer[AddPartitionsToTxnRequestData]] = {
-    version: DataClassSerializer(AddPartitionsToTxnRequestData, schema) for version, schema
-    in addPartitionsToTxnRequestDataSchemas.items()
+addPartitionsToTxnRequestDataSerializers: Dict[
+    int, DataClassSerializer[AddPartitionsToTxnRequestData]
+] = {
+    version: DataClassSerializer(AddPartitionsToTxnRequestData, schema)
+    for version, schema in addPartitionsToTxnRequestDataSchemas.items()
 }
-

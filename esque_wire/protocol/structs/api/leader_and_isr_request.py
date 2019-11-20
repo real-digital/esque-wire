@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -20,7 +15,7 @@ class LiveLeader:
     :param port: The port on which the broker accepts requests.
     :type port: int
     """
-    
+
     id: int
     host: str
     port: int
@@ -46,7 +41,7 @@ class PartitionState:
     :param is_new: Whether the replica should have existed on the broker or not
     :type is_new: bool
     """
-    
+
     partition: int
     controller_epoch: int
     leader: int
@@ -65,7 +60,7 @@ class TopicState:
     :param partition_states: Partition states
     :type partition_states: List[PartitionState]
     """
-    
+
     topic: str
     partition_states: List[PartitionState]
 
@@ -84,7 +79,7 @@ class LeaderAndIsrRequestData(RequestData):
     :param live_leaders: Live leaders
     :type live_leaders: List[LiveLeader]
     """
-    
+
     controller_id: int
     controller_epoch: int
     broker_epoch: int
@@ -92,9 +87,8 @@ class LeaderAndIsrRequestData(RequestData):
     live_leaders: List[LiveLeader]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `4`, the api key for this API.
         """
         return ApiKey.LEADER_AND_ISR
-

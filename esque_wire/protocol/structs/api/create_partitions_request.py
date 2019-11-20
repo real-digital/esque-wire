@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class NewPartitions:
     :param assignment: The assigned brokers.
     :type assignment: List[List[int]]
     """
-    
+
     count: int
     assignment: List[List[int]]
 
@@ -31,7 +26,7 @@ class TopicPartition:
     :param new_partitions: None
     :type new_partitions: NewPartitions
     """
-    
+
     topic: str
     new_partitions: NewPartitions
 
@@ -46,15 +41,14 @@ class CreatePartitionsRequestData(RequestData):
     :param validate_only: If true then validate the request, but don't actually increase the number of partitions.
     :type validate_only: bool
     """
-    
+
     topic_partitions: List[TopicPartition]
     timeout: int
     validate_only: bool
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `37`, the api key for this API.
         """
         return ApiKey.CREATE_PARTITIONS
-

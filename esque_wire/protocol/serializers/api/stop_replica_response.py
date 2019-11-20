@@ -20,38 +20,39 @@ from esque_wire.protocol.serializers import (
 
 partitionSchemas: Dict[int, Schema] = {
     0: [
-        ('topic', stringSerializer),
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
+        ("topic", stringSerializer),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
     ],
     1: [
-        ('topic', stringSerializer),
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
+        ("topic", stringSerializer),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
     ],
 }
 
 
 partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema) for version, schema
-    in partitionSchemas.items()
+    version: DataClassSerializer(Partition, schema)
+    for version, schema in partitionSchemas.items()
 }
 
 
 stopReplicaResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('partitions', ArraySerializer(partitionSerializers[0])),
+        ("error_code", int16Serializer),
+        ("partitions", ArraySerializer(partitionSerializers[0])),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('partitions', ArraySerializer(partitionSerializers[1])),
+        ("error_code", int16Serializer),
+        ("partitions", ArraySerializer(partitionSerializers[1])),
     ],
 }
 
 
-stopReplicaResponseDataSerializers: Dict[int, DataClassSerializer[StopReplicaResponseData]] = {
-    version: DataClassSerializer(StopReplicaResponseData, schema) for version, schema
-    in stopReplicaResponseDataSchemas.items()
+stopReplicaResponseDataSerializers: Dict[
+    int, DataClassSerializer[StopReplicaResponseData]
+] = {
+    version: DataClassSerializer(StopReplicaResponseData, schema)
+    for version, schema in stopReplicaResponseDataSchemas.items()
 }
-

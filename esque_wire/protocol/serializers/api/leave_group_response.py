@@ -3,9 +3,7 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.leave_group_response import (
-    LeaveGroupResponseData,
-)
+from esque_wire.protocol.structs.leave_group_response import LeaveGroupResponseData
 
 from esque_wire.protocol.serializers import (
     DataClassSerializer,
@@ -18,22 +16,17 @@ from esque_wire.protocol.serializers import (
 
 leaveGroupResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('throttle_time_ms', DummySerializer(int32Serializer.default)),
+        ("error_code", int16Serializer),
+        ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
-    1: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-    ],
-    2: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-    ],
+    1: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
+    2: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
 }
 
 
-leaveGroupResponseDataSerializers: Dict[int, DataClassSerializer[LeaveGroupResponseData]] = {
-    version: DataClassSerializer(LeaveGroupResponseData, schema) for version, schema
-    in leaveGroupResponseDataSchemas.items()
+leaveGroupResponseDataSerializers: Dict[
+    int, DataClassSerializer[LeaveGroupResponseData]
+] = {
+    version: DataClassSerializer(LeaveGroupResponseData, schema)
+    for version, schema in leaveGroupResponseDataSchemas.items()
 }
-

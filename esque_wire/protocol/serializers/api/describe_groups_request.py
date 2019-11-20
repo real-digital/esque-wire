@@ -19,26 +19,27 @@ from esque_wire.protocol.serializers import (
 
 describeGroupsRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('groups', ArraySerializer(stringSerializer)),
-        ('include_authorized_operations', DummySerializer(booleanSerializer.default)),
+        ("groups", ArraySerializer(stringSerializer)),
+        ("include_authorized_operations", DummySerializer(booleanSerializer.default)),
     ],
     1: [
-        ('groups', ArraySerializer(stringSerializer)),
-        ('include_authorized_operations', DummySerializer(booleanSerializer.default)),
+        ("groups", ArraySerializer(stringSerializer)),
+        ("include_authorized_operations", DummySerializer(booleanSerializer.default)),
     ],
     2: [
-        ('groups', ArraySerializer(stringSerializer)),
-        ('include_authorized_operations', DummySerializer(booleanSerializer.default)),
+        ("groups", ArraySerializer(stringSerializer)),
+        ("include_authorized_operations", DummySerializer(booleanSerializer.default)),
     ],
     3: [
-        ('groups', ArraySerializer(stringSerializer)),
-        ('include_authorized_operations', booleanSerializer),
+        ("groups", ArraySerializer(stringSerializer)),
+        ("include_authorized_operations", booleanSerializer),
     ],
 }
 
 
-describeGroupsRequestDataSerializers: Dict[int, DataClassSerializer[DescribeGroupsRequestData]] = {
-    version: DataClassSerializer(DescribeGroupsRequestData, schema) for version, schema
-    in describeGroupsRequestDataSchemas.items()
+describeGroupsRequestDataSerializers: Dict[
+    int, DataClassSerializer[DescribeGroupsRequestData]
+] = {
+    version: DataClassSerializer(DescribeGroupsRequestData, schema)
+    for version, schema in describeGroupsRequestDataSchemas.items()
 }
-

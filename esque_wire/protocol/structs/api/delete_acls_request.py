@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -28,7 +23,7 @@ class Filter:
     :param permission_type: The ACL permission type
     :type permission_type: int
     """
-    
+
     resource_type: int
     resource_name: Optional[str]
     resource_pattern_type_filter: int
@@ -44,13 +39,12 @@ class DeleteAclsRequestData(RequestData):
     :param filters: None
     :type filters: List[Filter]
     """
-    
+
     filters: List[Filter]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `31`, the api key for this API.
         """
         return ApiKey.DELETE_ACLS
-

@@ -22,30 +22,31 @@ from esque_wire.protocol.serializers import (
 
 responseSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-    ],
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+    ]
 }
 
 
 responseSerializers: Dict[int, DataClassSerializer[Response]] = {
-    version: DataClassSerializer(Response, schema) for version, schema
-    in responseSchemas.items()
+    version: DataClassSerializer(Response, schema)
+    for version, schema in responseSchemas.items()
 }
 
 
 incrementalAlterConfigsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('throttle_time_ms', int32Serializer),
-        ('responses', ArraySerializer(responseSerializers[0])),
-    ],
+        ("throttle_time_ms", int32Serializer),
+        ("responses", ArraySerializer(responseSerializers[0])),
+    ]
 }
 
 
-incrementalAlterConfigsResponseDataSerializers: Dict[int, DataClassSerializer[IncrementalAlterConfigsResponseData]] = {
-    version: DataClassSerializer(IncrementalAlterConfigsResponseData, schema) for version, schema
-    in incrementalAlterConfigsResponseDataSchemas.items()
+incrementalAlterConfigsResponseDataSerializers: Dict[
+    int, DataClassSerializer[IncrementalAlterConfigsResponseData]
+] = {
+    version: DataClassSerializer(IncrementalAlterConfigsResponseData, schema)
+    for version, schema in incrementalAlterConfigsResponseDataSchemas.items()
 }
-

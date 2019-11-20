@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class ForgottenTopicsData:
     :param partitions: Partitions to remove from the fetch session.
     :type partitions: List[int]
     """
-    
+
     topic: str
     partitions: List[int]
 
@@ -41,7 +36,7 @@ class Partition:
     :param partition_max_bytes: Maximum bytes to fetch.
     :type partition_max_bytes: int
     """
-    
+
     partition: int
     current_leader_epoch: int
     fetch_offset: int
@@ -57,7 +52,7 @@ class Topic:
     :param partitions: Partitions to fetch.
     :type partitions: List[Partition]
     """
-    
+
     topic: str
     partitions: List[Partition]
 
@@ -93,7 +88,7 @@ class FetchRequestData(RequestData):
     :param rack_id: The consumer's rack id
     :type rack_id: str
     """
-    
+
     replica_id: int
     max_wait_time: int
     min_bytes: int
@@ -106,9 +101,8 @@ class FetchRequestData(RequestData):
     rack_id: str
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `1`, the api key for this API.
         """
         return ApiKey.FETCH
-

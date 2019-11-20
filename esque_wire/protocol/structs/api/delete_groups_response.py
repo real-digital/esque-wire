@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class GroupErrorCode:
     :param error_code: Response error code
     :type error_code: int
     """
-    
+
     group_id: str
     error_code: int
 
@@ -32,14 +27,13 @@ class DeleteGroupsResponseData(ResponseData):
     :param group_error_codes: An array of per group error codes.
     :type group_error_codes: List[GroupErrorCode]
     """
-    
+
     throttle_time_ms: int
     group_error_codes: List[GroupErrorCode]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `42`, the api key for this API.
         """
         return ApiKey.DELETE_GROUPS
-

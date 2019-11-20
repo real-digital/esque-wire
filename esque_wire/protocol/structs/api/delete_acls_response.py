@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -32,7 +27,7 @@ class MatchingAcl:
     :param permission_type: The ACL permission type
     :type permission_type: int
     """
-    
+
     error_code: int
     error_message: Optional[str]
     resource_type: int
@@ -54,7 +49,7 @@ class FilterResponse:
     :param matching_acls: The matching ACLs
     :type matching_acls: List[MatchingAcl]
     """
-    
+
     error_code: int
     error_message: Optional[str]
     matching_acls: List[MatchingAcl]
@@ -69,14 +64,13 @@ class DeleteAclsResponseData(ResponseData):
     :param filter_responses: None
     :type filter_responses: List[FilterResponse]
     """
-    
+
     throttle_time_ms: int
     filter_responses: List[FilterResponse]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `31`, the api key for this API.
         """
         return ApiKey.DELETE_ACLS
-

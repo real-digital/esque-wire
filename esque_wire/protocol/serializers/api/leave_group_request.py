@@ -3,9 +3,7 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.leave_group_request import (
-    LeaveGroupRequestData,
-)
+from esque_wire.protocol.structs.leave_group_request import LeaveGroupRequestData
 
 from esque_wire.protocol.serializers import (
     DataClassSerializer,
@@ -15,23 +13,15 @@ from esque_wire.protocol.serializers import (
 
 
 leaveGroupRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('group_id', stringSerializer),
-        ('member_id', stringSerializer),
-    ],
-    1: [
-        ('group_id', stringSerializer),
-        ('member_id', stringSerializer),
-    ],
-    2: [
-        ('group_id', stringSerializer),
-        ('member_id', stringSerializer),
-    ],
+    0: [("group_id", stringSerializer), ("member_id", stringSerializer)],
+    1: [("group_id", stringSerializer), ("member_id", stringSerializer)],
+    2: [("group_id", stringSerializer), ("member_id", stringSerializer)],
 }
 
 
-leaveGroupRequestDataSerializers: Dict[int, DataClassSerializer[LeaveGroupRequestData]] = {
-    version: DataClassSerializer(LeaveGroupRequestData, schema) for version, schema
-    in leaveGroupRequestDataSchemas.items()
+leaveGroupRequestDataSerializers: Dict[
+    int, DataClassSerializer[LeaveGroupRequestData]
+] = {
+    version: DataClassSerializer(LeaveGroupRequestData, schema)
+    for version, schema in leaveGroupRequestDataSchemas.items()
 }
-

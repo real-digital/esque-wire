@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Partition:
     :param partition_ids: The partition ids of a topic
     :type partition_ids: List[int]
     """
-    
+
     topic: str
     partition_ids: List[int]
 
@@ -37,7 +32,7 @@ class StopReplicaRequestData(RequestData):
     :param partitions: The partitions
     :type partitions: List[Partition]
     """
-    
+
     controller_id: int
     controller_epoch: int
     broker_epoch: int
@@ -45,9 +40,8 @@ class StopReplicaRequestData(RequestData):
     partitions: List[Partition]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `5`, the api key for this API.
         """
         return ApiKey.STOP_REPLICA
-

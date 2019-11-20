@@ -3,9 +3,7 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.heartbeat_request import (
-    HeartbeatRequestData,
-)
+from esque_wire.protocol.structs.heartbeat_request import HeartbeatRequestData
 
 from esque_wire.protocol.serializers import (
     DataClassSerializer,
@@ -19,34 +17,35 @@ from esque_wire.protocol.serializers import (
 
 heartbeatRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('group_id', stringSerializer),
-        ('generation_id', int32Serializer),
-        ('member_id', stringSerializer),
-        ('group_instance_id', DummySerializer(nullableStringSerializer.default)),
+        ("group_id", stringSerializer),
+        ("generation_id", int32Serializer),
+        ("member_id", stringSerializer),
+        ("group_instance_id", DummySerializer(nullableStringSerializer.default)),
     ],
     1: [
-        ('group_id', stringSerializer),
-        ('generation_id', int32Serializer),
-        ('member_id', stringSerializer),
-        ('group_instance_id', DummySerializer(nullableStringSerializer.default)),
+        ("group_id", stringSerializer),
+        ("generation_id", int32Serializer),
+        ("member_id", stringSerializer),
+        ("group_instance_id", DummySerializer(nullableStringSerializer.default)),
     ],
     2: [
-        ('group_id', stringSerializer),
-        ('generation_id', int32Serializer),
-        ('member_id', stringSerializer),
-        ('group_instance_id', DummySerializer(nullableStringSerializer.default)),
+        ("group_id", stringSerializer),
+        ("generation_id", int32Serializer),
+        ("member_id", stringSerializer),
+        ("group_instance_id", DummySerializer(nullableStringSerializer.default)),
     ],
     3: [
-        ('group_id', stringSerializer),
-        ('generation_id', int32Serializer),
-        ('member_id', stringSerializer),
-        ('group_instance_id', nullableStringSerializer),
+        ("group_id", stringSerializer),
+        ("generation_id", int32Serializer),
+        ("member_id", stringSerializer),
+        ("group_instance_id", nullableStringSerializer),
     ],
 }
 
 
-heartbeatRequestDataSerializers: Dict[int, DataClassSerializer[HeartbeatRequestData]] = {
-    version: DataClassSerializer(HeartbeatRequestData, schema) for version, schema
-    in heartbeatRequestDataSchemas.items()
+heartbeatRequestDataSerializers: Dict[
+    int, DataClassSerializer[HeartbeatRequestData]
+] = {
+    version: DataClassSerializer(HeartbeatRequestData, schema)
+    for version, schema in heartbeatRequestDataSchemas.items()
 }
-

@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -20,7 +15,7 @@ class PartitionResult:
     :param error_message: The result message, or null if there was no error.
     :type error_message: Optional[str]
     """
-    
+
     partition_id: int
     error_code: int
     error_message: Optional[str]
@@ -34,7 +29,7 @@ class ReplicaElectionResult:
     :param partition_result: The results for each partition
     :type partition_result: List[PartitionResult]
     """
-    
+
     topic: str
     partition_result: List[PartitionResult]
 
@@ -49,14 +44,13 @@ class ElectPreferredLeadersResponseData(ResponseData):
                                      and the request asks for all partitions.
     :type replica_election_results: List[ReplicaElectionResult]
     """
-    
+
     throttle_time_ms: int
     replica_election_results: List[ReplicaElectionResult]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `43`, the api key for this API.
         """
         return ApiKey.ELECT_PREFERRED_LEADERS
-

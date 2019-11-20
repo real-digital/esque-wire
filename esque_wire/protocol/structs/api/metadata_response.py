@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -28,7 +23,7 @@ class Partition:
     :param offline_replicas: The set of offline replicas of this partition.
     :type offline_replicas: List[int]
     """
-    
+
     error_code: int
     partition_index: int
     leader_id: int
@@ -52,7 +47,7 @@ class Topic:
     :param topic_authorized_operations: 32-bit bitfield to represent authorized operations for this topic.
     :type topic_authorized_operations: int
     """
-    
+
     error_code: int
     name: str
     is_internal: bool
@@ -72,7 +67,7 @@ class Broker:
     :param rack: The rack of the broker, or null if it has not been assigned to a rack.
     :type rack: Optional[str]
     """
-    
+
     node_id: int
     host: str
     port: int
@@ -96,7 +91,7 @@ class MetadataResponseData(ResponseData):
     :param cluster_authorized_operations: 32-bit bitfield to represent authorized operations for this cluster.
     :type cluster_authorized_operations: int
     """
-    
+
     throttle_time_ms: int
     brokers: List[Broker]
     cluster_id: Optional[str]
@@ -105,9 +100,8 @@ class MetadataResponseData(ResponseData):
     cluster_authorized_operations: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `3`, the api key for this API.
         """
         return ApiKey.METADATA
-

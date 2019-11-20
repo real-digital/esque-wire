@@ -16,19 +16,14 @@ from esque_wire.protocol.serializers import (
 
 
 addOffsetsToTxnResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-    ],
-    1: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-    ],
+    0: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
+    1: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
 }
 
 
-addOffsetsToTxnResponseDataSerializers: Dict[int, DataClassSerializer[AddOffsetsToTxnResponseData]] = {
-    version: DataClassSerializer(AddOffsetsToTxnResponseData, schema) for version, schema
-    in addOffsetsToTxnResponseDataSchemas.items()
+addOffsetsToTxnResponseDataSerializers: Dict[
+    int, DataClassSerializer[AddOffsetsToTxnResponseData]
+] = {
+    version: DataClassSerializer(AddOffsetsToTxnResponseData, schema)
+    for version, schema in addOffsetsToTxnResponseDataSchemas.items()
 }
-

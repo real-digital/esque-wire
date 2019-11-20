@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -24,7 +19,7 @@ class Partition:
                       replica in the future.
     :type is_future: bool
     """
-    
+
     partition: int
     size: int
     offset_lag: int
@@ -39,7 +34,7 @@ class Topic:
     :param partitions: None
     :type partitions: List[Partition]
     """
-    
+
     topic: str
     partitions: List[Partition]
 
@@ -54,7 +49,7 @@ class LogDir:
     :param topics: None
     :type topics: List[Topic]
     """
-    
+
     error_code: int
     log_dir: str
     topics: List[Topic]
@@ -69,14 +64,13 @@ class DescribeLogDirsResponseData(ResponseData):
     :param log_dirs: None
     :type log_dirs: List[LogDir]
     """
-    
+
     throttle_time_ms: int
     log_dirs: List[LogDir]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `35`, the api key for this API.
         """
         return ApiKey.DESCRIBE_LOG_DIRS
-

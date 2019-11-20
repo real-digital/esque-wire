@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -22,7 +17,7 @@ class Acl:
     :param permission_type: The ACL permission type
     :type permission_type: int
     """
-    
+
     principal: str
     host: str
     operation: int
@@ -41,7 +36,7 @@ class Resource:
     :param acls: None
     :type acls: List[Acl]
     """
-    
+
     resource_type: int
     resource_name: str
     resource_pattern_type: int
@@ -61,16 +56,15 @@ class DescribeAclsResponseData(ResponseData):
     :param resources: The resources and their associated ACLs.
     :type resources: List[Resource]
     """
-    
+
     throttle_time_ms: int
     error_code: int
     error_message: Optional[str]
     resources: List[Resource]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `29`, the api key for this API.
         """
         return ApiKey.DESCRIBE_ACLS
-

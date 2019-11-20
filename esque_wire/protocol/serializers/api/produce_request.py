@@ -23,143 +23,94 @@ from esque_wire.protocol.serializers import (
 
 
 dataSchemas: Dict[int, Schema] = {
-    0: [
-        ('partition', int32Serializer),
-        ('record_set', nullableBytesSerializer),
-    ],
-    1: [
-        ('partition', int32Serializer),
-        ('record_set', nullableBytesSerializer),
-    ],
-    2: [
-        ('partition', int32Serializer),
-        ('record_set', nullableBytesSerializer),
-    ],
-    3: [
-        ('partition', int32Serializer),
-        ('record_set', nullableBytesSerializer),
-    ],
-    4: [
-        ('partition', int32Serializer),
-        ('record_set', nullableBytesSerializer),
-    ],
-    5: [
-        ('partition', int32Serializer),
-        ('record_set', nullableBytesSerializer),
-    ],
-    6: [
-        ('partition', int32Serializer),
-        ('record_set', nullableBytesSerializer),
-    ],
-    7: [
-        ('partition', int32Serializer),
-        ('record_set', nullableBytesSerializer),
-    ],
+    0: [("partition", int32Serializer), ("record_set", nullableBytesSerializer)],
+    1: [("partition", int32Serializer), ("record_set", nullableBytesSerializer)],
+    2: [("partition", int32Serializer), ("record_set", nullableBytesSerializer)],
+    3: [("partition", int32Serializer), ("record_set", nullableBytesSerializer)],
+    4: [("partition", int32Serializer), ("record_set", nullableBytesSerializer)],
+    5: [("partition", int32Serializer), ("record_set", nullableBytesSerializer)],
+    6: [("partition", int32Serializer), ("record_set", nullableBytesSerializer)],
+    7: [("partition", int32Serializer), ("record_set", nullableBytesSerializer)],
 }
 
 
 dataSerializers: Dict[int, DataClassSerializer[Data]] = {
-    version: DataClassSerializer(Data, schema) for version, schema
-    in dataSchemas.items()
+    version: DataClassSerializer(Data, schema)
+    for version, schema in dataSchemas.items()
 }
 
 
 topicDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('topic', stringSerializer),
-        ('data', ArraySerializer(dataSerializers[0])),
-    ],
-    1: [
-        ('topic', stringSerializer),
-        ('data', ArraySerializer(dataSerializers[1])),
-    ],
-    2: [
-        ('topic', stringSerializer),
-        ('data', ArraySerializer(dataSerializers[2])),
-    ],
-    3: [
-        ('topic', stringSerializer),
-        ('data', ArraySerializer(dataSerializers[3])),
-    ],
-    4: [
-        ('topic', stringSerializer),
-        ('data', ArraySerializer(dataSerializers[4])),
-    ],
-    5: [
-        ('topic', stringSerializer),
-        ('data', ArraySerializer(dataSerializers[5])),
-    ],
-    6: [
-        ('topic', stringSerializer),
-        ('data', ArraySerializer(dataSerializers[6])),
-    ],
-    7: [
-        ('topic', stringSerializer),
-        ('data', ArraySerializer(dataSerializers[7])),
-    ],
+    0: [("topic", stringSerializer), ("data", ArraySerializer(dataSerializers[0]))],
+    1: [("topic", stringSerializer), ("data", ArraySerializer(dataSerializers[1]))],
+    2: [("topic", stringSerializer), ("data", ArraySerializer(dataSerializers[2]))],
+    3: [("topic", stringSerializer), ("data", ArraySerializer(dataSerializers[3]))],
+    4: [("topic", stringSerializer), ("data", ArraySerializer(dataSerializers[4]))],
+    5: [("topic", stringSerializer), ("data", ArraySerializer(dataSerializers[5]))],
+    6: [("topic", stringSerializer), ("data", ArraySerializer(dataSerializers[6]))],
+    7: [("topic", stringSerializer), ("data", ArraySerializer(dataSerializers[7]))],
 }
 
 
 topicDataSerializers: Dict[int, DataClassSerializer[TopicData]] = {
-    version: DataClassSerializer(TopicData, schema) for version, schema
-    in topicDataSchemas.items()
+    version: DataClassSerializer(TopicData, schema)
+    for version, schema in topicDataSchemas.items()
 }
 
 
 produceRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('acks', int16Serializer),
-        ('timeout', int32Serializer),
-        ('topic_data', ArraySerializer(topicDataSerializers[0])),
-        ('transactional_id', DummySerializer(nullableStringSerializer.default)),
+        ("acks", int16Serializer),
+        ("timeout", int32Serializer),
+        ("topic_data", ArraySerializer(topicDataSerializers[0])),
+        ("transactional_id", DummySerializer(nullableStringSerializer.default)),
     ],
     1: [
-        ('acks', int16Serializer),
-        ('timeout', int32Serializer),
-        ('topic_data', ArraySerializer(topicDataSerializers[1])),
-        ('transactional_id', DummySerializer(nullableStringSerializer.default)),
+        ("acks", int16Serializer),
+        ("timeout", int32Serializer),
+        ("topic_data", ArraySerializer(topicDataSerializers[1])),
+        ("transactional_id", DummySerializer(nullableStringSerializer.default)),
     ],
     2: [
-        ('acks', int16Serializer),
-        ('timeout', int32Serializer),
-        ('topic_data', ArraySerializer(topicDataSerializers[2])),
-        ('transactional_id', DummySerializer(nullableStringSerializer.default)),
+        ("acks", int16Serializer),
+        ("timeout", int32Serializer),
+        ("topic_data", ArraySerializer(topicDataSerializers[2])),
+        ("transactional_id", DummySerializer(nullableStringSerializer.default)),
     ],
     3: [
-        ('transactional_id', nullableStringSerializer),
-        ('acks', int16Serializer),
-        ('timeout', int32Serializer),
-        ('topic_data', ArraySerializer(topicDataSerializers[3])),
+        ("transactional_id", nullableStringSerializer),
+        ("acks", int16Serializer),
+        ("timeout", int32Serializer),
+        ("topic_data", ArraySerializer(topicDataSerializers[3])),
     ],
     4: [
-        ('transactional_id', nullableStringSerializer),
-        ('acks', int16Serializer),
-        ('timeout', int32Serializer),
-        ('topic_data', ArraySerializer(topicDataSerializers[4])),
+        ("transactional_id", nullableStringSerializer),
+        ("acks", int16Serializer),
+        ("timeout", int32Serializer),
+        ("topic_data", ArraySerializer(topicDataSerializers[4])),
     ],
     5: [
-        ('transactional_id', nullableStringSerializer),
-        ('acks', int16Serializer),
-        ('timeout', int32Serializer),
-        ('topic_data', ArraySerializer(topicDataSerializers[5])),
+        ("transactional_id", nullableStringSerializer),
+        ("acks", int16Serializer),
+        ("timeout", int32Serializer),
+        ("topic_data", ArraySerializer(topicDataSerializers[5])),
     ],
     6: [
-        ('transactional_id', nullableStringSerializer),
-        ('acks', int16Serializer),
-        ('timeout', int32Serializer),
-        ('topic_data', ArraySerializer(topicDataSerializers[6])),
+        ("transactional_id", nullableStringSerializer),
+        ("acks", int16Serializer),
+        ("timeout", int32Serializer),
+        ("topic_data", ArraySerializer(topicDataSerializers[6])),
     ],
     7: [
-        ('transactional_id', nullableStringSerializer),
-        ('acks', int16Serializer),
-        ('timeout', int32Serializer),
-        ('topic_data', ArraySerializer(topicDataSerializers[7])),
+        ("transactional_id", nullableStringSerializer),
+        ("acks", int16Serializer),
+        ("timeout", int32Serializer),
+        ("topic_data", ArraySerializer(topicDataSerializers[7])),
     ],
 }
 
 
 produceRequestDataSerializers: Dict[int, DataClassSerializer[ProduceRequestData]] = {
-    version: DataClassSerializer(ProduceRequestData, schema) for version, schema
-    in produceRequestDataSchemas.items()
+    version: DataClassSerializer(ProduceRequestData, schema)
+    for version, schema in produceRequestDataSchemas.items()
 }
-

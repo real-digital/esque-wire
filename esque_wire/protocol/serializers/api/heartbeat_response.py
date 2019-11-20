@@ -3,9 +3,7 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.heartbeat_response import (
-    HeartbeatResponseData,
-)
+from esque_wire.protocol.structs.heartbeat_response import HeartbeatResponseData
 
 from esque_wire.protocol.serializers import (
     DataClassSerializer,
@@ -18,26 +16,18 @@ from esque_wire.protocol.serializers import (
 
 heartbeatResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('throttle_time_ms', DummySerializer(int32Serializer.default)),
+        ("error_code", int16Serializer),
+        ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
-    1: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-    ],
-    2: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-    ],
-    3: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-    ],
+    1: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
+    2: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
+    3: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
 }
 
 
-heartbeatResponseDataSerializers: Dict[int, DataClassSerializer[HeartbeatResponseData]] = {
-    version: DataClassSerializer(HeartbeatResponseData, schema) for version, schema
-    in heartbeatResponseDataSchemas.items()
+heartbeatResponseDataSerializers: Dict[
+    int, DataClassSerializer[HeartbeatResponseData]
+] = {
+    version: DataClassSerializer(HeartbeatResponseData, schema)
+    for version, schema in heartbeatResponseDataSchemas.items()
 }
-

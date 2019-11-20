@@ -20,47 +20,48 @@ from esque_wire.protocol.serializers import (
 
 partitionSchemas: Dict[int, Schema] = {
     0: [
-        ('topic', stringSerializer),
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
+        ("topic", stringSerializer),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
     ],
     1: [
-        ('topic', stringSerializer),
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
+        ("topic", stringSerializer),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
     ],
     2: [
-        ('topic', stringSerializer),
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
+        ("topic", stringSerializer),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
     ],
 }
 
 
 partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema) for version, schema
-    in partitionSchemas.items()
+    version: DataClassSerializer(Partition, schema)
+    for version, schema in partitionSchemas.items()
 }
 
 
 leaderAndIsrResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('partitions', ArraySerializer(partitionSerializers[0])),
+        ("error_code", int16Serializer),
+        ("partitions", ArraySerializer(partitionSerializers[0])),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('partitions', ArraySerializer(partitionSerializers[1])),
+        ("error_code", int16Serializer),
+        ("partitions", ArraySerializer(partitionSerializers[1])),
     ],
     2: [
-        ('error_code', int16Serializer),
-        ('partitions', ArraySerializer(partitionSerializers[2])),
+        ("error_code", int16Serializer),
+        ("partitions", ArraySerializer(partitionSerializers[2])),
     ],
 }
 
 
-leaderAndIsrResponseDataSerializers: Dict[int, DataClassSerializer[LeaderAndIsrResponseData]] = {
-    version: DataClassSerializer(LeaderAndIsrResponseData, schema) for version, schema
-    in leaderAndIsrResponseDataSchemas.items()
+leaderAndIsrResponseDataSerializers: Dict[
+    int, DataClassSerializer[LeaderAndIsrResponseData]
+] = {
+    version: DataClassSerializer(LeaderAndIsrResponseData, schema)
+    for version, schema in leaderAndIsrResponseDataSchemas.items()
 }
-

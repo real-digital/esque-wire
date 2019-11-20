@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Assignment:
     :param assignment: The member assignment.
     :type assignment: bytes
     """
-    
+
     member_id: str
     assignment: bytes
 
@@ -37,7 +32,7 @@ class SyncGroupRequestData(RequestData):
     :param assignments: Each assignment.
     :type assignments: List[Assignment]
     """
-    
+
     group_id: str
     generation_id: int
     member_id: str
@@ -45,9 +40,8 @@ class SyncGroupRequestData(RequestData):
     assignments: List[Assignment]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `14`, the api key for this API.
         """
         return ApiKey.SYNC_GROUP
-

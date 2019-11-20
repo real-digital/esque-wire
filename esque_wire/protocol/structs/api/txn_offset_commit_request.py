@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -24,7 +19,7 @@ class Partition:
     :param metadata: Any associated metadata the client wants to keep.
     :type metadata: Optional[str]
     """
-    
+
     partition: int
     offset: int
     leader_epoch: int
@@ -39,7 +34,7 @@ class Topic:
     :param partitions: Partitions to commit offsets
     :type partitions: List[Partition]
     """
-    
+
     topic: str
     partitions: List[Partition]
 
@@ -58,7 +53,7 @@ class TxnOffsetCommitRequestData(RequestData):
     :param topics: Topics to commit offsets
     :type topics: List[Topic]
     """
-    
+
     transactional_id: str
     group_id: str
     producer_id: int
@@ -66,9 +61,8 @@ class TxnOffsetCommitRequestData(RequestData):
     topics: List[Topic]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `28`, the api key for this API.
         """
         return ApiKey.TXN_OFFSET_COMMIT
-

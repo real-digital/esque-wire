@@ -20,49 +20,44 @@ from esque_wire.protocol.serializers import (
 
 
 ownerSchemas: Dict[int, Schema] = {
-    0: [
-        ('principal_type', stringSerializer),
-        ('name', stringSerializer),
-    ],
-    1: [
-        ('principal_type', stringSerializer),
-        ('name', stringSerializer),
-    ],
+    0: [("principal_type", stringSerializer), ("name", stringSerializer)],
+    1: [("principal_type", stringSerializer), ("name", stringSerializer)],
 }
 
 
 ownerSerializers: Dict[int, DataClassSerializer[Owner]] = {
-    version: DataClassSerializer(Owner, schema) for version, schema
-    in ownerSchemas.items()
+    version: DataClassSerializer(Owner, schema)
+    for version, schema in ownerSchemas.items()
 }
 
 
 createDelegationTokenResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('owner', ownerSerializers[0]),
-        ('issue_timestamp', int64Serializer),
-        ('expiry_timestamp', int64Serializer),
-        ('max_timestamp', int64Serializer),
-        ('token_id', stringSerializer),
-        ('hmac', bytesSerializer),
-        ('throttle_time_ms', int32Serializer),
+        ("error_code", int16Serializer),
+        ("owner", ownerSerializers[0]),
+        ("issue_timestamp", int64Serializer),
+        ("expiry_timestamp", int64Serializer),
+        ("max_timestamp", int64Serializer),
+        ("token_id", stringSerializer),
+        ("hmac", bytesSerializer),
+        ("throttle_time_ms", int32Serializer),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('owner', ownerSerializers[1]),
-        ('issue_timestamp', int64Serializer),
-        ('expiry_timestamp', int64Serializer),
-        ('max_timestamp', int64Serializer),
-        ('token_id', stringSerializer),
-        ('hmac', bytesSerializer),
-        ('throttle_time_ms', int32Serializer),
+        ("error_code", int16Serializer),
+        ("owner", ownerSerializers[1]),
+        ("issue_timestamp", int64Serializer),
+        ("expiry_timestamp", int64Serializer),
+        ("max_timestamp", int64Serializer),
+        ("token_id", stringSerializer),
+        ("hmac", bytesSerializer),
+        ("throttle_time_ms", int32Serializer),
     ],
 }
 
 
-createDelegationTokenResponseDataSerializers: Dict[int, DataClassSerializer[CreateDelegationTokenResponseData]] = {
-    version: DataClassSerializer(CreateDelegationTokenResponseData, schema) for version, schema
-    in createDelegationTokenResponseDataSchemas.items()
+createDelegationTokenResponseDataSerializers: Dict[
+    int, DataClassSerializer[CreateDelegationTokenResponseData]
+] = {
+    version: DataClassSerializer(CreateDelegationTokenResponseData, schema)
+    for version, schema in createDelegationTokenResponseDataSchemas.items()
 }
-

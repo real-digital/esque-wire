@@ -3,9 +3,7 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.sasl_handshake_request import (
-    SaslHandshakeRequestData,
-)
+from esque_wire.protocol.structs.sasl_handshake_request import SaslHandshakeRequestData
 
 from esque_wire.protocol.serializers import (
     DataClassSerializer,
@@ -15,17 +13,14 @@ from esque_wire.protocol.serializers import (
 
 
 saslHandshakeRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('mechanism', stringSerializer),
-    ],
-    1: [
-        ('mechanism', stringSerializer),
-    ],
+    0: [("mechanism", stringSerializer)],
+    1: [("mechanism", stringSerializer)],
 }
 
 
-saslHandshakeRequestDataSerializers: Dict[int, DataClassSerializer[SaslHandshakeRequestData]] = {
-    version: DataClassSerializer(SaslHandshakeRequestData, schema) for version, schema
-    in saslHandshakeRequestDataSchemas.items()
+saslHandshakeRequestDataSerializers: Dict[
+    int, DataClassSerializer[SaslHandshakeRequestData]
+] = {
+    version: DataClassSerializer(SaslHandshakeRequestData, schema)
+    for version, schema in saslHandshakeRequestDataSchemas.items()
 }
-

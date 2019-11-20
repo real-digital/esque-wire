@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -24,7 +19,7 @@ class PartitionResponse:
     :param leader_epoch: The leader epoch
     :type leader_epoch: int
     """
-    
+
     partition: int
     error_code: int
     timestamp: int
@@ -40,7 +35,7 @@ class Response:
     :param partition_responses: The listed offsets by partition
     :type partition_responses: List[PartitionResponse]
     """
-    
+
     topic: str
     partition_responses: List[PartitionResponse]
 
@@ -54,14 +49,13 @@ class ListOffsetsResponseData(ResponseData):
     :param responses: The listed offsets by topic
     :type responses: List[Response]
     """
-    
+
     throttle_time_ms: int
     responses: List[Response]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `2`, the api key for this API.
         """
         return ApiKey.LIST_OFFSETS
-

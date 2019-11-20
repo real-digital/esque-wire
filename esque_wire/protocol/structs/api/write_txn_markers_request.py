@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Topic:
     :param partitions: None
     :type partitions: List[int]
     """
-    
+
     topic: str
     partitions: List[int]
 
@@ -38,7 +33,7 @@ class TransactionMarker:
                               coordinator
     :type coordinator_epoch: int
     """
-    
+
     producer_id: int
     producer_epoch: int
     transaction_result: bool
@@ -52,13 +47,12 @@ class WriteTxnMarkersRequestData(RequestData):
     :param transaction_markers: The transaction markers to be written.
     :type transaction_markers: List[TransactionMarker]
     """
-    
+
     transaction_markers: List[TransactionMarker]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `27`, the api key for this API.
         """
         return ApiKey.WRITE_TXN_MARKERS
-

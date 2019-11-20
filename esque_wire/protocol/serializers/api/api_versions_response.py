@@ -20,50 +20,51 @@ from esque_wire.protocol.serializers import (
 
 apiVersionSchemas: Dict[int, Schema] = {
     0: [
-        ('api_key', int16Serializer),
-        ('min_version', int16Serializer),
-        ('max_version', int16Serializer),
+        ("api_key", int16Serializer),
+        ("min_version", int16Serializer),
+        ("max_version", int16Serializer),
     ],
     1: [
-        ('api_key', int16Serializer),
-        ('min_version', int16Serializer),
-        ('max_version', int16Serializer),
+        ("api_key", int16Serializer),
+        ("min_version", int16Serializer),
+        ("max_version", int16Serializer),
     ],
     2: [
-        ('api_key', int16Serializer),
-        ('min_version', int16Serializer),
-        ('max_version', int16Serializer),
+        ("api_key", int16Serializer),
+        ("min_version", int16Serializer),
+        ("max_version", int16Serializer),
     ],
 }
 
 
 apiVersionSerializers: Dict[int, DataClassSerializer[ApiVersion]] = {
-    version: DataClassSerializer(ApiVersion, schema) for version, schema
-    in apiVersionSchemas.items()
+    version: DataClassSerializer(ApiVersion, schema)
+    for version, schema in apiVersionSchemas.items()
 }
 
 
 apiVersionsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('api_versions', ArraySerializer(apiVersionSerializers[0])),
-        ('throttle_time_ms', DummySerializer(0)),
+        ("error_code", int16Serializer),
+        ("api_versions", ArraySerializer(apiVersionSerializers[0])),
+        ("throttle_time_ms", DummySerializer(0)),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('api_versions', ArraySerializer(apiVersionSerializers[1])),
-        ('throttle_time_ms', int32Serializer),
+        ("error_code", int16Serializer),
+        ("api_versions", ArraySerializer(apiVersionSerializers[1])),
+        ("throttle_time_ms", int32Serializer),
     ],
     2: [
-        ('error_code', int16Serializer),
-        ('api_versions', ArraySerializer(apiVersionSerializers[2])),
-        ('throttle_time_ms', int32Serializer),
+        ("error_code", int16Serializer),
+        ("api_versions", ArraySerializer(apiVersionSerializers[2])),
+        ("throttle_time_ms", int32Serializer),
     ],
 }
 
 
-apiVersionsResponseDataSerializers: Dict[int, DataClassSerializer[ApiVersionsResponseData]] = {
-    version: DataClassSerializer(ApiVersionsResponseData, schema) for version, schema
-    in apiVersionsResponseDataSchemas.items()
+apiVersionsResponseDataSerializers: Dict[
+    int, DataClassSerializer[ApiVersionsResponseData]
+] = {
+    version: DataClassSerializer(ApiVersionsResponseData, schema)
+    for version, schema in apiVersionsResponseDataSchemas.items()
 }
-

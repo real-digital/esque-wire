@@ -17,18 +17,19 @@ from esque_wire.protocol.serializers import (
 
 initProducerIdRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('transactional_id', nullableStringSerializer),
-        ('transaction_timeout_ms', int32Serializer),
+        ("transactional_id", nullableStringSerializer),
+        ("transaction_timeout_ms", int32Serializer),
     ],
     1: [
-        ('transactional_id', nullableStringSerializer),
-        ('transaction_timeout_ms', int32Serializer),
+        ("transactional_id", nullableStringSerializer),
+        ("transaction_timeout_ms", int32Serializer),
     ],
 }
 
 
-initProducerIdRequestDataSerializers: Dict[int, DataClassSerializer[InitProducerIdRequestData]] = {
-    version: DataClassSerializer(InitProducerIdRequestData, schema) for version, schema
-    in initProducerIdRequestDataSchemas.items()
+initProducerIdRequestDataSerializers: Dict[
+    int, DataClassSerializer[InitProducerIdRequestData]
+] = {
+    version: DataClassSerializer(InitProducerIdRequestData, schema)
+    for version, schema in initProducerIdRequestDataSchemas.items()
 }
-

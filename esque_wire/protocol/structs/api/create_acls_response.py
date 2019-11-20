@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class CreationResponse:
     :param error_message: Response error message
     :type error_message: Optional[str]
     """
-    
+
     error_code: int
     error_message: Optional[str]
 
@@ -32,14 +27,13 @@ class CreateAclsResponseData(ResponseData):
     :param creation_responses: None
     :type creation_responses: List[CreationResponse]
     """
-    
+
     throttle_time_ms: int
     creation_responses: List[CreationResponse]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `30`, the api key for this API.
         """
         return ApiKey.CREATE_ACLS
-

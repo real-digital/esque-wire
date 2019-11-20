@@ -24,70 +24,71 @@ from esque_wire.protocol.serializers import (
 
 matchingAclSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('principal', stringSerializer),
-        ('host', stringSerializer),
-        ('operation', int8Serializer),
-        ('permission_type', int8Serializer),
-        ('resource_pattern_type', DummySerializer(3)),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("principal", stringSerializer),
+        ("host", stringSerializer),
+        ("operation", int8Serializer),
+        ("permission_type", int8Serializer),
+        ("resource_pattern_type", DummySerializer(3)),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('resource_pattern_type', int8Serializer),
-        ('principal', stringSerializer),
-        ('host', stringSerializer),
-        ('operation', int8Serializer),
-        ('permission_type', int8Serializer),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("resource_pattern_type", int8Serializer),
+        ("principal", stringSerializer),
+        ("host", stringSerializer),
+        ("operation", int8Serializer),
+        ("permission_type", int8Serializer),
     ],
 }
 
 
 matchingAclSerializers: Dict[int, DataClassSerializer[MatchingAcl]] = {
-    version: DataClassSerializer(MatchingAcl, schema) for version, schema
-    in matchingAclSchemas.items()
+    version: DataClassSerializer(MatchingAcl, schema)
+    for version, schema in matchingAclSchemas.items()
 }
 
 
 filterResponseSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('matching_acls', ArraySerializer(matchingAclSerializers[0])),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("matching_acls", ArraySerializer(matchingAclSerializers[0])),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('matching_acls', ArraySerializer(matchingAclSerializers[1])),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("matching_acls", ArraySerializer(matchingAclSerializers[1])),
     ],
 }
 
 
 filterResponseSerializers: Dict[int, DataClassSerializer[FilterResponse]] = {
-    version: DataClassSerializer(FilterResponse, schema) for version, schema
-    in filterResponseSchemas.items()
+    version: DataClassSerializer(FilterResponse, schema)
+    for version, schema in filterResponseSchemas.items()
 }
 
 
 deleteAclsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('throttle_time_ms', int32Serializer),
-        ('filter_responses', ArraySerializer(filterResponseSerializers[0])),
+        ("throttle_time_ms", int32Serializer),
+        ("filter_responses", ArraySerializer(filterResponseSerializers[0])),
     ],
     1: [
-        ('throttle_time_ms', int32Serializer),
-        ('filter_responses', ArraySerializer(filterResponseSerializers[1])),
+        ("throttle_time_ms", int32Serializer),
+        ("filter_responses", ArraySerializer(filterResponseSerializers[1])),
     ],
 }
 
 
-deleteAclsResponseDataSerializers: Dict[int, DataClassSerializer[DeleteAclsResponseData]] = {
-    version: DataClassSerializer(DeleteAclsResponseData, schema) for version, schema
-    in deleteAclsResponseDataSchemas.items()
+deleteAclsResponseDataSerializers: Dict[
+    int, DataClassSerializer[DeleteAclsResponseData]
+] = {
+    version: DataClassSerializer(DeleteAclsResponseData, schema)
+    for version, schema in deleteAclsResponseDataSchemas.items()
 }
-

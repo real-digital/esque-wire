@@ -22,44 +22,45 @@ from esque_wire.protocol.serializers import (
 
 configSchemas: Dict[int, Schema] = {
     0: [
-        ('name', stringSerializer),
-        ('config_operation', int8Serializer),
-        ('value', nullableStringSerializer),
-    ],
+        ("name", stringSerializer),
+        ("config_operation", int8Serializer),
+        ("value", nullableStringSerializer),
+    ]
 }
 
 
 configSerializers: Dict[int, DataClassSerializer[Config]] = {
-    version: DataClassSerializer(Config, schema) for version, schema
-    in configSchemas.items()
+    version: DataClassSerializer(Config, schema)
+    for version, schema in configSchemas.items()
 }
 
 
 resourceSchemas: Dict[int, Schema] = {
     0: [
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('configs', ArraySerializer(configSerializers[0])),
-    ],
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("configs", ArraySerializer(configSerializers[0])),
+    ]
 }
 
 
 resourceSerializers: Dict[int, DataClassSerializer[Resource]] = {
-    version: DataClassSerializer(Resource, schema) for version, schema
-    in resourceSchemas.items()
+    version: DataClassSerializer(Resource, schema)
+    for version, schema in resourceSchemas.items()
 }
 
 
 incrementalAlterConfigsRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('resources', ArraySerializer(resourceSerializers[0])),
-        ('validate_only', booleanSerializer),
-    ],
+        ("resources", ArraySerializer(resourceSerializers[0])),
+        ("validate_only", booleanSerializer),
+    ]
 }
 
 
-incrementalAlterConfigsRequestDataSerializers: Dict[int, DataClassSerializer[IncrementalAlterConfigsRequestData]] = {
-    version: DataClassSerializer(IncrementalAlterConfigsRequestData, schema) for version, schema
-    in incrementalAlterConfigsRequestDataSchemas.items()
+incrementalAlterConfigsRequestDataSerializers: Dict[
+    int, DataClassSerializer[IncrementalAlterConfigsRequestData]
+] = {
+    version: DataClassSerializer(IncrementalAlterConfigsRequestData, schema)
+    for version, schema in incrementalAlterConfigsRequestDataSchemas.items()
 }
-

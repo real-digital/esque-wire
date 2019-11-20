@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Protocol:
     :param metadata: The protocol metadata.
     :type metadata: bytes
     """
-    
+
     name: str
     metadata: bytes
 
@@ -43,7 +38,7 @@ class JoinGroupRequestData(RequestData):
     :param protocols: The list of protocols that the member supports.
     :type protocols: List[Protocol]
     """
-    
+
     group_id: str
     session_timeout_ms: int
     rebalance_timeout_ms: int
@@ -53,9 +48,8 @@ class JoinGroupRequestData(RequestData):
     protocols: List[Protocol]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `11`, the api key for this API.
         """
         return ApiKey.JOIN_GROUP
-

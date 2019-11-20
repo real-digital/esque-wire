@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -20,7 +15,7 @@ class Partition:
     :param error_code: Response error code
     :type error_code: int
     """
-    
+
     topic: str
     partition: int
     error_code: int
@@ -34,14 +29,13 @@ class StopReplicaResponseData(ResponseData):
     :param partitions: Response for the requests partitions
     :type partitions: List[Partition]
     """
-    
+
     error_code: int
     partitions: List[Partition]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `5`, the api key for this API.
         """
         return ApiKey.STOP_REPLICA
-

@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -16,7 +11,7 @@ class Partition:
     :param partition: Topic partition id
     :type partition: int
     """
-    
+
     partition: int
 
 
@@ -28,7 +23,7 @@ class Topic:
     :param partitions: Partitions to fetch offsets.
     :type partitions: List[Partition]
     """
-    
+
     topic: str
     partitions: List[Partition]
 
@@ -41,14 +36,13 @@ class OffsetFetchRequestData(RequestData):
     :param topics: Topics to fetch offsets. If the topic array is null fetch offsets for all topics.
     :type topics: List[Topic]
     """
-    
+
     group_id: str
     topics: List[Topic]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `9`, the api key for this API.
         """
         return ApiKey.OFFSET_FETCH
-

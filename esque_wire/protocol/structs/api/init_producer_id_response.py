@@ -1,13 +1,7 @@
-
-from typing import Dict, List, Optional
-
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -23,16 +17,15 @@ class InitProducerIdResponseData(ResponseData):
     :param producer_epoch: The current epoch associated with the producer id.
     :type producer_epoch: int
     """
-    
+
     throttle_time_ms: int
     error_code: int
     producer_id: int
     producer_epoch: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `22`, the api key for this API.
         """
         return ApiKey.INIT_PRODUCER_ID
-

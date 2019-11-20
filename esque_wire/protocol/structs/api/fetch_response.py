@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class AbortedTransaction:
     :param first_offset: The first offset in the aborted transaction
     :type first_offset: int
     """
-    
+
     producer_id: int
     first_offset: int
 
@@ -43,7 +38,7 @@ class PartitionHeader:
     :param preferred_read_replica: The ID of the replica that the consumer should prefer.
     :type preferred_read_replica: int
     """
-    
+
     partition: int
     error_code: int
     high_watermark: int
@@ -61,7 +56,7 @@ class PartitionResponse:
     :param record_set: None
     :type record_set: Optional[bytes]
     """
-    
+
     partition_header: PartitionHeader
     record_set: Optional[bytes]
 
@@ -74,7 +69,7 @@ class Response:
     :param partition_responses: None
     :type partition_responses: List[PartitionResponse]
     """
-    
+
     topic: str
     partition_responses: List[PartitionResponse]
 
@@ -92,16 +87,15 @@ class FetchResponseData(ResponseData):
     :param responses: None
     :type responses: List[Response]
     """
-    
+
     throttle_time_ms: int
     error_code: int
     session_id: int
     responses: List[Response]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `1`, the api key for this API.
         """
         return ApiKey.FETCH
-

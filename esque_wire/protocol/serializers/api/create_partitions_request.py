@@ -21,56 +21,51 @@ from esque_wire.protocol.serializers import (
 
 newPartitionsSchemas: Dict[int, Schema] = {
     0: [
-        ('count', int32Serializer),
-        ('assignment', ArraySerializer(ArraySerializer(int32Serializer))),
+        ("count", int32Serializer),
+        ("assignment", ArraySerializer(ArraySerializer(int32Serializer))),
     ],
     1: [
-        ('count', int32Serializer),
-        ('assignment', ArraySerializer(ArraySerializer(int32Serializer))),
+        ("count", int32Serializer),
+        ("assignment", ArraySerializer(ArraySerializer(int32Serializer))),
     ],
 }
 
 
 newPartitionsSerializers: Dict[int, DataClassSerializer[NewPartitions]] = {
-    version: DataClassSerializer(NewPartitions, schema) for version, schema
-    in newPartitionsSchemas.items()
+    version: DataClassSerializer(NewPartitions, schema)
+    for version, schema in newPartitionsSchemas.items()
 }
 
 
 topicPartitionSchemas: Dict[int, Schema] = {
-    0: [
-        ('topic', stringSerializer),
-        ('new_partitions', newPartitionsSerializers[0]),
-    ],
-    1: [
-        ('topic', stringSerializer),
-        ('new_partitions', newPartitionsSerializers[1]),
-    ],
+    0: [("topic", stringSerializer), ("new_partitions", newPartitionsSerializers[0])],
+    1: [("topic", stringSerializer), ("new_partitions", newPartitionsSerializers[1])],
 }
 
 
 topicPartitionSerializers: Dict[int, DataClassSerializer[TopicPartition]] = {
-    version: DataClassSerializer(TopicPartition, schema) for version, schema
-    in topicPartitionSchemas.items()
+    version: DataClassSerializer(TopicPartition, schema)
+    for version, schema in topicPartitionSchemas.items()
 }
 
 
 createPartitionsRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('topic_partitions', ArraySerializer(topicPartitionSerializers[0])),
-        ('timeout', int32Serializer),
-        ('validate_only', booleanSerializer),
+        ("topic_partitions", ArraySerializer(topicPartitionSerializers[0])),
+        ("timeout", int32Serializer),
+        ("validate_only", booleanSerializer),
     ],
     1: [
-        ('topic_partitions', ArraySerializer(topicPartitionSerializers[1])),
-        ('timeout', int32Serializer),
-        ('validate_only', booleanSerializer),
+        ("topic_partitions", ArraySerializer(topicPartitionSerializers[1])),
+        ("timeout", int32Serializer),
+        ("validate_only", booleanSerializer),
     ],
 }
 
 
-createPartitionsRequestDataSerializers: Dict[int, DataClassSerializer[CreatePartitionsRequestData]] = {
-    version: DataClassSerializer(CreatePartitionsRequestData, schema) for version, schema
-    in createPartitionsRequestDataSchemas.items()
+createPartitionsRequestDataSerializers: Dict[
+    int, DataClassSerializer[CreatePartitionsRequestData]
+] = {
+    version: DataClassSerializer(CreatePartitionsRequestData, schema)
+    for version, schema in createPartitionsRequestDataSchemas.items()
 }
-

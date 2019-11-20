@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Group:
     :param protocol_type: None
     :type protocol_type: str
     """
-    
+
     group_id: str
     protocol_type: str
 
@@ -34,15 +29,14 @@ class ListGroupsResponseData(ResponseData):
     :param groups: None
     :type groups: List[Group]
     """
-    
+
     throttle_time_ms: int
     error_code: int
     groups: List[Group]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `16`, the api key for this API.
         """
         return ApiKey.LIST_GROUPS
-

@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Renewer:
     :param name: name of the Kafka principal
     :type name: str
     """
-    
+
     principal_type: str
     name: str
 
@@ -31,7 +26,7 @@ class Owner:
     :param name: name of the Kafka principal
     :type name: str
     """
-    
+
     principal_type: str
     name: str
 
@@ -55,7 +50,7 @@ class TokenDetail:
                      renew this token before the max lifetime expires.
     :type renewers: List[Renewer]
     """
-    
+
     owner: Owner
     issue_timestamp: int
     expiry_timestamp: int
@@ -76,15 +71,14 @@ class DescribeDelegationTokenResponseData(ResponseData):
                              if the request did not violate any quota)
     :type throttle_time_ms: int
     """
-    
+
     error_code: int
     token_details: List[TokenDetail]
     throttle_time_ms: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `41`, the api key for this API.
         """
         return ApiKey.DESCRIBE_DELEGATION_TOKEN
-

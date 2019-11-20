@@ -1,13 +1,7 @@
-
-from typing import Dict, List, Optional
-
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -19,14 +13,13 @@ class HeartbeatResponseData(ResponseData):
     :param error_code: The error code, or 0 if there was no error.
     :type error_code: int
     """
-    
+
     throttle_time_ms: int
     error_code: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `12`, the api key for this API.
         """
         return ApiKey.HEARTBEAT
-

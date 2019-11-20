@@ -18,22 +18,23 @@ from esque_wire.protocol.serializers import (
 
 addOffsetsToTxnRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('transactional_id', stringSerializer),
-        ('producer_id', int64Serializer),
-        ('producer_epoch', int16Serializer),
-        ('group_id', stringSerializer),
+        ("transactional_id", stringSerializer),
+        ("producer_id", int64Serializer),
+        ("producer_epoch", int16Serializer),
+        ("group_id", stringSerializer),
     ],
     1: [
-        ('transactional_id', stringSerializer),
-        ('producer_id', int64Serializer),
-        ('producer_epoch', int16Serializer),
-        ('group_id', stringSerializer),
+        ("transactional_id", stringSerializer),
+        ("producer_id", int64Serializer),
+        ("producer_epoch", int16Serializer),
+        ("group_id", stringSerializer),
     ],
 }
 
 
-addOffsetsToTxnRequestDataSerializers: Dict[int, DataClassSerializer[AddOffsetsToTxnRequestData]] = {
-    version: DataClassSerializer(AddOffsetsToTxnRequestData, schema) for version, schema
-    in addOffsetsToTxnRequestDataSchemas.items()
+addOffsetsToTxnRequestDataSerializers: Dict[
+    int, DataClassSerializer[AddOffsetsToTxnRequestData]
+] = {
+    version: DataClassSerializer(AddOffsetsToTxnRequestData, schema)
+    for version, schema in addOffsetsToTxnRequestDataSchemas.items()
 }
-

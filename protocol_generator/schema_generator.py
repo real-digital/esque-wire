@@ -4,7 +4,7 @@ import json
 import pathlib
 import sys
 import textwrap
-from typing import Any, Dict, Iterable, List, Set, Tuple, Optional, TypeVar, cast
+from typing import Any, Dict, Iterable, List, Set, Tuple, Optional, TypeVar
 import subprocess
 
 import inflection
@@ -16,10 +16,12 @@ if sys.version_info < (3, 6):
 
 import dataclasses
 
-API_INPUT_FILE = pathlib.Path(__file__).parent / "api_definition.json"
-CONSTANTS_INPUT_FILE = pathlib.Path(__file__).parent / "constant_definition.json"
-TARGET_PATH = pathlib.Path(__file__).parent.parent / "esque_wire" / "protocol"
-TEMPLATE_PATH = pathlib.Path(__file__).parent / "templates"
+PROJECT_ROOT = pathlib.Path(__file__).parent.parent
+
+API_INPUT_FILE = PROJECT_ROOT / "protocol_generator" / "api_definition.json"
+CONSTANTS_INPUT_FILE = PROJECT_ROOT / "protocol_generator" / "constant_definition.json"
+TARGET_PATH = PROJECT_ROOT / "esque_wire" / "protocol"
+TEMPLATE_PATH = PROJECT_ROOT / "protocol_generator" / "templates"
 T = TypeVar("T")
 
 
@@ -100,6 +102,11 @@ class TypeDef:
             raise ValueError(f"No type hint for {self.field_type}")
 
     @property
+    def type_import_name(self) -> Optional[str]:
+        if self.field_type in (FieldType.NULLABLE_BYTES, FieldType.NULLABLE_STRING, FieldType.RECORDS):
+            return "Optional"
+
+    @property
     def serializer_import_name(self) -> str:
         return PRIMITIVE_SERIALIZERS[self.field_type]
 
@@ -125,6 +132,10 @@ class ArrayTypeDef(TypeDef):
     @property
     def type_hint(self) -> str:
         return f"List[{self.element_type.type_hint}]"
+
+    @property
+    def type_import_name(self) -> Optional[str]:
+        return "List"
 
     @property
     def serializer_import_name(self) -> str:
@@ -160,7 +171,7 @@ class DummyTypeDef(TypeDef):
             default_def = repr(self.default)
         else:
             default_def = self.element_type.serializer_definition()
-            default_def += '.default'
+            default_def += ".default"
         return f"DummySerializer({default_def})"
 
     def serializer_variable_name(self, version=0):
@@ -168,7 +179,7 @@ class DummyTypeDef(TypeDef):
             default_def = repr(self.default)
         else:
             default_def = self.element_type.serializer_variable_name()
-            default_def += '.default'
+            default_def += ".default"
         return f"DummySerializer({default_def})"
 
 
@@ -239,9 +250,12 @@ class StructTypeDef(TypeDef):
     def _add_missing_fields(self, other_struct: "StructTypeDef") -> None:
         for field in other_struct.fields:
             if field.name not in self.field_names:
-                dummy_type = DummyTypeDef(field_type=field.type_def.field_type,
-                                          element_type=field.type_def, default=field.default,
-                                          has_default=field.has_default)
+                dummy_type = DummyTypeDef(
+                    field_type=field.type_def.field_type,
+                    element_type=field.type_def,
+                    default=field.default,
+                    has_default=field.has_default,
+                )
                 dummy_field = dataclasses.replace(field, type_def=dummy_type)
                 self.fields.append(dummy_field)
                 self.field_names.append(field.name)
@@ -394,6 +408,14 @@ class Api:
                 serializers.add(field_type.serializer_import_name)
         return sorted(serializers)
 
+    def get_type_imports(self, direction: Direction) -> List[str]:
+        type_hints = set()
+        for version_pair in self.api_versions.values():
+            schema = version_pair[direction]
+            for field_type in schema.schema.traverse_types():
+                type_hints.add(field_type.type_import_name)
+        return sorted(type_hints - {None})
+
 
 def main():
     constants = load_constants(CONSTANTS_INPUT_FILE)
@@ -474,7 +496,7 @@ class Templater:
                 latest_schema=latest_schema,
                 all_versions=all_versions,
                 direction=direction,
-                constants=constants
+                constants=constants,
             )
         )
 
@@ -510,7 +532,7 @@ def render_long_text(text, wrap_at=100, **kwargs) -> str:
     segments = textwrap.wrap(text, **kwargs)
     if len(segments) == 1:
         return repr(segments[0])
-    joined = ' '.join(map(repr, segments))
+    joined = " ".join(map(repr, segments))
     return f"({joined})"
 
 
@@ -540,11 +562,11 @@ def render(all_apis: List[Api], constants: Dict) -> None:
             for templater in templaters:
                 templater.render(all_apis, current_api, direction, constants)
 
-    #run_black()
+    run_black()
 
 
 def run_black():
-    subprocess.check_call(["black", str(TARGET_PATH)])
+    subprocess.check_call(["black", str(TARGET_PATH)], cwd=str(PROJECT_ROOT))
 
 
 if __name__ == "__main__":

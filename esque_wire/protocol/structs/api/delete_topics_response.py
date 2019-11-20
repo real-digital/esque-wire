@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Response:
     :param error_code: The deletion error, or 0 if the deletion succeeded.
     :type error_code: int
     """
-    
+
     name: str
     error_code: int
 
@@ -32,14 +27,13 @@ class DeleteTopicsResponseData(ResponseData):
     :param responses: The results for each topic we tried to delete.
     :type responses: List[Response]
     """
-    
+
     throttle_time_ms: int
     responses: List[Response]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `20`, the api key for this API.
         """
         return ApiKey.DELETE_TOPICS
-

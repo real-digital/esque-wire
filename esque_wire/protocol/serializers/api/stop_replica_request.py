@@ -22,43 +22,44 @@ from esque_wire.protocol.serializers import (
 
 partitionSchemas: Dict[int, Schema] = {
     0: [
-        ('topic', stringSerializer),
+        ("topic", stringSerializer),
         (None, int32Serializer),
-        ('partition_ids', DummySerializer(ArraySerializer(int32Serializer).default)),
+        ("partition_ids", DummySerializer(ArraySerializer(int32Serializer).default)),
     ],
     1: [
-        ('topic', stringSerializer),
-        ('partition_ids', ArraySerializer(int32Serializer)),
+        ("topic", stringSerializer),
+        ("partition_ids", ArraySerializer(int32Serializer)),
     ],
 }
 
 
 partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema) for version, schema
-    in partitionSchemas.items()
+    version: DataClassSerializer(Partition, schema)
+    for version, schema in partitionSchemas.items()
 }
 
 
 stopReplicaRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('controller_id', int32Serializer),
-        ('controller_epoch', int32Serializer),
-        ('delete_partitions', booleanSerializer),
-        ('partitions', ArraySerializer(partitionSerializers[0])),
-        ('broker_epoch', DummySerializer(int64Serializer.default)),
+        ("controller_id", int32Serializer),
+        ("controller_epoch", int32Serializer),
+        ("delete_partitions", booleanSerializer),
+        ("partitions", ArraySerializer(partitionSerializers[0])),
+        ("broker_epoch", DummySerializer(int64Serializer.default)),
     ],
     1: [
-        ('controller_id', int32Serializer),
-        ('controller_epoch', int32Serializer),
-        ('broker_epoch', int64Serializer),
-        ('delete_partitions', booleanSerializer),
-        ('partitions', ArraySerializer(partitionSerializers[1])),
+        ("controller_id", int32Serializer),
+        ("controller_epoch", int32Serializer),
+        ("broker_epoch", int64Serializer),
+        ("delete_partitions", booleanSerializer),
+        ("partitions", ArraySerializer(partitionSerializers[1])),
     ],
 }
 
 
-stopReplicaRequestDataSerializers: Dict[int, DataClassSerializer[StopReplicaRequestData]] = {
-    version: DataClassSerializer(StopReplicaRequestData, schema) for version, schema
-    in stopReplicaRequestDataSchemas.items()
+stopReplicaRequestDataSerializers: Dict[
+    int, DataClassSerializer[StopReplicaRequestData]
+] = {
+    version: DataClassSerializer(StopReplicaRequestData, schema)
+    for version, schema in stopReplicaRequestDataSchemas.items()
 }
-

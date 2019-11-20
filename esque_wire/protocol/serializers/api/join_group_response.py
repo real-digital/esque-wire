@@ -23,104 +23,105 @@ from esque_wire.protocol.serializers import (
 
 memberSchemas: Dict[int, Schema] = {
     0: [
-        ('member_id', stringSerializer),
-        ('metadata', bytesSerializer),
-        ('group_instance_id', DummySerializer(nullableStringSerializer.default)),
+        ("member_id", stringSerializer),
+        ("metadata", bytesSerializer),
+        ("group_instance_id", DummySerializer(nullableStringSerializer.default)),
     ],
     1: [
-        ('member_id', stringSerializer),
-        ('metadata', bytesSerializer),
-        ('group_instance_id', DummySerializer(nullableStringSerializer.default)),
+        ("member_id", stringSerializer),
+        ("metadata", bytesSerializer),
+        ("group_instance_id", DummySerializer(nullableStringSerializer.default)),
     ],
     2: [
-        ('member_id', stringSerializer),
-        ('metadata', bytesSerializer),
-        ('group_instance_id', DummySerializer(nullableStringSerializer.default)),
+        ("member_id", stringSerializer),
+        ("metadata", bytesSerializer),
+        ("group_instance_id", DummySerializer(nullableStringSerializer.default)),
     ],
     3: [
-        ('member_id', stringSerializer),
-        ('metadata', bytesSerializer),
-        ('group_instance_id', DummySerializer(nullableStringSerializer.default)),
+        ("member_id", stringSerializer),
+        ("metadata", bytesSerializer),
+        ("group_instance_id", DummySerializer(nullableStringSerializer.default)),
     ],
     4: [
-        ('member_id', stringSerializer),
-        ('metadata', bytesSerializer),
-        ('group_instance_id', DummySerializer(nullableStringSerializer.default)),
+        ("member_id", stringSerializer),
+        ("metadata", bytesSerializer),
+        ("group_instance_id", DummySerializer(nullableStringSerializer.default)),
     ],
     5: [
-        ('member_id', stringSerializer),
-        ('group_instance_id', nullableStringSerializer),
-        ('metadata', bytesSerializer),
+        ("member_id", stringSerializer),
+        ("group_instance_id", nullableStringSerializer),
+        ("metadata", bytesSerializer),
     ],
 }
 
 
 memberSerializers: Dict[int, DataClassSerializer[Member]] = {
-    version: DataClassSerializer(Member, schema) for version, schema
-    in memberSchemas.items()
+    version: DataClassSerializer(Member, schema)
+    for version, schema in memberSchemas.items()
 }
 
 
 joinGroupResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('generation_id', int32Serializer),
-        ('protocol_name', stringSerializer),
-        ('leader', stringSerializer),
-        ('member_id', stringSerializer),
-        ('members', ArraySerializer(memberSerializers[0])),
-        ('throttle_time_ms', DummySerializer(int32Serializer.default)),
+        ("error_code", int16Serializer),
+        ("generation_id", int32Serializer),
+        ("protocol_name", stringSerializer),
+        ("leader", stringSerializer),
+        ("member_id", stringSerializer),
+        ("members", ArraySerializer(memberSerializers[0])),
+        ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('generation_id', int32Serializer),
-        ('protocol_name', stringSerializer),
-        ('leader', stringSerializer),
-        ('member_id', stringSerializer),
-        ('members', ArraySerializer(memberSerializers[1])),
-        ('throttle_time_ms', DummySerializer(int32Serializer.default)),
+        ("error_code", int16Serializer),
+        ("generation_id", int32Serializer),
+        ("protocol_name", stringSerializer),
+        ("leader", stringSerializer),
+        ("member_id", stringSerializer),
+        ("members", ArraySerializer(memberSerializers[1])),
+        ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
     2: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-        ('generation_id', int32Serializer),
-        ('protocol_name', stringSerializer),
-        ('leader', stringSerializer),
-        ('member_id', stringSerializer),
-        ('members', ArraySerializer(memberSerializers[2])),
+        ("throttle_time_ms", int32Serializer),
+        ("error_code", int16Serializer),
+        ("generation_id", int32Serializer),
+        ("protocol_name", stringSerializer),
+        ("leader", stringSerializer),
+        ("member_id", stringSerializer),
+        ("members", ArraySerializer(memberSerializers[2])),
     ],
     3: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-        ('generation_id', int32Serializer),
-        ('protocol_name', stringSerializer),
-        ('leader', stringSerializer),
-        ('member_id', stringSerializer),
-        ('members', ArraySerializer(memberSerializers[3])),
+        ("throttle_time_ms", int32Serializer),
+        ("error_code", int16Serializer),
+        ("generation_id", int32Serializer),
+        ("protocol_name", stringSerializer),
+        ("leader", stringSerializer),
+        ("member_id", stringSerializer),
+        ("members", ArraySerializer(memberSerializers[3])),
     ],
     4: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-        ('generation_id', int32Serializer),
-        ('protocol_name', stringSerializer),
-        ('leader', stringSerializer),
-        ('member_id', stringSerializer),
-        ('members', ArraySerializer(memberSerializers[4])),
+        ("throttle_time_ms", int32Serializer),
+        ("error_code", int16Serializer),
+        ("generation_id", int32Serializer),
+        ("protocol_name", stringSerializer),
+        ("leader", stringSerializer),
+        ("member_id", stringSerializer),
+        ("members", ArraySerializer(memberSerializers[4])),
     ],
     5: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-        ('generation_id', int32Serializer),
-        ('protocol_name', stringSerializer),
-        ('leader', stringSerializer),
-        ('member_id', stringSerializer),
-        ('members', ArraySerializer(memberSerializers[5])),
+        ("throttle_time_ms", int32Serializer),
+        ("error_code", int16Serializer),
+        ("generation_id", int32Serializer),
+        ("protocol_name", stringSerializer),
+        ("leader", stringSerializer),
+        ("member_id", stringSerializer),
+        ("members", ArraySerializer(memberSerializers[5])),
     ],
 }
 
 
-joinGroupResponseDataSerializers: Dict[int, DataClassSerializer[JoinGroupResponseData]] = {
-    version: DataClassSerializer(JoinGroupResponseData, schema) for version, schema
-    in joinGroupResponseDataSchemas.items()
+joinGroupResponseDataSerializers: Dict[
+    int, DataClassSerializer[JoinGroupResponseData]
+] = {
+    version: DataClassSerializer(JoinGroupResponseData, schema)
+    for version, schema in joinGroupResponseDataSchemas.items()
 }
-

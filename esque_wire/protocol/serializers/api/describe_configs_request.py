@@ -21,47 +21,48 @@ from esque_wire.protocol.serializers import (
 
 resourceSchemas: Dict[int, Schema] = {
     0: [
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('config_names', ArraySerializer(stringSerializer)),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("config_names", ArraySerializer(stringSerializer)),
     ],
     1: [
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('config_names', ArraySerializer(stringSerializer)),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("config_names", ArraySerializer(stringSerializer)),
     ],
     2: [
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('config_names', ArraySerializer(stringSerializer)),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("config_names", ArraySerializer(stringSerializer)),
     ],
 }
 
 
 resourceSerializers: Dict[int, DataClassSerializer[Resource]] = {
-    version: DataClassSerializer(Resource, schema) for version, schema
-    in resourceSchemas.items()
+    version: DataClassSerializer(Resource, schema)
+    for version, schema in resourceSchemas.items()
 }
 
 
 describeConfigsRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('resources', ArraySerializer(resourceSerializers[0])),
-        ('include_synonyms', DummySerializer(booleanSerializer.default)),
+        ("resources", ArraySerializer(resourceSerializers[0])),
+        ("include_synonyms", DummySerializer(booleanSerializer.default)),
     ],
     1: [
-        ('resources', ArraySerializer(resourceSerializers[1])),
-        ('include_synonyms', booleanSerializer),
+        ("resources", ArraySerializer(resourceSerializers[1])),
+        ("include_synonyms", booleanSerializer),
     ],
     2: [
-        ('resources', ArraySerializer(resourceSerializers[2])),
-        ('include_synonyms', booleanSerializer),
+        ("resources", ArraySerializer(resourceSerializers[2])),
+        ("include_synonyms", booleanSerializer),
     ],
 }
 
 
-describeConfigsRequestDataSerializers: Dict[int, DataClassSerializer[DescribeConfigsRequestData]] = {
-    version: DataClassSerializer(DescribeConfigsRequestData, schema) for version, schema
-    in describeConfigsRequestDataSchemas.items()
+describeConfigsRequestDataSerializers: Dict[
+    int, DataClassSerializer[DescribeConfigsRequestData]
+] = {
+    version: DataClassSerializer(DescribeConfigsRequestData, schema)
+    for version, schema in describeConfigsRequestDataSchemas.items()
 }
-

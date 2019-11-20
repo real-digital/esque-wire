@@ -22,56 +22,52 @@ from esque_wire.protocol.serializers import (
 
 
 partitionSchemas: Dict[int, Schema] = {
-    0: [
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
-    ],
+    0: [("partition", int32Serializer), ("error_code", int16Serializer)]
 }
 
 
 partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema) for version, schema
-    in partitionSchemas.items()
+    version: DataClassSerializer(Partition, schema)
+    for version, schema in partitionSchemas.items()
 }
 
 
 topicSchemas: Dict[int, Schema] = {
     0: [
-        ('topic', stringSerializer),
-        ('partitions', ArraySerializer(partitionSerializers[0])),
-    ],
+        ("topic", stringSerializer),
+        ("partitions", ArraySerializer(partitionSerializers[0])),
+    ]
 }
 
 
 topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema) for version, schema
-    in topicSchemas.items()
+    version: DataClassSerializer(Topic, schema)
+    for version, schema in topicSchemas.items()
 }
 
 
 transactionMarkerSchemas: Dict[int, Schema] = {
     0: [
-        ('producer_id', int64Serializer),
-        ('topics', ArraySerializer(topicSerializers[0])),
-    ],
+        ("producer_id", int64Serializer),
+        ("topics", ArraySerializer(topicSerializers[0])),
+    ]
 }
 
 
 transactionMarkerSerializers: Dict[int, DataClassSerializer[TransactionMarker]] = {
-    version: DataClassSerializer(TransactionMarker, schema) for version, schema
-    in transactionMarkerSchemas.items()
+    version: DataClassSerializer(TransactionMarker, schema)
+    for version, schema in transactionMarkerSchemas.items()
 }
 
 
 writeTxnMarkersResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('transaction_markers', ArraySerializer(transactionMarkerSerializers[0])),
-    ],
+    0: [("transaction_markers", ArraySerializer(transactionMarkerSerializers[0]))]
 }
 
 
-writeTxnMarkersResponseDataSerializers: Dict[int, DataClassSerializer[WriteTxnMarkersResponseData]] = {
-    version: DataClassSerializer(WriteTxnMarkersResponseData, schema) for version, schema
-    in writeTxnMarkersResponseDataSchemas.items()
+writeTxnMarkersResponseDataSerializers: Dict[
+    int, DataClassSerializer[WriteTxnMarkersResponseData]
+] = {
+    version: DataClassSerializer(WriteTxnMarkersResponseData, schema)
+    for version, schema in writeTxnMarkersResponseDataSchemas.items()
 }
-

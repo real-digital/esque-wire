@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -20,7 +15,7 @@ class Resource:
     :param config_names: None
     :type config_names: List[str]
     """
-    
+
     resource_type: int
     resource_name: str
     config_names: List[str]
@@ -34,14 +29,13 @@ class DescribeConfigsRequestData(RequestData):
     :param include_synonyms: None
     :type include_synonyms: bool
     """
-    
+
     resources: List[Resource]
     include_synonyms: bool
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `32`, the api key for this API.
         """
         return ApiKey.DESCRIBE_CONFIGS
-

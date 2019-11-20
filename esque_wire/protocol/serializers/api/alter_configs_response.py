@@ -22,40 +22,41 @@ from esque_wire.protocol.serializers import (
 
 resourceSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
     ],
 }
 
 
 resourceSerializers: Dict[int, DataClassSerializer[Resource]] = {
-    version: DataClassSerializer(Resource, schema) for version, schema
-    in resourceSchemas.items()
+    version: DataClassSerializer(Resource, schema)
+    for version, schema in resourceSchemas.items()
 }
 
 
 alterConfigsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('throttle_time_ms', int32Serializer),
-        ('resources', ArraySerializer(resourceSerializers[0])),
+        ("throttle_time_ms", int32Serializer),
+        ("resources", ArraySerializer(resourceSerializers[0])),
     ],
     1: [
-        ('throttle_time_ms', int32Serializer),
-        ('resources', ArraySerializer(resourceSerializers[1])),
+        ("throttle_time_ms", int32Serializer),
+        ("resources", ArraySerializer(resourceSerializers[1])),
     ],
 }
 
 
-alterConfigsResponseDataSerializers: Dict[int, DataClassSerializer[AlterConfigsResponseData]] = {
-    version: DataClassSerializer(AlterConfigsResponseData, schema) for version, schema
-    in alterConfigsResponseDataSchemas.items()
+alterConfigsResponseDataSerializers: Dict[
+    int, DataClassSerializer[AlterConfigsResponseData]
+] = {
+    version: DataClassSerializer(AlterConfigsResponseData, schema)
+    for version, schema in alterConfigsResponseDataSchemas.items()
 }
-

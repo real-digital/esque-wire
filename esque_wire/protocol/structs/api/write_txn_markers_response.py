@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Partition:
     :param error_code: Response error code
     :type error_code: int
     """
-    
+
     partition: int
     error_code: int
 
@@ -31,7 +26,7 @@ class Topic:
     :param partitions: None
     :type partitions: List[Partition]
     """
-    
+
     topic: str
     partitions: List[Partition]
 
@@ -44,7 +39,7 @@ class TransactionMarker:
     :param topics: Errors per partition from writing markers.
     :type topics: List[Topic]
     """
-    
+
     producer_id: int
     topics: List[Topic]
 
@@ -55,13 +50,12 @@ class WriteTxnMarkersResponseData(ResponseData):
     :param transaction_markers: Errors per partition from writing markers.
     :type transaction_markers: List[TransactionMarker]
     """
-    
+
     transaction_markers: List[TransactionMarker]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `27`, the api key for this API.
         """
         return ApiKey.WRITE_TXN_MARKERS
-

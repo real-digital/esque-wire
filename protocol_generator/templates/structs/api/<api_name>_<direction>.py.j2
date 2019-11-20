@@ -1,6 +1,8 @@
 {% block imports %}
-from typing import Dict, List, Optional
-
+{%- set type_imports = current_api.get_type_imports(direction) %}
+{%- if type_imports %}
+from typing import {{ type_imports | join(", ") }}
+{%- endif %}
 from dataclasses import dataclass
 
 from ...constants import ApiKey
@@ -28,7 +30,7 @@ class {{ struct.name }}:
     {%- if loop.last %}
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `{{ current_api.api_key }}`, the api key for this API.
         """

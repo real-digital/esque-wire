@@ -3,9 +3,7 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.delete_topics_request import (
-    DeleteTopicsRequestData,
-)
+from esque_wire.protocol.structs.delete_topics_request import DeleteTopicsRequestData
 
 from esque_wire.protocol.serializers import (
     ArraySerializer,
@@ -18,26 +16,27 @@ from esque_wire.protocol.serializers import (
 
 deleteTopicsRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('topic_names', ArraySerializer(stringSerializer)),
-        ('timeout_ms', int32Serializer),
+        ("topic_names", ArraySerializer(stringSerializer)),
+        ("timeout_ms", int32Serializer),
     ],
     1: [
-        ('topic_names', ArraySerializer(stringSerializer)),
-        ('timeout_ms', int32Serializer),
+        ("topic_names", ArraySerializer(stringSerializer)),
+        ("timeout_ms", int32Serializer),
     ],
     2: [
-        ('topic_names', ArraySerializer(stringSerializer)),
-        ('timeout_ms', int32Serializer),
+        ("topic_names", ArraySerializer(stringSerializer)),
+        ("timeout_ms", int32Serializer),
     ],
     3: [
-        ('topic_names', ArraySerializer(stringSerializer)),
-        ('timeout_ms', int32Serializer),
+        ("topic_names", ArraySerializer(stringSerializer)),
+        ("timeout_ms", int32Serializer),
     ],
 }
 
 
-deleteTopicsRequestDataSerializers: Dict[int, DataClassSerializer[DeleteTopicsRequestData]] = {
-    version: DataClassSerializer(DeleteTopicsRequestData, schema) for version, schema
-    in deleteTopicsRequestDataSchemas.items()
+deleteTopicsRequestDataSerializers: Dict[
+    int, DataClassSerializer[DeleteTopicsRequestData]
+] = {
+    version: DataClassSerializer(DeleteTopicsRequestData, schema)
+    for version, schema in deleteTopicsRequestDataSchemas.items()
 }
-

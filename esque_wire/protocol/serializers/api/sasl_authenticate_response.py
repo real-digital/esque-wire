@@ -20,22 +20,23 @@ from esque_wire.protocol.serializers import (
 
 saslAuthenticateResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('auth_bytes', bytesSerializer),
-        ('session_lifetime_ms', DummySerializer(int64Serializer.default)),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("auth_bytes", bytesSerializer),
+        ("session_lifetime_ms", DummySerializer(int64Serializer.default)),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('auth_bytes', bytesSerializer),
-        ('session_lifetime_ms', int64Serializer),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("auth_bytes", bytesSerializer),
+        ("session_lifetime_ms", int64Serializer),
     ],
 }
 
 
-saslAuthenticateResponseDataSerializers: Dict[int, DataClassSerializer[SaslAuthenticateResponseData]] = {
-    version: DataClassSerializer(SaslAuthenticateResponseData, schema) for version, schema
-    in saslAuthenticateResponseDataSchemas.items()
+saslAuthenticateResponseDataSerializers: Dict[
+    int, DataClassSerializer[SaslAuthenticateResponseData]
+] = {
+    version: DataClassSerializer(SaslAuthenticateResponseData, schema)
+    for version, schema in saslAuthenticateResponseDataSchemas.items()
 }
-

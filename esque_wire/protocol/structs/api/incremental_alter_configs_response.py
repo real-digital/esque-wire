@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -22,7 +17,7 @@ class Response:
     :param resource_name: The resource name.
     :type resource_name: str
     """
-    
+
     error_code: int
     error_message: Optional[str]
     resource_type: int
@@ -38,14 +33,13 @@ class IncrementalAlterConfigsResponseData(ResponseData):
     :param responses: The responses for each resource.
     :type responses: List[Response]
     """
-    
+
     throttle_time_ms: int
     responses: List[Response]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `44`, the api key for this API.
         """
         return ApiKey.INCREMENTAL_ALTER_CONFIGS
-

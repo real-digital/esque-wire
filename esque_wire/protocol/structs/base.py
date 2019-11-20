@@ -1,6 +1,7 @@
 from ..constants import ApiKey
 from dataclasses import dataclass
 
+
 @dataclass
 class RequestData:
     @staticmethod

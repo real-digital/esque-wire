@@ -3,9 +3,7 @@
 ##############################################
 
 from typing import Dict
-from esque_wire.protocol.structs.end_txn_response import (
-    EndTxnResponseData,
-)
+from esque_wire.protocol.structs.end_txn_response import EndTxnResponseData
 
 from esque_wire.protocol.serializers import (
     DataClassSerializer,
@@ -16,19 +14,12 @@ from esque_wire.protocol.serializers import (
 
 
 endTxnResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-    ],
-    1: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-    ],
+    0: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
+    1: [("throttle_time_ms", int32Serializer), ("error_code", int16Serializer)],
 }
 
 
 endTxnResponseDataSerializers: Dict[int, DataClassSerializer[EndTxnResponseData]] = {
-    version: DataClassSerializer(EndTxnResponseData, schema) for version, schema
-    in endTxnResponseDataSchemas.items()
+    version: DataClassSerializer(EndTxnResponseData, schema)
+    for version, schema in endTxnResponseDataSchemas.items()
 }
-

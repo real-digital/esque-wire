@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -23,7 +18,7 @@ class Partition:
     :param leader_epoch: The epoch to lookup an offset for.
     :type leader_epoch: int
     """
-    
+
     partition: int
     current_leader_epoch: int
     leader_epoch: int
@@ -37,7 +32,7 @@ class Topic:
     :param partitions: An array of partitions to get epochs for
     :type partitions: List[Partition]
     """
-    
+
     topic: str
     partitions: List[Partition]
 
@@ -50,14 +45,13 @@ class OffsetForLeaderEpochRequestData(RequestData):
     :param topics: An array of topics to get epochs for
     :type topics: List[Topic]
     """
-    
+
     replica_id: int
     topics: List[Topic]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `23`, the api key for this API.
         """
         return ApiKey.OFFSET_FOR_LEADER_EPOCH
-

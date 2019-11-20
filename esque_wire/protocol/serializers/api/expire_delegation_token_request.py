@@ -16,19 +16,14 @@ from esque_wire.protocol.serializers import (
 
 
 expireDelegationTokenRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('hmac', bytesSerializer),
-        ('expiry_time_period', int64Serializer),
-    ],
-    1: [
-        ('hmac', bytesSerializer),
-        ('expiry_time_period', int64Serializer),
-    ],
+    0: [("hmac", bytesSerializer), ("expiry_time_period", int64Serializer)],
+    1: [("hmac", bytesSerializer), ("expiry_time_period", int64Serializer)],
 }
 
 
-expireDelegationTokenRequestDataSerializers: Dict[int, DataClassSerializer[ExpireDelegationTokenRequestData]] = {
-    version: DataClassSerializer(ExpireDelegationTokenRequestData, schema) for version, schema
-    in expireDelegationTokenRequestDataSchemas.items()
+expireDelegationTokenRequestDataSerializers: Dict[
+    int, DataClassSerializer[ExpireDelegationTokenRequestData]
+] = {
+    version: DataClassSerializer(ExpireDelegationTokenRequestData, schema)
+    for version, schema in expireDelegationTokenRequestDataSchemas.items()
 }
-

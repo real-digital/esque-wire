@@ -17,35 +17,26 @@ from esque_wire.protocol.serializers import (
 
 
 ownerSchemas: Dict[int, Schema] = {
-    0: [
-        ('principal_type', stringSerializer),
-        ('name', stringSerializer),
-    ],
-    1: [
-        ('principal_type', stringSerializer),
-        ('name', stringSerializer),
-    ],
+    0: [("principal_type", stringSerializer), ("name", stringSerializer)],
+    1: [("principal_type", stringSerializer), ("name", stringSerializer)],
 }
 
 
 ownerSerializers: Dict[int, DataClassSerializer[Owner]] = {
-    version: DataClassSerializer(Owner, schema) for version, schema
-    in ownerSchemas.items()
+    version: DataClassSerializer(Owner, schema)
+    for version, schema in ownerSchemas.items()
 }
 
 
 describeDelegationTokenRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('owners', ArraySerializer(ownerSerializers[0])),
-    ],
-    1: [
-        ('owners', ArraySerializer(ownerSerializers[1])),
-    ],
+    0: [("owners", ArraySerializer(ownerSerializers[0]))],
+    1: [("owners", ArraySerializer(ownerSerializers[1]))],
 }
 
 
-describeDelegationTokenRequestDataSerializers: Dict[int, DataClassSerializer[DescribeDelegationTokenRequestData]] = {
-    version: DataClassSerializer(DescribeDelegationTokenRequestData, schema) for version, schema
-    in describeDelegationTokenRequestDataSchemas.items()
+describeDelegationTokenRequestDataSerializers: Dict[
+    int, DataClassSerializer[DescribeDelegationTokenRequestData]
+] = {
+    version: DataClassSerializer(DescribeDelegationTokenRequestData, schema)
+    for version, schema in describeDelegationTokenRequestDataSchemas.items()
 }
-

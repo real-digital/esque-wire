@@ -18,20 +18,21 @@ from esque_wire.protocol.serializers import (
 
 expireDelegationTokenResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('expiry_timestamp', int64Serializer),
-        ('throttle_time_ms', int32Serializer),
+        ("error_code", int16Serializer),
+        ("expiry_timestamp", int64Serializer),
+        ("throttle_time_ms", int32Serializer),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('expiry_timestamp', int64Serializer),
-        ('throttle_time_ms', int32Serializer),
+        ("error_code", int16Serializer),
+        ("expiry_timestamp", int64Serializer),
+        ("throttle_time_ms", int32Serializer),
     ],
 }
 
 
-expireDelegationTokenResponseDataSerializers: Dict[int, DataClassSerializer[ExpireDelegationTokenResponseData]] = {
-    version: DataClassSerializer(ExpireDelegationTokenResponseData, schema) for version, schema
-    in expireDelegationTokenResponseDataSchemas.items()
+expireDelegationTokenResponseDataSerializers: Dict[
+    int, DataClassSerializer[ExpireDelegationTokenResponseData]
+] = {
+    version: DataClassSerializer(ExpireDelegationTokenResponseData, schema)
+    for version, schema in expireDelegationTokenResponseDataSchemas.items()
 }
-

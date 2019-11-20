@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Data:
     :param record_set: None
     :type record_set: Optional[bytes]
     """
-    
+
     partition: int
     record_set: Optional[bytes]
 
@@ -31,7 +26,7 @@ class TopicData:
     :param data: None
     :type data: List[Data]
     """
-    
+
     topic: str
     data: List[Data]
 
@@ -50,16 +45,15 @@ class ProduceRequestData(RequestData):
     :param topic_data: None
     :type topic_data: List[TopicData]
     """
-    
+
     transactional_id: Optional[str]
     acks: int
     timeout: int
     topic_data: List[TopicData]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `0`, the api key for this API.
         """
         return ApiKey.PRODUCE
-

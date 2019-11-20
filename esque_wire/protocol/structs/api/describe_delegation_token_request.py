@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Owner:
     :param name: name of the Kafka principal
     :type name: str
     """
-    
+
     principal_type: str
     name: str
 
@@ -29,13 +24,12 @@ class DescribeDelegationTokenRequestData(RequestData):
     :param owners: An array of token owners.
     :type owners: List[Owner]
     """
-    
+
     owners: List[Owner]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `41`, the api key for this API.
         """
         return ApiKey.DESCRIBE_DELEGATION_TOKEN
-

@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -22,16 +17,15 @@ class SaslAuthenticateResponseData(ResponseData):
     :param session_lifetime_ms: The SASL authentication bytes from the server, as defined by the SASL mechanism.
     :type session_lifetime_ms: int
     """
-    
+
     error_code: int
     error_message: Optional[str]
     auth_bytes: bytes
     session_lifetime_ms: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `36`, the api key for this API.
         """
         return ApiKey.SASL_AUTHENTICATE
-

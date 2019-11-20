@@ -18,22 +18,17 @@ from esque_wire.protocol.serializers import (
 
 findCoordinatorRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('key', stringSerializer),
-        ('key_type', DummySerializer(int8Serializer.default)),
+        ("key", stringSerializer),
+        ("key_type", DummySerializer(int8Serializer.default)),
     ],
-    1: [
-        ('key', stringSerializer),
-        ('key_type', int8Serializer),
-    ],
-    2: [
-        ('key', stringSerializer),
-        ('key_type', int8Serializer),
-    ],
+    1: [("key", stringSerializer), ("key_type", int8Serializer)],
+    2: [("key", stringSerializer), ("key_type", int8Serializer)],
 }
 
 
-findCoordinatorRequestDataSerializers: Dict[int, DataClassSerializer[FindCoordinatorRequestData]] = {
-    version: DataClassSerializer(FindCoordinatorRequestData, schema) for version, schema
-    in findCoordinatorRequestDataSchemas.items()
+findCoordinatorRequestDataSerializers: Dict[
+    int, DataClassSerializer[FindCoordinatorRequestData]
+] = {
+    version: DataClassSerializer(FindCoordinatorRequestData, schema)
+    for version, schema in findCoordinatorRequestDataSchemas.items()
 }
-

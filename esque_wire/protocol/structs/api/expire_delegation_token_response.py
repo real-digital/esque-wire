@@ -1,13 +1,7 @@
-
-from typing import Dict, List, Optional
-
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -21,15 +15,14 @@ class ExpireDelegationTokenResponseData(ResponseData):
                              if the request did not violate any quota)
     :type throttle_time_ms: int
     """
-    
+
     error_code: int
     expiry_timestamp: int
     throttle_time_ms: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `40`, the api key for this API.
         """
         return ApiKey.EXPIRE_DELEGATION_TOKEN
-

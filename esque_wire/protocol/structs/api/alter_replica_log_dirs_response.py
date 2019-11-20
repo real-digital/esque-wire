@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Partition:
     :param error_code: Response error code
     :type error_code: int
     """
-    
+
     partition: int
     error_code: int
 
@@ -31,7 +26,7 @@ class Topic:
     :param partitions: None
     :type partitions: List[Partition]
     """
-    
+
     topic: str
     partitions: List[Partition]
 
@@ -45,14 +40,13 @@ class AlterReplicaLogDirsResponseData(ResponseData):
     :param topics: None
     :type topics: List[Topic]
     """
-    
+
     throttle_time_ms: int
     topics: List[Topic]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `34`, the api key for this API.
         """
         return ApiKey.ALTER_REPLICA_LOG_DIRS
-

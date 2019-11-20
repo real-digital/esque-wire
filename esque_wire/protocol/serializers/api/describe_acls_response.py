@@ -24,66 +24,66 @@ from esque_wire.protocol.serializers import (
 
 aclSchemas: Dict[int, Schema] = {
     0: [
-        ('principal', stringSerializer),
-        ('host', stringSerializer),
-        ('operation', int8Serializer),
-        ('permission_type', int8Serializer),
+        ("principal", stringSerializer),
+        ("host", stringSerializer),
+        ("operation", int8Serializer),
+        ("permission_type", int8Serializer),
     ],
     1: [
-        ('principal', stringSerializer),
-        ('host', stringSerializer),
-        ('operation', int8Serializer),
-        ('permission_type', int8Serializer),
+        ("principal", stringSerializer),
+        ("host", stringSerializer),
+        ("operation", int8Serializer),
+        ("permission_type", int8Serializer),
     ],
 }
 
 
 aclSerializers: Dict[int, DataClassSerializer[Acl]] = {
-    version: DataClassSerializer(Acl, schema) for version, schema
-    in aclSchemas.items()
+    version: DataClassSerializer(Acl, schema) for version, schema in aclSchemas.items()
 }
 
 
 resourceSchemas: Dict[int, Schema] = {
     0: [
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('acls', ArraySerializer(aclSerializers[0])),
-        ('resource_pattern_type', DummySerializer(3)),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("acls", ArraySerializer(aclSerializers[0])),
+        ("resource_pattern_type", DummySerializer(3)),
     ],
     1: [
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('resource_pattern_type', int8Serializer),
-        ('acls', ArraySerializer(aclSerializers[1])),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("resource_pattern_type", int8Serializer),
+        ("acls", ArraySerializer(aclSerializers[1])),
     ],
 }
 
 
 resourceSerializers: Dict[int, DataClassSerializer[Resource]] = {
-    version: DataClassSerializer(Resource, schema) for version, schema
-    in resourceSchemas.items()
+    version: DataClassSerializer(Resource, schema)
+    for version, schema in resourceSchemas.items()
 }
 
 
 describeAclsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('resources', ArraySerializer(resourceSerializers[0])),
+        ("throttle_time_ms", int32Serializer),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("resources", ArraySerializer(resourceSerializers[0])),
     ],
     1: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('resources', ArraySerializer(resourceSerializers[1])),
+        ("throttle_time_ms", int32Serializer),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("resources", ArraySerializer(resourceSerializers[1])),
     ],
 }
 
 
-describeAclsResponseDataSerializers: Dict[int, DataClassSerializer[DescribeAclsResponseData]] = {
-    version: DataClassSerializer(DescribeAclsResponseData, schema) for version, schema
-    in describeAclsResponseDataSchemas.items()
+describeAclsResponseDataSerializers: Dict[
+    int, DataClassSerializer[DescribeAclsResponseData]
+] = {
+    version: DataClassSerializer(DescribeAclsResponseData, schema)
+    for version, schema in describeAclsResponseDataSchemas.items()
 }
-

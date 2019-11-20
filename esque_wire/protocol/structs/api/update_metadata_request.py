@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -22,7 +17,7 @@ class EndPoint:
     :param security_protocol_type: The security protocol type.
     :type security_protocol_type: int
     """
-    
+
     port: int
     host: str
     listener_name: str
@@ -39,7 +34,7 @@ class LiveBroker:
     :param rack: The rack
     :type rack: Optional[str]
     """
-    
+
     id: int
     end_points: List[EndPoint]
     rack: Optional[str]
@@ -65,7 +60,7 @@ class PartitionState:
     :param offline_replicas: The offline replica ids
     :type offline_replicas: List[int]
     """
-    
+
     partition: int
     controller_epoch: int
     leader: int
@@ -84,7 +79,7 @@ class TopicState:
     :param partition_states: Partition states
     :type partition_states: List[PartitionState]
     """
-    
+
     topic: str
     partition_states: List[PartitionState]
 
@@ -103,7 +98,7 @@ class UpdateMetadataRequestData(RequestData):
     :param live_brokers: Live broekrs
     :type live_brokers: List[LiveBroker]
     """
-    
+
     controller_id: int
     controller_epoch: int
     broker_epoch: int
@@ -111,9 +106,8 @@ class UpdateMetadataRequestData(RequestData):
     live_brokers: List[LiveBroker]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `6`, the api key for this API.
         """
         return ApiKey.UPDATE_METADATA
-

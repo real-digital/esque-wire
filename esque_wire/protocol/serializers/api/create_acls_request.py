@@ -20,44 +20,41 @@ from esque_wire.protocol.serializers import (
 
 creationSchemas: Dict[int, Schema] = {
     0: [
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('principal', stringSerializer),
-        ('host', stringSerializer),
-        ('operation', int8Serializer),
-        ('permission_type', int8Serializer),
-        ('resource_pattern_type', DummySerializer(3)),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("principal", stringSerializer),
+        ("host", stringSerializer),
+        ("operation", int8Serializer),
+        ("permission_type", int8Serializer),
+        ("resource_pattern_type", DummySerializer(3)),
     ],
     1: [
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('resource_pattern_type', int8Serializer),
-        ('principal', stringSerializer),
-        ('host', stringSerializer),
-        ('operation', int8Serializer),
-        ('permission_type', int8Serializer),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("resource_pattern_type", int8Serializer),
+        ("principal", stringSerializer),
+        ("host", stringSerializer),
+        ("operation", int8Serializer),
+        ("permission_type", int8Serializer),
     ],
 }
 
 
 creationSerializers: Dict[int, DataClassSerializer[Creation]] = {
-    version: DataClassSerializer(Creation, schema) for version, schema
-    in creationSchemas.items()
+    version: DataClassSerializer(Creation, schema)
+    for version, schema in creationSchemas.items()
 }
 
 
 createAclsRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('creations', ArraySerializer(creationSerializers[0])),
-    ],
-    1: [
-        ('creations', ArraySerializer(creationSerializers[1])),
-    ],
+    0: [("creations", ArraySerializer(creationSerializers[0]))],
+    1: [("creations", ArraySerializer(creationSerializers[1]))],
 }
 
 
-createAclsRequestDataSerializers: Dict[int, DataClassSerializer[CreateAclsRequestData]] = {
-    version: DataClassSerializer(CreateAclsRequestData, schema) for version, schema
-    in createAclsRequestDataSchemas.items()
+createAclsRequestDataSerializers: Dict[
+    int, DataClassSerializer[CreateAclsRequestData]
+] = {
+    version: DataClassSerializer(CreateAclsRequestData, schema)
+    for version, schema in createAclsRequestDataSchemas.items()
 }
-

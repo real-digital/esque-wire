@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -22,7 +17,7 @@ class Resource:
     :param resource_name: None
     :type resource_name: str
     """
-    
+
     error_code: int
     error_message: Optional[str]
     resource_type: int
@@ -38,14 +33,13 @@ class AlterConfigsResponseData(ResponseData):
     :param resources: None
     :type resources: List[Resource]
     """
-    
+
     throttle_time_ms: int
     resources: List[Resource]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `33`, the api key for this API.
         """
         return ApiKey.ALTER_CONFIGS
-

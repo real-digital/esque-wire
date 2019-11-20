@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -19,14 +14,13 @@ class InitProducerIdRequestData(RequestData):
                                    This is only relevant if a TransactionalId has been defined.
     :type transaction_timeout_ms: int
     """
-    
+
     transactional_id: Optional[str]
     transaction_timeout_ms: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `22`, the api key for this API.
         """
         return ApiKey.INIT_PRODUCER_ID
-

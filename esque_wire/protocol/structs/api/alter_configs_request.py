@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class ConfigEntry:
     :param config_value: Configuration value
     :type config_value: Optional[str]
     """
-    
+
     config_name: str
     config_value: Optional[str]
 
@@ -33,7 +28,7 @@ class Resource:
     :param config_entries: None
     :type config_entries: List[ConfigEntry]
     """
-    
+
     resource_type: int
     resource_name: str
     config_entries: List[ConfigEntry]
@@ -47,14 +42,13 @@ class AlterConfigsRequestData(RequestData):
     :param validate_only: None
     :type validate_only: bool
     """
-    
+
     resources: List[Resource]
     validate_only: bool
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `33`, the api key for this API.
         """
         return ApiKey.ALTER_CONFIGS
-

@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -27,7 +22,7 @@ class FindCoordinatorResponseData(ResponseData):
     :param port: The port.
     :type port: int
     """
-    
+
     throttle_time_ms: int
     error_code: int
     error_message: Optional[str]
@@ -36,9 +31,8 @@ class FindCoordinatorResponseData(ResponseData):
     port: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `10`, the api key for this API.
         """
         return ApiKey.FIND_COORDINATOR
-

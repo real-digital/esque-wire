@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Topic:
     :param partitions: List of partition ids of the topic.
     :type partitions: List[int]
     """
-    
+
     topic: str
     partitions: List[int]
 
@@ -31,7 +26,7 @@ class LogDir:
     :param topics: None
     :type topics: List[Topic]
     """
-    
+
     log_dir: str
     topics: List[Topic]
 
@@ -42,13 +37,12 @@ class AlterReplicaLogDirsRequestData(RequestData):
     :param log_dirs: None
     :type log_dirs: List[LogDir]
     """
-    
+
     log_dirs: List[LogDir]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `34`, the api key for this API.
         """
         return ApiKey.ALTER_REPLICA_LOG_DIRS
-

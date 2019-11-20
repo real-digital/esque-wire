@@ -22,45 +22,41 @@ from esque_wire.protocol.serializers import (
 
 
 topicSchemas: Dict[int, Schema] = {
-    0: [
-        ('topic', stringSerializer),
-        ('partitions', ArraySerializer(int32Serializer)),
-    ],
+    0: [("topic", stringSerializer), ("partitions", ArraySerializer(int32Serializer))]
 }
 
 
 topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema) for version, schema
-    in topicSchemas.items()
+    version: DataClassSerializer(Topic, schema)
+    for version, schema in topicSchemas.items()
 }
 
 
 transactionMarkerSchemas: Dict[int, Schema] = {
     0: [
-        ('producer_id', int64Serializer),
-        ('producer_epoch', int16Serializer),
-        ('transaction_result', booleanSerializer),
-        ('topics', ArraySerializer(topicSerializers[0])),
-        ('coordinator_epoch', int32Serializer),
-    ],
+        ("producer_id", int64Serializer),
+        ("producer_epoch", int16Serializer),
+        ("transaction_result", booleanSerializer),
+        ("topics", ArraySerializer(topicSerializers[0])),
+        ("coordinator_epoch", int32Serializer),
+    ]
 }
 
 
 transactionMarkerSerializers: Dict[int, DataClassSerializer[TransactionMarker]] = {
-    version: DataClassSerializer(TransactionMarker, schema) for version, schema
-    in transactionMarkerSchemas.items()
+    version: DataClassSerializer(TransactionMarker, schema)
+    for version, schema in transactionMarkerSchemas.items()
 }
 
 
 writeTxnMarkersRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('transaction_markers', ArraySerializer(transactionMarkerSerializers[0])),
-    ],
+    0: [("transaction_markers", ArraySerializer(transactionMarkerSerializers[0]))]
 }
 
 
-writeTxnMarkersRequestDataSerializers: Dict[int, DataClassSerializer[WriteTxnMarkersRequestData]] = {
-    version: DataClassSerializer(WriteTxnMarkersRequestData, schema) for version, schema
-    in writeTxnMarkersRequestDataSchemas.items()
+writeTxnMarkersRequestDataSerializers: Dict[
+    int, DataClassSerializer[WriteTxnMarkersRequestData]
+] = {
+    version: DataClassSerializer(WriteTxnMarkersRequestData, schema)
+    for version, schema in writeTxnMarkersRequestDataSchemas.items()
 }
-

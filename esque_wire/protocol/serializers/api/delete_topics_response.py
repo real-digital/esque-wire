@@ -20,53 +20,42 @@ from esque_wire.protocol.serializers import (
 
 
 responseSchemas: Dict[int, Schema] = {
-    0: [
-        ('name', stringSerializer),
-        ('error_code', int16Serializer),
-    ],
-    1: [
-        ('name', stringSerializer),
-        ('error_code', int16Serializer),
-    ],
-    2: [
-        ('name', stringSerializer),
-        ('error_code', int16Serializer),
-    ],
-    3: [
-        ('name', stringSerializer),
-        ('error_code', int16Serializer),
-    ],
+    0: [("name", stringSerializer), ("error_code", int16Serializer)],
+    1: [("name", stringSerializer), ("error_code", int16Serializer)],
+    2: [("name", stringSerializer), ("error_code", int16Serializer)],
+    3: [("name", stringSerializer), ("error_code", int16Serializer)],
 }
 
 
 responseSerializers: Dict[int, DataClassSerializer[Response]] = {
-    version: DataClassSerializer(Response, schema) for version, schema
-    in responseSchemas.items()
+    version: DataClassSerializer(Response, schema)
+    for version, schema in responseSchemas.items()
 }
 
 
 deleteTopicsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('responses', ArraySerializer(responseSerializers[0])),
-        ('throttle_time_ms', DummySerializer(int32Serializer.default)),
+        ("responses", ArraySerializer(responseSerializers[0])),
+        ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
     1: [
-        ('throttle_time_ms', int32Serializer),
-        ('responses', ArraySerializer(responseSerializers[1])),
+        ("throttle_time_ms", int32Serializer),
+        ("responses", ArraySerializer(responseSerializers[1])),
     ],
     2: [
-        ('throttle_time_ms', int32Serializer),
-        ('responses', ArraySerializer(responseSerializers[2])),
+        ("throttle_time_ms", int32Serializer),
+        ("responses", ArraySerializer(responseSerializers[2])),
     ],
     3: [
-        ('throttle_time_ms', int32Serializer),
-        ('responses', ArraySerializer(responseSerializers[3])),
+        ("throttle_time_ms", int32Serializer),
+        ("responses", ArraySerializer(responseSerializers[3])),
     ],
 }
 
 
-deleteTopicsResponseDataSerializers: Dict[int, DataClassSerializer[DeleteTopicsResponseData]] = {
-    version: DataClassSerializer(DeleteTopicsResponseData, schema) for version, schema
-    in deleteTopicsResponseDataSchemas.items()
+deleteTopicsResponseDataSerializers: Dict[
+    int, DataClassSerializer[DeleteTopicsResponseData]
+] = {
+    version: DataClassSerializer(DeleteTopicsResponseData, schema)
+    for version, schema in deleteTopicsResponseDataSchemas.items()
 }
-

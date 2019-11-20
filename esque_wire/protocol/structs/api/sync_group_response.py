@@ -1,13 +1,7 @@
-
-from typing import Dict, List, Optional
-
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -21,15 +15,14 @@ class SyncGroupResponseData(ResponseData):
     :param assignment: The member assignment.
     :type assignment: bytes
     """
-    
+
     throttle_time_ms: int
     error_code: int
     assignment: bytes
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `14`, the api key for this API.
         """
         return ApiKey.SYNC_GROUP
-

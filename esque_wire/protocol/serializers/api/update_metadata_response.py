@@ -7,37 +7,22 @@ from esque_wire.protocol.structs.update_metadata_response import (
     UpdateMetadataResponseData,
 )
 
-from esque_wire.protocol.serializers import (
-    DataClassSerializer,
-    Schema,
-    int16Serializer,
-)
+from esque_wire.protocol.serializers import DataClassSerializer, Schema, int16Serializer
 
 
 updateMetadataResponseDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('error_code', int16Serializer),
-    ],
-    1: [
-        ('error_code', int16Serializer),
-    ],
-    2: [
-        ('error_code', int16Serializer),
-    ],
-    3: [
-        ('error_code', int16Serializer),
-    ],
-    4: [
-        ('error_code', int16Serializer),
-    ],
-    5: [
-        ('error_code', int16Serializer),
-    ],
+    0: [("error_code", int16Serializer)],
+    1: [("error_code", int16Serializer)],
+    2: [("error_code", int16Serializer)],
+    3: [("error_code", int16Serializer)],
+    4: [("error_code", int16Serializer)],
+    5: [("error_code", int16Serializer)],
 }
 
 
-updateMetadataResponseDataSerializers: Dict[int, DataClassSerializer[UpdateMetadataResponseData]] = {
-    version: DataClassSerializer(UpdateMetadataResponseData, schema) for version, schema
-    in updateMetadataResponseDataSchemas.items()
+updateMetadataResponseDataSerializers: Dict[
+    int, DataClassSerializer[UpdateMetadataResponseData]
+] = {
+    version: DataClassSerializer(UpdateMetadataResponseData, schema)
+    for version, schema in updateMetadataResponseDataSchemas.items()
 }
-

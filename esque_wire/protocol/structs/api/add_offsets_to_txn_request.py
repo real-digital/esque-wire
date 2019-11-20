@@ -1,13 +1,7 @@
-
-from typing import Dict, List, Optional
-
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -22,16 +16,15 @@ class AddOffsetsToTxnRequestData(RequestData):
     :param group_id: The unique group identifier
     :type group_id: str
     """
-    
+
     transactional_id: str
     producer_id: int
     producer_epoch: int
     group_id: str
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `25`, the api key for this API.
         """
         return ApiKey.ADD_OFFSETS_TO_TXN
-

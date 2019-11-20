@@ -16,4 +16,3 @@ class RequestHeader:
 @dataclass
 class ResponseHeader:
     correlation_id: int  # INT32
-

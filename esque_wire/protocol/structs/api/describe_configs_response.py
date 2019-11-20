@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -20,7 +15,7 @@ class ConfigSynonym:
     :param config_source: None
     :type config_source: int
     """
-    
+
     config_name: str
     config_value: Optional[str]
     config_source: int
@@ -42,7 +37,7 @@ class ConfigEntry:
     :param config_synonyms: None
     :type config_synonyms: List[ConfigSynonym]
     """
-    
+
     config_name: str
     config_value: Optional[str]
     read_only: bool
@@ -65,7 +60,7 @@ class Resource:
     :param config_entries: None
     :type config_entries: List[ConfigEntry]
     """
-    
+
     error_code: int
     error_message: Optional[str]
     resource_type: int
@@ -82,14 +77,13 @@ class DescribeConfigsResponseData(ResponseData):
     :param resources: None
     :type resources: List[Resource]
     """
-    
+
     throttle_time_ms: int
     resources: List[Resource]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `32`, the api key for this API.
         """
         return ApiKey.DESCRIBE_CONFIGS
-

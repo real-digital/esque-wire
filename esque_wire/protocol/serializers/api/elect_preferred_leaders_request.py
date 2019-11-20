@@ -18,29 +18,27 @@ from esque_wire.protocol.serializers import (
 
 
 topicPartitionSchemas: Dict[int, Schema] = {
-    0: [
-        ('topic', stringSerializer),
-        ('partition_id', ArraySerializer(int32Serializer)),
-    ],
+    0: [("topic", stringSerializer), ("partition_id", ArraySerializer(int32Serializer))]
 }
 
 
 topicPartitionSerializers: Dict[int, DataClassSerializer[TopicPartition]] = {
-    version: DataClassSerializer(TopicPartition, schema) for version, schema
-    in topicPartitionSchemas.items()
+    version: DataClassSerializer(TopicPartition, schema)
+    for version, schema in topicPartitionSchemas.items()
 }
 
 
 electPreferredLeadersRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('topic_partitions', ArraySerializer(topicPartitionSerializers[0])),
-        ('timeout_ms', int32Serializer),
-    ],
+        ("topic_partitions", ArraySerializer(topicPartitionSerializers[0])),
+        ("timeout_ms", int32Serializer),
+    ]
 }
 
 
-electPreferredLeadersRequestDataSerializers: Dict[int, DataClassSerializer[ElectPreferredLeadersRequestData]] = {
-    version: DataClassSerializer(ElectPreferredLeadersRequestData, schema) for version, schema
-    in electPreferredLeadersRequestDataSchemas.items()
+electPreferredLeadersRequestDataSerializers: Dict[
+    int, DataClassSerializer[ElectPreferredLeadersRequestData]
+] = {
+    version: DataClassSerializer(ElectPreferredLeadersRequestData, schema)
+    for version, schema in electPreferredLeadersRequestDataSchemas.items()
 }
-

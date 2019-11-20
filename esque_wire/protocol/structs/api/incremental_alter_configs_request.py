@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -20,7 +15,7 @@ class Config:
     :param value: The value to set for the configuration key.
     :type value: Optional[str]
     """
-    
+
     name: str
     config_operation: int
     value: Optional[str]
@@ -36,7 +31,7 @@ class Resource:
     :param configs: The configurations.
     :type configs: List[Config]
     """
-    
+
     resource_type: int
     resource_name: str
     configs: List[Config]
@@ -50,14 +45,13 @@ class IncrementalAlterConfigsRequestData(RequestData):
     :param validate_only: True if we should validate the request, but not change the configurations.
     :type validate_only: bool
     """
-    
+
     resources: List[Resource]
     validate_only: bool
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `44`, the api key for this API.
         """
         return ApiKey.INCREMENTAL_ALTER_CONFIGS
-

@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -20,7 +15,7 @@ class Topic:
     :param error_message: The error message, or null if there was no error.
     :type error_message: Optional[str]
     """
-    
+
     name: str
     error_code: int
     error_message: Optional[str]
@@ -35,14 +30,13 @@ class CreateTopicsResponseData(ResponseData):
     :param topics: Results for each topic we tried to create.
     :type topics: List[Topic]
     """
-    
+
     throttle_time_ms: int
     topics: List[Topic]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `19`, the api key for this API.
         """
         return ApiKey.CREATE_TOPICS
-

@@ -20,48 +20,40 @@ from esque_wire.protocol.serializers import (
 
 
 groupSchemas: Dict[int, Schema] = {
-    0: [
-        ('group_id', stringSerializer),
-        ('protocol_type', stringSerializer),
-    ],
-    1: [
-        ('group_id', stringSerializer),
-        ('protocol_type', stringSerializer),
-    ],
-    2: [
-        ('group_id', stringSerializer),
-        ('protocol_type', stringSerializer),
-    ],
+    0: [("group_id", stringSerializer), ("protocol_type", stringSerializer)],
+    1: [("group_id", stringSerializer), ("protocol_type", stringSerializer)],
+    2: [("group_id", stringSerializer), ("protocol_type", stringSerializer)],
 }
 
 
 groupSerializers: Dict[int, DataClassSerializer[Group]] = {
-    version: DataClassSerializer(Group, schema) for version, schema
-    in groupSchemas.items()
+    version: DataClassSerializer(Group, schema)
+    for version, schema in groupSchemas.items()
 }
 
 
 listGroupsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('groups', ArraySerializer(groupSerializers[0])),
-        ('throttle_time_ms', DummySerializer(0)),
+        ("error_code", int16Serializer),
+        ("groups", ArraySerializer(groupSerializers[0])),
+        ("throttle_time_ms", DummySerializer(0)),
     ],
     1: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-        ('groups', ArraySerializer(groupSerializers[1])),
+        ("throttle_time_ms", int32Serializer),
+        ("error_code", int16Serializer),
+        ("groups", ArraySerializer(groupSerializers[1])),
     ],
     2: [
-        ('throttle_time_ms', int32Serializer),
-        ('error_code', int16Serializer),
-        ('groups', ArraySerializer(groupSerializers[2])),
+        ("throttle_time_ms", int32Serializer),
+        ("error_code", int16Serializer),
+        ("groups", ArraySerializer(groupSerializers[2])),
     ],
 }
 
 
-listGroupsResponseDataSerializers: Dict[int, DataClassSerializer[ListGroupsResponseData]] = {
-    version: DataClassSerializer(ListGroupsResponseData, schema) for version, schema
-    in listGroupsResponseDataSchemas.items()
+listGroupsResponseDataSerializers: Dict[
+    int, DataClassSerializer[ListGroupsResponseData]
+] = {
+    version: DataClassSerializer(ListGroupsResponseData, schema)
+    for version, schema in listGroupsResponseDataSchemas.items()
 }
-

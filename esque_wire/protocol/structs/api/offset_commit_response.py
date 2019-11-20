@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Partition:
     :param error_code: The error code, or 0 if there was no error.
     :type error_code: int
     """
-    
+
     partition_index: int
     error_code: int
 
@@ -31,7 +26,7 @@ class Topic:
     :param partitions: The responses for each partition in the topic.
     :type partitions: List[Partition]
     """
-    
+
     name: str
     partitions: List[Partition]
 
@@ -45,14 +40,13 @@ class OffsetCommitResponseData(ResponseData):
     :param topics: The responses for each topic.
     :type topics: List[Topic]
     """
-    
+
     throttle_time_ms: int
     topics: List[Topic]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `8`, the api key for this API.
         """
         return ApiKey.OFFSET_COMMIT
-

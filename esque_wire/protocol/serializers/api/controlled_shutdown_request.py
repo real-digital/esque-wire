@@ -18,22 +18,20 @@ from esque_wire.protocol.serializers import (
 
 controlledShutdownRequestDataSchemas: Dict[int, Schema] = {
     0: [
-        ('broker_id', int32Serializer),
-        ('broker_epoch', DummySerializer(int64Serializer.default)),
+        ("broker_id", int32Serializer),
+        ("broker_epoch", DummySerializer(int64Serializer.default)),
     ],
     1: [
-        ('broker_id', int32Serializer),
-        ('broker_epoch', DummySerializer(int64Serializer.default)),
+        ("broker_id", int32Serializer),
+        ("broker_epoch", DummySerializer(int64Serializer.default)),
     ],
-    2: [
-        ('broker_id', int32Serializer),
-        ('broker_epoch', int64Serializer),
-    ],
+    2: [("broker_id", int32Serializer), ("broker_epoch", int64Serializer)],
 }
 
 
-controlledShutdownRequestDataSerializers: Dict[int, DataClassSerializer[ControlledShutdownRequestData]] = {
-    version: DataClassSerializer(ControlledShutdownRequestData, schema) for version, schema
-    in controlledShutdownRequestDataSchemas.items()
+controlledShutdownRequestDataSerializers: Dict[
+    int, DataClassSerializer[ControlledShutdownRequestData]
+] = {
+    version: DataClassSerializer(ControlledShutdownRequestData, schema)
+    for version, schema in controlledShutdownRequestDataSchemas.items()
 }
-

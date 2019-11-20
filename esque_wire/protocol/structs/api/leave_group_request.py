@@ -1,13 +1,7 @@
-
-from typing import Dict, List, Optional
-
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,14 +12,13 @@ class LeaveGroupRequestData(RequestData):
     :param member_id: The member ID to remove from the group.
     :type member_id: str
     """
-    
+
     group_id: str
     member_id: str
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `13`, the api key for this API.
         """
         return ApiKey.LEAVE_GROUP
-

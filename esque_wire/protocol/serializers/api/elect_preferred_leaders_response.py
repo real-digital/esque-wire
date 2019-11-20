@@ -22,43 +22,49 @@ from esque_wire.protocol.serializers import (
 
 partitionResultSchemas: Dict[int, Schema] = {
     0: [
-        ('partition_id', int32Serializer),
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-    ],
+        ("partition_id", int32Serializer),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+    ]
 }
 
 
 partitionResultSerializers: Dict[int, DataClassSerializer[PartitionResult]] = {
-    version: DataClassSerializer(PartitionResult, schema) for version, schema
-    in partitionResultSchemas.items()
+    version: DataClassSerializer(PartitionResult, schema)
+    for version, schema in partitionResultSchemas.items()
 }
 
 
 replicaElectionResultSchemas: Dict[int, Schema] = {
     0: [
-        ('topic', stringSerializer),
-        ('partition_result', ArraySerializer(partitionResultSerializers[0])),
-    ],
+        ("topic", stringSerializer),
+        ("partition_result", ArraySerializer(partitionResultSerializers[0])),
+    ]
 }
 
 
-replicaElectionResultSerializers: Dict[int, DataClassSerializer[ReplicaElectionResult]] = {
-    version: DataClassSerializer(ReplicaElectionResult, schema) for version, schema
-    in replicaElectionResultSchemas.items()
+replicaElectionResultSerializers: Dict[
+    int, DataClassSerializer[ReplicaElectionResult]
+] = {
+    version: DataClassSerializer(ReplicaElectionResult, schema)
+    for version, schema in replicaElectionResultSchemas.items()
 }
 
 
 electPreferredLeadersResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('throttle_time_ms', int32Serializer),
-        ('replica_election_results', ArraySerializer(replicaElectionResultSerializers[0])),
-    ],
+        ("throttle_time_ms", int32Serializer),
+        (
+            "replica_election_results",
+            ArraySerializer(replicaElectionResultSerializers[0]),
+        ),
+    ]
 }
 
 
-electPreferredLeadersResponseDataSerializers: Dict[int, DataClassSerializer[ElectPreferredLeadersResponseData]] = {
-    version: DataClassSerializer(ElectPreferredLeadersResponseData, schema) for version, schema
-    in electPreferredLeadersResponseDataSchemas.items()
+electPreferredLeadersResponseDataSerializers: Dict[
+    int, DataClassSerializer[ElectPreferredLeadersResponseData]
+] = {
+    version: DataClassSerializer(ElectPreferredLeadersResponseData, schema)
+    for version, schema in electPreferredLeadersResponseDataSchemas.items()
 }
-

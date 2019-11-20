@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -22,16 +17,15 @@ class HeartbeatRequestData(RequestData):
     :param group_instance_id: The unique identifier of the consumer instance provided by end user.
     :type group_instance_id: Optional[str]
     """
-    
+
     group_id: str
     generation_id: int
     member_id: str
     group_instance_id: Optional[str]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `12`, the api key for this API.
         """
         return ApiKey.HEARTBEAT
-

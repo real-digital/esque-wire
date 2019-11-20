@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class PartitionError:
     :param error_code: Response error code
     :type error_code: int
     """
-    
+
     partition: int
     error_code: int
 
@@ -31,7 +26,7 @@ class Error:
     :param partition_errors: None
     :type partition_errors: List[PartitionError]
     """
-    
+
     topic: str
     partition_errors: List[PartitionError]
 
@@ -45,14 +40,13 @@ class AddPartitionsToTxnResponseData(ResponseData):
     :param errors: None
     :type errors: List[Error]
     """
-    
+
     throttle_time_ms: int
     errors: List[Error]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `24`, the api key for this API.
         """
         return ApiKey.ADD_PARTITIONS_TO_TXN
-

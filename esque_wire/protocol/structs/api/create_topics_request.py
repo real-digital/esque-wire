@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Config:
     :param value: The configuration value.
     :type value: Optional[str]
     """
-    
+
     name: str
     value: Optional[str]
 
@@ -31,7 +26,7 @@ class Assignment:
     :param broker_ids: The brokers to place the partition on.
     :type broker_ids: List[int]
     """
-    
+
     partition_index: int
     broker_ids: List[int]
 
@@ -52,7 +47,7 @@ class Topic:
     :param configs: The custom topic configurations to set.
     :type configs: List[Config]
     """
-    
+
     name: str
     num_partitions: int
     replication_factor: int
@@ -70,15 +65,14 @@ class CreateTopicsRequestData(RequestData):
     :param validate_only: If true, check that the topics can be created as specified, but don't create anything.
     :type validate_only: bool
     """
-    
+
     topics: List[Topic]
     timeout_ms: int
     validate_only: bool
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `19`, the api key for this API.
         """
         return ApiKey.CREATE_TOPICS
-

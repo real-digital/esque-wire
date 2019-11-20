@@ -18,35 +18,26 @@ from esque_wire.protocol.serializers import (
 
 
 topicSchemas: Dict[int, Schema] = {
-    0: [
-        ('topic', stringSerializer),
-        ('partitions', ArraySerializer(int32Serializer)),
-    ],
-    1: [
-        ('topic', stringSerializer),
-        ('partitions', ArraySerializer(int32Serializer)),
-    ],
+    0: [("topic", stringSerializer), ("partitions", ArraySerializer(int32Serializer))],
+    1: [("topic", stringSerializer), ("partitions", ArraySerializer(int32Serializer))],
 }
 
 
 topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema) for version, schema
-    in topicSchemas.items()
+    version: DataClassSerializer(Topic, schema)
+    for version, schema in topicSchemas.items()
 }
 
 
 describeLogDirsRequestDataSchemas: Dict[int, Schema] = {
-    0: [
-        ('topics', ArraySerializer(topicSerializers[0])),
-    ],
-    1: [
-        ('topics', ArraySerializer(topicSerializers[1])),
-    ],
+    0: [("topics", ArraySerializer(topicSerializers[0]))],
+    1: [("topics", ArraySerializer(topicSerializers[1]))],
 }
 
 
-describeLogDirsRequestDataSerializers: Dict[int, DataClassSerializer[DescribeLogDirsRequestData]] = {
-    version: DataClassSerializer(DescribeLogDirsRequestData, schema) for version, schema
-    in describeLogDirsRequestDataSchemas.items()
+describeLogDirsRequestDataSerializers: Dict[
+    int, DataClassSerializer[DescribeLogDirsRequestData]
+] = {
+    version: DataClassSerializer(DescribeLogDirsRequestData, schema)
+    for version, schema in describeLogDirsRequestDataSchemas.items()
 }
-

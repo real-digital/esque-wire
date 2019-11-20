@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class Renewer:
     :param name: name of the Kafka principal
     :type name: str
     """
-    
+
     principal_type: str
     name: str
 
@@ -33,14 +28,13 @@ class CreateDelegationTokenRequestData(RequestData):
                           default to a server side config value.
     :type max_life_time: int
     """
-    
+
     renewers: List[Renewer]
     max_life_time: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `38`, the api key for this API.
         """
         return ApiKey.CREATE_DELEGATION_TOKEN
-

@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -20,7 +15,7 @@ class TopicError:
     :param error_message: Response error message
     :type error_message: Optional[str]
     """
-    
+
     topic: str
     error_code: int
     error_message: Optional[str]
@@ -35,14 +30,13 @@ class CreatePartitionsResponseData(ResponseData):
     :param topic_errors: Per topic results for the create partitions request
     :type topic_errors: List[TopicError]
     """
-    
+
     throttle_time_ms: int
     topic_errors: List[TopicError]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `37`, the api key for this API.
         """
         return ApiKey.CREATE_PARTITIONS
-

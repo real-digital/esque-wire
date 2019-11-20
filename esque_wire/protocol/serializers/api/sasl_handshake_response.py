@@ -18,18 +18,19 @@ from esque_wire.protocol.serializers import (
 
 saslHandshakeResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('mechanisms', ArraySerializer(stringSerializer)),
+        ("error_code", int16Serializer),
+        ("mechanisms", ArraySerializer(stringSerializer)),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('mechanisms', ArraySerializer(stringSerializer)),
+        ("error_code", int16Serializer),
+        ("mechanisms", ArraySerializer(stringSerializer)),
     ],
 }
 
 
-saslHandshakeResponseDataSerializers: Dict[int, DataClassSerializer[SaslHandshakeResponseData]] = {
-    version: DataClassSerializer(SaslHandshakeResponseData, schema) for version, schema
-    in saslHandshakeResponseDataSchemas.items()
+saslHandshakeResponseDataSerializers: Dict[
+    int, DataClassSerializer[SaslHandshakeResponseData]
+] = {
+    version: DataClassSerializer(SaslHandshakeResponseData, schema)
+    for version, schema in saslHandshakeResponseDataSchemas.items()
 }
-

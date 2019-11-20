@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -18,7 +13,7 @@ class TopicPartition:
     :param partition_id: The partitions of this topic whose preferred leader should be elected
     :type partition_id: List[int]
     """
-    
+
     topic: str
     partition_id: List[int]
 
@@ -31,14 +26,13 @@ class ElectPreferredLeadersRequestData(RequestData):
     :param timeout_ms: The time in ms to wait for the election to complete.
     :type timeout_ms: int
     """
-    
+
     topic_partitions: List[TopicPartition]
     timeout_ms: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `43`, the api key for this API.
         """
         return ApiKey.ELECT_PREFERRED_LEADERS
-

@@ -26,108 +26,112 @@ from esque_wire.protocol.serializers import (
 
 configSynonymSchemas: Dict[int, Schema] = {
     1: [
-        ('config_name', stringSerializer),
-        ('config_value', nullableStringSerializer),
-        ('config_source', int8Serializer),
+        ("config_name", stringSerializer),
+        ("config_value", nullableStringSerializer),
+        ("config_source", int8Serializer),
     ],
     2: [
-        ('config_name', stringSerializer),
-        ('config_value', nullableStringSerializer),
-        ('config_source', int8Serializer),
+        ("config_name", stringSerializer),
+        ("config_value", nullableStringSerializer),
+        ("config_source", int8Serializer),
     ],
 }
 
 
 configSynonymSerializers: Dict[int, DataClassSerializer[ConfigSynonym]] = {
-    version: DataClassSerializer(ConfigSynonym, schema) for version, schema
-    in configSynonymSchemas.items()
+    version: DataClassSerializer(ConfigSynonym, schema)
+    for version, schema in configSynonymSchemas.items()
 }
 
 
 configEntrySchemas: Dict[int, Schema] = {
     0: [
-        ('config_name', stringSerializer),
-        ('config_value', nullableStringSerializer),
-        ('read_only', booleanSerializer),
+        ("config_name", stringSerializer),
+        ("config_value", nullableStringSerializer),
+        ("read_only", booleanSerializer),
         (None, booleanSerializer),
-        ('is_sensitive', booleanSerializer),
-        ('config_source', DummySerializer(int8Serializer.default)),
-        ('config_synonyms', DummySerializer(ArraySerializer(configSynonymSerializers[0]).default)),
+        ("is_sensitive", booleanSerializer),
+        ("config_source", DummySerializer(int8Serializer.default)),
+        (
+            "config_synonyms",
+            DummySerializer(ArraySerializer(configSynonymSerializers[0]).default),
+        ),
     ],
     1: [
-        ('config_name', stringSerializer),
-        ('config_value', nullableStringSerializer),
-        ('read_only', booleanSerializer),
-        ('config_source', int8Serializer),
-        ('is_sensitive', booleanSerializer),
-        ('config_synonyms', ArraySerializer(configSynonymSerializers[1])),
+        ("config_name", stringSerializer),
+        ("config_value", nullableStringSerializer),
+        ("read_only", booleanSerializer),
+        ("config_source", int8Serializer),
+        ("is_sensitive", booleanSerializer),
+        ("config_synonyms", ArraySerializer(configSynonymSerializers[1])),
     ],
     2: [
-        ('config_name', stringSerializer),
-        ('config_value', nullableStringSerializer),
-        ('read_only', booleanSerializer),
-        ('config_source', int8Serializer),
-        ('is_sensitive', booleanSerializer),
-        ('config_synonyms', ArraySerializer(configSynonymSerializers[2])),
+        ("config_name", stringSerializer),
+        ("config_value", nullableStringSerializer),
+        ("read_only", booleanSerializer),
+        ("config_source", int8Serializer),
+        ("is_sensitive", booleanSerializer),
+        ("config_synonyms", ArraySerializer(configSynonymSerializers[2])),
     ],
 }
 
 
 configEntrySerializers: Dict[int, DataClassSerializer[ConfigEntry]] = {
-    version: DataClassSerializer(ConfigEntry, schema) for version, schema
-    in configEntrySchemas.items()
+    version: DataClassSerializer(ConfigEntry, schema)
+    for version, schema in configEntrySchemas.items()
 }
 
 
 resourceSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('config_entries', ArraySerializer(configEntrySerializers[0])),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("config_entries", ArraySerializer(configEntrySerializers[0])),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('config_entries', ArraySerializer(configEntrySerializers[1])),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("config_entries", ArraySerializer(configEntrySerializers[1])),
     ],
     2: [
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
-        ('resource_type', int8Serializer),
-        ('resource_name', stringSerializer),
-        ('config_entries', ArraySerializer(configEntrySerializers[2])),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
+        ("resource_type", int8Serializer),
+        ("resource_name", stringSerializer),
+        ("config_entries", ArraySerializer(configEntrySerializers[2])),
     ],
 }
 
 
 resourceSerializers: Dict[int, DataClassSerializer[Resource]] = {
-    version: DataClassSerializer(Resource, schema) for version, schema
-    in resourceSchemas.items()
+    version: DataClassSerializer(Resource, schema)
+    for version, schema in resourceSchemas.items()
 }
 
 
 describeConfigsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('throttle_time_ms', int32Serializer),
-        ('resources', ArraySerializer(resourceSerializers[0])),
+        ("throttle_time_ms", int32Serializer),
+        ("resources", ArraySerializer(resourceSerializers[0])),
     ],
     1: [
-        ('throttle_time_ms', int32Serializer),
-        ('resources', ArraySerializer(resourceSerializers[1])),
+        ("throttle_time_ms", int32Serializer),
+        ("resources", ArraySerializer(resourceSerializers[1])),
     ],
     2: [
-        ('throttle_time_ms', int32Serializer),
-        ('resources', ArraySerializer(resourceSerializers[2])),
+        ("throttle_time_ms", int32Serializer),
+        ("resources", ArraySerializer(resourceSerializers[2])),
     ],
 }
 
 
-describeConfigsResponseDataSerializers: Dict[int, DataClassSerializer[DescribeConfigsResponseData]] = {
-    version: DataClassSerializer(DescribeConfigsResponseData, schema) for version, schema
-    in describeConfigsResponseDataSchemas.items()
+describeConfigsResponseDataSerializers: Dict[
+    int, DataClassSerializer[DescribeConfigsResponseData]
+] = {
+    version: DataClassSerializer(DescribeConfigsResponseData, schema)
+    for version, schema in describeConfigsResponseDataSchemas.items()
 }
-

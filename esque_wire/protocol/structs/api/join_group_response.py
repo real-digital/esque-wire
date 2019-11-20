@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -20,7 +15,7 @@ class Member:
     :param metadata: The group member metadata.
     :type metadata: bytes
     """
-    
+
     member_id: str
     group_instance_id: Optional[str]
     metadata: bytes
@@ -45,7 +40,7 @@ class JoinGroupResponseData(ResponseData):
     :param members: 
     :type members: List[Member]
     """
-    
+
     throttle_time_ms: int
     error_code: int
     generation_id: int
@@ -55,9 +50,8 @@ class JoinGroupResponseData(ResponseData):
     members: List[Member]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `11`, the api key for this API.
         """
         return ApiKey.JOIN_GROUP
-

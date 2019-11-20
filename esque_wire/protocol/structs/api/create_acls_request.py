@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -28,7 +23,7 @@ class Creation:
     :param permission_type: The ACL permission type
     :type permission_type: int
     """
-    
+
     resource_type: int
     resource_name: str
     resource_pattern_type: int
@@ -44,13 +39,12 @@ class CreateAclsRequestData(RequestData):
     :param creations: None
     :type creations: List[Creation]
     """
-    
+
     creations: List[Creation]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `30`, the api key for this API.
         """
         return ApiKey.CREATE_ACLS
-

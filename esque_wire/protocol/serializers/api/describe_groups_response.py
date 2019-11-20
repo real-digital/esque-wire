@@ -23,110 +23,111 @@ from esque_wire.protocol.serializers import (
 
 memberSchemas: Dict[int, Schema] = {
     0: [
-        ('member_id', stringSerializer),
-        ('client_id', stringSerializer),
-        ('client_host', stringSerializer),
-        ('member_metadata', bytesSerializer),
-        ('member_assignment', bytesSerializer),
+        ("member_id", stringSerializer),
+        ("client_id", stringSerializer),
+        ("client_host", stringSerializer),
+        ("member_metadata", bytesSerializer),
+        ("member_assignment", bytesSerializer),
     ],
     1: [
-        ('member_id', stringSerializer),
-        ('client_id', stringSerializer),
-        ('client_host', stringSerializer),
-        ('member_metadata', bytesSerializer),
-        ('member_assignment', bytesSerializer),
+        ("member_id", stringSerializer),
+        ("client_id", stringSerializer),
+        ("client_host", stringSerializer),
+        ("member_metadata", bytesSerializer),
+        ("member_assignment", bytesSerializer),
     ],
     2: [
-        ('member_id', stringSerializer),
-        ('client_id', stringSerializer),
-        ('client_host', stringSerializer),
-        ('member_metadata', bytesSerializer),
-        ('member_assignment', bytesSerializer),
+        ("member_id", stringSerializer),
+        ("client_id", stringSerializer),
+        ("client_host", stringSerializer),
+        ("member_metadata", bytesSerializer),
+        ("member_assignment", bytesSerializer),
     ],
     3: [
-        ('member_id', stringSerializer),
-        ('client_id', stringSerializer),
-        ('client_host', stringSerializer),
-        ('member_metadata', bytesSerializer),
-        ('member_assignment', bytesSerializer),
+        ("member_id", stringSerializer),
+        ("client_id", stringSerializer),
+        ("client_host", stringSerializer),
+        ("member_metadata", bytesSerializer),
+        ("member_assignment", bytesSerializer),
     ],
 }
 
 
 memberSerializers: Dict[int, DataClassSerializer[Member]] = {
-    version: DataClassSerializer(Member, schema) for version, schema
-    in memberSchemas.items()
+    version: DataClassSerializer(Member, schema)
+    for version, schema in memberSchemas.items()
 }
 
 
 groupSchemas: Dict[int, Schema] = {
     0: [
-        ('error_code', int16Serializer),
-        ('group_id', stringSerializer),
-        ('group_state', stringSerializer),
-        ('protocol_type', stringSerializer),
-        ('protocol_data', stringSerializer),
-        ('members', ArraySerializer(memberSerializers[0])),
-        ('authorized_operations', DummySerializer(int32Serializer.default)),
+        ("error_code", int16Serializer),
+        ("group_id", stringSerializer),
+        ("group_state", stringSerializer),
+        ("protocol_type", stringSerializer),
+        ("protocol_data", stringSerializer),
+        ("members", ArraySerializer(memberSerializers[0])),
+        ("authorized_operations", DummySerializer(int32Serializer.default)),
     ],
     1: [
-        ('error_code', int16Serializer),
-        ('group_id', stringSerializer),
-        ('group_state', stringSerializer),
-        ('protocol_type', stringSerializer),
-        ('protocol_data', stringSerializer),
-        ('members', ArraySerializer(memberSerializers[1])),
-        ('authorized_operations', DummySerializer(int32Serializer.default)),
+        ("error_code", int16Serializer),
+        ("group_id", stringSerializer),
+        ("group_state", stringSerializer),
+        ("protocol_type", stringSerializer),
+        ("protocol_data", stringSerializer),
+        ("members", ArraySerializer(memberSerializers[1])),
+        ("authorized_operations", DummySerializer(int32Serializer.default)),
     ],
     2: [
-        ('error_code', int16Serializer),
-        ('group_id', stringSerializer),
-        ('group_state', stringSerializer),
-        ('protocol_type', stringSerializer),
-        ('protocol_data', stringSerializer),
-        ('members', ArraySerializer(memberSerializers[2])),
-        ('authorized_operations', DummySerializer(int32Serializer.default)),
+        ("error_code", int16Serializer),
+        ("group_id", stringSerializer),
+        ("group_state", stringSerializer),
+        ("protocol_type", stringSerializer),
+        ("protocol_data", stringSerializer),
+        ("members", ArraySerializer(memberSerializers[2])),
+        ("authorized_operations", DummySerializer(int32Serializer.default)),
     ],
     3: [
-        ('error_code', int16Serializer),
-        ('group_id', stringSerializer),
-        ('group_state', stringSerializer),
-        ('protocol_type', stringSerializer),
-        ('protocol_data', stringSerializer),
-        ('members', ArraySerializer(memberSerializers[3])),
-        ('authorized_operations', int32Serializer),
+        ("error_code", int16Serializer),
+        ("group_id", stringSerializer),
+        ("group_state", stringSerializer),
+        ("protocol_type", stringSerializer),
+        ("protocol_data", stringSerializer),
+        ("members", ArraySerializer(memberSerializers[3])),
+        ("authorized_operations", int32Serializer),
     ],
 }
 
 
 groupSerializers: Dict[int, DataClassSerializer[Group]] = {
-    version: DataClassSerializer(Group, schema) for version, schema
-    in groupSchemas.items()
+    version: DataClassSerializer(Group, schema)
+    for version, schema in groupSchemas.items()
 }
 
 
 describeGroupsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('groups', ArraySerializer(groupSerializers[0])),
-        ('throttle_time_ms', DummySerializer(int32Serializer.default)),
+        ("groups", ArraySerializer(groupSerializers[0])),
+        ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
     1: [
-        ('throttle_time_ms', int32Serializer),
-        ('groups', ArraySerializer(groupSerializers[1])),
+        ("throttle_time_ms", int32Serializer),
+        ("groups", ArraySerializer(groupSerializers[1])),
     ],
     2: [
-        ('throttle_time_ms', int32Serializer),
-        ('groups', ArraySerializer(groupSerializers[2])),
+        ("throttle_time_ms", int32Serializer),
+        ("groups", ArraySerializer(groupSerializers[2])),
     ],
     3: [
-        ('throttle_time_ms', int32Serializer),
-        ('groups', ArraySerializer(groupSerializers[3])),
+        ("throttle_time_ms", int32Serializer),
+        ("groups", ArraySerializer(groupSerializers[3])),
     ],
 }
 
 
-describeGroupsResponseDataSerializers: Dict[int, DataClassSerializer[DescribeGroupsResponseData]] = {
-    version: DataClassSerializer(DescribeGroupsResponseData, schema) for version, schema
-    in describeGroupsResponseDataSchemas.items()
+describeGroupsResponseDataSerializers: Dict[
+    int, DataClassSerializer[DescribeGroupsResponseData]
+] = {
+    version: DataClassSerializer(DescribeGroupsResponseData, schema)
+    for version, schema in describeGroupsResponseDataSchemas.items()
 }
-

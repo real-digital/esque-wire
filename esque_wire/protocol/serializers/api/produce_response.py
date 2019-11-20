@@ -23,150 +23,149 @@ from esque_wire.protocol.serializers import (
 
 partitionResponseSchemas: Dict[int, Schema] = {
     0: [
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
-        ('base_offset', int64Serializer),
-        ('log_append_time', DummySerializer(int64Serializer.default)),
-        ('log_start_offset', DummySerializer(-1)),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
+        ("base_offset", int64Serializer),
+        ("log_append_time", DummySerializer(int64Serializer.default)),
+        ("log_start_offset", DummySerializer(-1)),
     ],
     1: [
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
-        ('base_offset', int64Serializer),
-        ('log_append_time', DummySerializer(int64Serializer.default)),
-        ('log_start_offset', DummySerializer(-1)),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
+        ("base_offset", int64Serializer),
+        ("log_append_time", DummySerializer(int64Serializer.default)),
+        ("log_start_offset", DummySerializer(-1)),
     ],
     2: [
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
-        ('base_offset', int64Serializer),
-        ('log_append_time', int64Serializer),
-        ('log_start_offset', DummySerializer(-1)),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
+        ("base_offset", int64Serializer),
+        ("log_append_time", int64Serializer),
+        ("log_start_offset", DummySerializer(-1)),
     ],
     3: [
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
-        ('base_offset', int64Serializer),
-        ('log_append_time', int64Serializer),
-        ('log_start_offset', DummySerializer(-1)),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
+        ("base_offset", int64Serializer),
+        ("log_append_time", int64Serializer),
+        ("log_start_offset", DummySerializer(-1)),
     ],
     4: [
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
-        ('base_offset', int64Serializer),
-        ('log_append_time', int64Serializer),
-        ('log_start_offset', DummySerializer(-1)),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
+        ("base_offset", int64Serializer),
+        ("log_append_time", int64Serializer),
+        ("log_start_offset", DummySerializer(-1)),
     ],
     5: [
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
-        ('base_offset', int64Serializer),
-        ('log_append_time', int64Serializer),
-        ('log_start_offset', int64Serializer),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
+        ("base_offset", int64Serializer),
+        ("log_append_time", int64Serializer),
+        ("log_start_offset", int64Serializer),
     ],
     6: [
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
-        ('base_offset', int64Serializer),
-        ('log_append_time', int64Serializer),
-        ('log_start_offset', int64Serializer),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
+        ("base_offset", int64Serializer),
+        ("log_append_time", int64Serializer),
+        ("log_start_offset", int64Serializer),
     ],
     7: [
-        ('partition', int32Serializer),
-        ('error_code', int16Serializer),
-        ('base_offset', int64Serializer),
-        ('log_append_time', int64Serializer),
-        ('log_start_offset', int64Serializer),
+        ("partition", int32Serializer),
+        ("error_code", int16Serializer),
+        ("base_offset", int64Serializer),
+        ("log_append_time", int64Serializer),
+        ("log_start_offset", int64Serializer),
     ],
 }
 
 
 partitionResponseSerializers: Dict[int, DataClassSerializer[PartitionResponse]] = {
-    version: DataClassSerializer(PartitionResponse, schema) for version, schema
-    in partitionResponseSchemas.items()
+    version: DataClassSerializer(PartitionResponse, schema)
+    for version, schema in partitionResponseSchemas.items()
 }
 
 
 responseSchemas: Dict[int, Schema] = {
     0: [
-        ('topic', stringSerializer),
-        ('partition_responses', ArraySerializer(partitionResponseSerializers[0])),
+        ("topic", stringSerializer),
+        ("partition_responses", ArraySerializer(partitionResponseSerializers[0])),
     ],
     1: [
-        ('topic', stringSerializer),
-        ('partition_responses', ArraySerializer(partitionResponseSerializers[1])),
+        ("topic", stringSerializer),
+        ("partition_responses", ArraySerializer(partitionResponseSerializers[1])),
     ],
     2: [
-        ('topic', stringSerializer),
-        ('partition_responses', ArraySerializer(partitionResponseSerializers[2])),
+        ("topic", stringSerializer),
+        ("partition_responses", ArraySerializer(partitionResponseSerializers[2])),
     ],
     3: [
-        ('topic', stringSerializer),
-        ('partition_responses', ArraySerializer(partitionResponseSerializers[3])),
+        ("topic", stringSerializer),
+        ("partition_responses", ArraySerializer(partitionResponseSerializers[3])),
     ],
     4: [
-        ('topic', stringSerializer),
-        ('partition_responses', ArraySerializer(partitionResponseSerializers[4])),
+        ("topic", stringSerializer),
+        ("partition_responses", ArraySerializer(partitionResponseSerializers[4])),
     ],
     5: [
-        ('topic', stringSerializer),
-        ('partition_responses', ArraySerializer(partitionResponseSerializers[5])),
+        ("topic", stringSerializer),
+        ("partition_responses", ArraySerializer(partitionResponseSerializers[5])),
     ],
     6: [
-        ('topic', stringSerializer),
-        ('partition_responses', ArraySerializer(partitionResponseSerializers[6])),
+        ("topic", stringSerializer),
+        ("partition_responses", ArraySerializer(partitionResponseSerializers[6])),
     ],
     7: [
-        ('topic', stringSerializer),
-        ('partition_responses', ArraySerializer(partitionResponseSerializers[7])),
+        ("topic", stringSerializer),
+        ("partition_responses", ArraySerializer(partitionResponseSerializers[7])),
     ],
 }
 
 
 responseSerializers: Dict[int, DataClassSerializer[Response]] = {
-    version: DataClassSerializer(Response, schema) for version, schema
-    in responseSchemas.items()
+    version: DataClassSerializer(Response, schema)
+    for version, schema in responseSchemas.items()
 }
 
 
 produceResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('responses', ArraySerializer(responseSerializers[0])),
-        ('throttle_time_ms', DummySerializer(0)),
+        ("responses", ArraySerializer(responseSerializers[0])),
+        ("throttle_time_ms", DummySerializer(0)),
     ],
     1: [
-        ('responses', ArraySerializer(responseSerializers[1])),
-        ('throttle_time_ms', int32Serializer),
+        ("responses", ArraySerializer(responseSerializers[1])),
+        ("throttle_time_ms", int32Serializer),
     ],
     2: [
-        ('responses', ArraySerializer(responseSerializers[2])),
-        ('throttle_time_ms', int32Serializer),
+        ("responses", ArraySerializer(responseSerializers[2])),
+        ("throttle_time_ms", int32Serializer),
     ],
     3: [
-        ('responses', ArraySerializer(responseSerializers[3])),
-        ('throttle_time_ms', int32Serializer),
+        ("responses", ArraySerializer(responseSerializers[3])),
+        ("throttle_time_ms", int32Serializer),
     ],
     4: [
-        ('responses', ArraySerializer(responseSerializers[4])),
-        ('throttle_time_ms', int32Serializer),
+        ("responses", ArraySerializer(responseSerializers[4])),
+        ("throttle_time_ms", int32Serializer),
     ],
     5: [
-        ('responses', ArraySerializer(responseSerializers[5])),
-        ('throttle_time_ms', int32Serializer),
+        ("responses", ArraySerializer(responseSerializers[5])),
+        ("throttle_time_ms", int32Serializer),
     ],
     6: [
-        ('responses', ArraySerializer(responseSerializers[6])),
-        ('throttle_time_ms', int32Serializer),
+        ("responses", ArraySerializer(responseSerializers[6])),
+        ("throttle_time_ms", int32Serializer),
     ],
     7: [
-        ('responses', ArraySerializer(responseSerializers[7])),
-        ('throttle_time_ms', int32Serializer),
+        ("responses", ArraySerializer(responseSerializers[7])),
+        ("throttle_time_ms", int32Serializer),
     ],
 }
 
 
 produceResponseDataSerializers: Dict[int, DataClassSerializer[ProduceResponseData]] = {
-    version: DataClassSerializer(ProduceResponseData, schema) for version, schema
-    in produceResponseDataSchemas.items()
+    version: DataClassSerializer(ProduceResponseData, schema)
+    for version, schema in produceResponseDataSchemas.items()
 }
-

@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import RequestData
-
-
-
 
 
 @dataclass
@@ -16,7 +11,7 @@ class Topic:
     :param name: The topic name.
     :type name: str
     """
-    
+
     name: str
 
 
@@ -33,16 +28,15 @@ class MetadataRequestData(RequestData):
     :param include_topic_authorized_operations: Whether to include topic authorized operations.
     :type include_topic_authorized_operations: bool
     """
-    
+
     topics: List[Topic]
     allow_auto_topic_creation: bool
     include_cluster_authorized_operations: bool
     include_topic_authorized_operations: bool
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `3`, the api key for this API.
         """
         return ApiKey.METADATA
-

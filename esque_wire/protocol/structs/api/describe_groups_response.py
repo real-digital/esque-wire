@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -24,7 +19,7 @@ class Member:
     :param member_assignment: The current assignment provided by the group leader.
     :type member_assignment: bytes
     """
-    
+
     member_id: str
     client_id: str
     client_host: str
@@ -50,7 +45,7 @@ class Group:
     :param authorized_operations: 32-bit bitfield to represent authorized operations for this group.
     :type authorized_operations: int
     """
-    
+
     error_code: int
     group_id: str
     group_state: str
@@ -69,14 +64,13 @@ class DescribeGroupsResponseData(ResponseData):
     :param groups: Each described group.
     :type groups: List[Group]
     """
-    
+
     throttle_time_ms: int
     groups: List[Group]
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `15`, the api key for this API.
         """
         return ApiKey.DESCRIBE_GROUPS
-

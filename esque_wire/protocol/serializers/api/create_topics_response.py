@@ -22,56 +22,57 @@ from esque_wire.protocol.serializers import (
 
 topicSchemas: Dict[int, Schema] = {
     0: [
-        ('name', stringSerializer),
-        ('error_code', int16Serializer),
-        ('error_message', DummySerializer(nullableStringSerializer.default)),
+        ("name", stringSerializer),
+        ("error_code", int16Serializer),
+        ("error_message", DummySerializer(nullableStringSerializer.default)),
     ],
     1: [
-        ('name', stringSerializer),
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
+        ("name", stringSerializer),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
     ],
     2: [
-        ('name', stringSerializer),
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
+        ("name", stringSerializer),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
     ],
     3: [
-        ('name', stringSerializer),
-        ('error_code', int16Serializer),
-        ('error_message', nullableStringSerializer),
+        ("name", stringSerializer),
+        ("error_code", int16Serializer),
+        ("error_message", nullableStringSerializer),
     ],
 }
 
 
 topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema) for version, schema
-    in topicSchemas.items()
+    version: DataClassSerializer(Topic, schema)
+    for version, schema in topicSchemas.items()
 }
 
 
 createTopicsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('topics', ArraySerializer(topicSerializers[0])),
-        ('throttle_time_ms', DummySerializer(int32Serializer.default)),
+        ("topics", ArraySerializer(topicSerializers[0])),
+        ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
     1: [
-        ('topics', ArraySerializer(topicSerializers[1])),
-        ('throttle_time_ms', DummySerializer(int32Serializer.default)),
+        ("topics", ArraySerializer(topicSerializers[1])),
+        ("throttle_time_ms", DummySerializer(int32Serializer.default)),
     ],
     2: [
-        ('throttle_time_ms', int32Serializer),
-        ('topics', ArraySerializer(topicSerializers[2])),
+        ("throttle_time_ms", int32Serializer),
+        ("topics", ArraySerializer(topicSerializers[2])),
     ],
     3: [
-        ('throttle_time_ms', int32Serializer),
-        ('topics', ArraySerializer(topicSerializers[3])),
+        ("throttle_time_ms", int32Serializer),
+        ("topics", ArraySerializer(topicSerializers[3])),
     ],
 }
 
 
-createTopicsResponseDataSerializers: Dict[int, DataClassSerializer[CreateTopicsResponseData]] = {
-    version: DataClassSerializer(CreateTopicsResponseData, schema) for version, schema
-    in createTopicsResponseDataSchemas.items()
+createTopicsResponseDataSerializers: Dict[
+    int, DataClassSerializer[CreateTopicsResponseData]
+] = {
+    version: DataClassSerializer(CreateTopicsResponseData, schema)
+    for version, schema in createTopicsResponseDataSchemas.items()
 }
-

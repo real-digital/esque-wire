@@ -1,13 +1,8 @@
-
-from typing import Dict, List, Optional
-
+from typing import List
 from dataclasses import dataclass
 
 from ...constants import ApiKey
 from ..base import ResponseData
-
-
-
 
 
 @dataclass
@@ -26,7 +21,7 @@ class PartitionResponse:
     :param log_start_offset: The start offset of the log at the time this produce response was created
     :type log_start_offset: int
     """
-    
+
     partition: int
     error_code: int
     base_offset: int
@@ -42,7 +37,7 @@ class Response:
     :param partition_responses: None
     :type partition_responses: List[PartitionResponse]
     """
-    
+
     topic: str
     partition_responses: List[PartitionResponse]
 
@@ -56,14 +51,13 @@ class ProduceResponseData(ResponseData):
                              if the request did not violate any quota)
     :type throttle_time_ms: int
     """
-    
+
     responses: List[Response]
     throttle_time_ms: int
 
     @staticmethod
-    def api_key() -> int:
+    def api_key() -> ApiKey:
         """
         :return: `0`, the api key for this API.
         """
         return ApiKey.PRODUCE
-

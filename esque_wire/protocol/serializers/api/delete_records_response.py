@@ -22,56 +22,57 @@ from esque_wire.protocol.serializers import (
 
 partitionSchemas: Dict[int, Schema] = {
     0: [
-        ('partition', int32Serializer),
-        ('low_watermark', int64Serializer),
-        ('error_code', int16Serializer),
+        ("partition", int32Serializer),
+        ("low_watermark", int64Serializer),
+        ("error_code", int16Serializer),
     ],
     1: [
-        ('partition', int32Serializer),
-        ('low_watermark', int64Serializer),
-        ('error_code', int16Serializer),
+        ("partition", int32Serializer),
+        ("low_watermark", int64Serializer),
+        ("error_code", int16Serializer),
     ],
 }
 
 
 partitionSerializers: Dict[int, DataClassSerializer[Partition]] = {
-    version: DataClassSerializer(Partition, schema) for version, schema
-    in partitionSchemas.items()
+    version: DataClassSerializer(Partition, schema)
+    for version, schema in partitionSchemas.items()
 }
 
 
 topicSchemas: Dict[int, Schema] = {
     0: [
-        ('topic', stringSerializer),
-        ('partitions', ArraySerializer(partitionSerializers[0])),
+        ("topic", stringSerializer),
+        ("partitions", ArraySerializer(partitionSerializers[0])),
     ],
     1: [
-        ('topic', stringSerializer),
-        ('partitions', ArraySerializer(partitionSerializers[1])),
+        ("topic", stringSerializer),
+        ("partitions", ArraySerializer(partitionSerializers[1])),
     ],
 }
 
 
 topicSerializers: Dict[int, DataClassSerializer[Topic]] = {
-    version: DataClassSerializer(Topic, schema) for version, schema
-    in topicSchemas.items()
+    version: DataClassSerializer(Topic, schema)
+    for version, schema in topicSchemas.items()
 }
 
 
 deleteRecordsResponseDataSchemas: Dict[int, Schema] = {
     0: [
-        ('throttle_time_ms', int32Serializer),
-        ('topics', ArraySerializer(topicSerializers[0])),
+        ("throttle_time_ms", int32Serializer),
+        ("topics", ArraySerializer(topicSerializers[0])),
     ],
     1: [
-        ('throttle_time_ms', int32Serializer),
-        ('topics', ArraySerializer(topicSerializers[1])),
+        ("throttle_time_ms", int32Serializer),
+        ("topics", ArraySerializer(topicSerializers[1])),
     ],
 }
 
 
-deleteRecordsResponseDataSerializers: Dict[int, DataClassSerializer[DeleteRecordsResponseData]] = {
-    version: DataClassSerializer(DeleteRecordsResponseData, schema) for version, schema
-    in deleteRecordsResponseDataSchemas.items()
+deleteRecordsResponseDataSerializers: Dict[
+    int, DataClassSerializer[DeleteRecordsResponseData]
+] = {
+    version: DataClassSerializer(DeleteRecordsResponseData, schema)
+    for version, schema in deleteRecordsResponseDataSchemas.items()
 }
-
