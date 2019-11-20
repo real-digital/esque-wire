@@ -10,13 +10,14 @@ from .protocol.serializers import int32Serializer, SUPPORTED_API_VERSIONS
 from .protocol.constants import ApiKey
 from .protocol.structs.api import ApiVersionsRequestData
 from .protocol.structs.api.api_versions_response import ApiVersion
+from ._base_connection import BaseBrokerConnection
 
 
 class ApiNotSupportedWarning(UserWarning):
     pass
 
 
-class BrokerConnection:
+class BrokerConnection(BaseBrokerConnection):
     def __init__(self, host: str, client_id: str):
         host, port = host.split(":")
         self.kafka_io = KafkaIO.from_address((host, int(port)))
@@ -27,6 +28,9 @@ class BrokerConnection:
 
     def _query_api_versions(self) -> None:
         request = self.send(ApiVersionsRequestData())
+        if request.response_data is None:
+            raise RuntimeError("")
+
         all_server_supported_versions = {
             ApiKey(support_range.api_key): support_range for support_range in request.response_data.api_versions
         }
@@ -77,7 +81,7 @@ class BrokerConnection:
                     )
             self.api_versions[api_key] = effective_version
 
-    def send(self, request_data: RequestData) -> Request:
+    def send_(self, request_data: RequestData) -> Request:
         return self.send_many([request_data])[0]
 
     def send_many(self, request_data_to_send: List[RequestData]) -> List[Request]:

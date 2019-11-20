@@ -122,10 +122,9 @@ from .primitive import (
     recordsSerializer,
 )
 from ..constants import ApiKey
-from ..structs.base import RequestData, ResponseData
 from ..structs.api.api_versions_response import ApiVersion
 
-REQUEST_SERIALIZERS: Dict[ApiKey, Dict[int, BaseSerializer[RequestData]]] = {
+REQUEST_SERIALIZERS: Dict[ApiKey, Dict[int, ClassSerializer]] = {
     ApiKey.PRODUCE: produceRequestDataSerializers,
     ApiKey.FETCH: fetchRequestDataSerializers,
     ApiKey.LIST_OFFSETS: listOffsetsRequestDataSerializers,
@@ -173,7 +172,7 @@ REQUEST_SERIALIZERS: Dict[ApiKey, Dict[int, BaseSerializer[RequestData]]] = {
     ApiKey.INCREMENTAL_ALTER_CONFIGS: incrementalAlterConfigsRequestDataSerializers,
 }
 
-RESPONSE_SERIALIZERS: Dict[ApiKey, Dict[int, BaseSerializer[ResponseData]]] = {
+RESPONSE_SERIALIZERS: Dict[ApiKey, Dict[int, ClassSerializer]] = {
     ApiKey.PRODUCE: produceResponseDataSerializers,
     ApiKey.FETCH: fetchResponseDataSerializers,
     ApiKey.LIST_OFFSETS: listOffsetsResponseDataSerializers,

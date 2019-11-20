@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import BinaryIO, Dict, Tuple, List, Type, TypeVar, Optional
+from typing import BinaryIO, Dict, Tuple, List, Type, TypeVar, Optional, Any
 
 from .base import BaseSerializer
 from .primitive import int32Serializer
@@ -12,13 +12,18 @@ class DictSerializer(BaseSerializer[Dict]):
     def __init__(self, schema: Schema):
         self._schema = schema.copy()
 
-    def encode(self, value: Dict) -> bytes:
-        return b"".join(serializer.encode(value[field]) for field, serializer in self._schema)
+    def encode(self, value: Dict[str, Any]) -> bytes:
+        return b"".join(serializer.encode(value[field]) for field, serializer in self._schema if field is not None)
 
-    def read(self, buffer: BinaryIO) -> Dict:
+    def read(self, buffer: BinaryIO) -> Dict[str, Any]:
         data = {}
         for field, serializer in self._schema:
-            data[field] = serializer.read(buffer)
+            # None fields are legacy, they're present and have
+            # to be read but are not part of the data structure anymore
+            if field is None:
+                serializer.read(buffer)
+            else:
+                data[field] = serializer.read(buffer)
         return data
 
     @property
@@ -26,7 +31,7 @@ class DictSerializer(BaseSerializer[Dict]):
         return {}
 
 
-class ArraySerializer(BaseSerializer[T]):
+class ArraySerializer(BaseSerializer[Optional[List[T]]]):
     def __init__(self, elem_serializer: BaseSerializer[T]):
         self._elem_serializer: BaseSerializer[T] = elem_serializer
 
@@ -52,7 +57,9 @@ class ClassSerializer(BaseSerializer[T]):
         self._cls: Type[T] = cls
 
     def encode(self, value: T) -> bytes:
-        return b"".join(serializer.encode(getattr(value, field)) for field, serializer in self._schema)
+        return b"".join(
+            serializer.encode(getattr(value, field)) for field, serializer in self._schema if field is not None
+        )
 
     def read(self, buffer: BinaryIO) -> T:
         data = {}
@@ -63,11 +70,12 @@ class ClassSerializer(BaseSerializer[T]):
                 serializer.read(buffer)
             else:
                 data[field] = serializer.read(buffer)
-        return self._cls(**data)
+        return self._cls(**data)  # type:ignore
 
     @property
     def default(self) -> T:
-        return self._cls(**{field: serializer.default for field, serializer in self._schema if field is not None})
+        kwargs = {field: serializer.default for field, serializer in self._schema if field is not None}
+        return self._cls(**kwargs)  # type:ignore
 
 
 E = TypeVar("E", bound=Enum)

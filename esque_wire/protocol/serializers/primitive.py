@@ -198,7 +198,7 @@ bytesSerializer: BaseSerializer[bytes] = GenericSerializer(encode_bytes, read_by
 
 # Represents a sequence of Kafka records as NULLABLE_BYTES. For a detailed description of records see
 # Message Sets.
-recordsSerializer: BaseSerializer[bytes] = nullableBytesSerializer
+recordsSerializer: BaseSerializer[Optional[bytes]] = nullableBytesSerializer
 
 SERIALIZER_MAP: Dict[PrimitiveType, BaseSerializer] = {
     PrimitiveType.Boolean: booleanSerializer,
@@ -216,4 +216,6 @@ SERIALIZER_MAP: Dict[PrimitiveType, BaseSerializer] = {
     PrimitiveType.Records: recordsSerializer,
 }
 
-get_serializer: Callable[[PrimitiveType], BaseSerializer] = SERIALIZER_MAP.get
+
+def get_serializer(primitive_type: PrimitiveType) -> BaseSerializer:
+    return SERIALIZER_MAP[primitive_type]

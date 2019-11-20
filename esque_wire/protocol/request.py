@@ -1,5 +1,5 @@
 from io import BytesIO
-from typing import BinaryIO, Generic, Optional, TypeVar
+from typing import BinaryIO, Generic, Optional, TypeVar, cast, Type
 from .constants import ApiKey
 from .serializers import REQUEST_SERIALIZERS, RESPONSE_SERIALIZERS
 from .serializers.base import BaseSerializer
@@ -52,15 +52,19 @@ class Request(Generic[Req, Res]):
 
     @property
     def response_serializer(self) -> BaseSerializer[Res]:
-        return get_response_serializer(self.api_key, self.api_version)
+        return cast(BaseSerializer[Res], get_response_serializer(self.api_key, self.api_version))
 
     @property
     def request_serializer(self) -> BaseSerializer[Req]:
-        return get_request_serializer(self.api_key, self.api_version)
+        return cast(BaseSerializer[Req], get_request_serializer(self.api_key, self.api_version))
 
     @classmethod
     def from_request_data(
-        cls: "Request[Req, Res]", request_data: Req, api_version: int, correlation_id: int, client_id: Optional[str]
+        cls: "Type[Request[Req, Res]]",
+        request_data: Req,
+        api_version: int,
+        correlation_id: int,
+        client_id: Optional[str],
     ) -> "Request[Req, Res]":
         request_data = request_data
         header = RequestHeader(

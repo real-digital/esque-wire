@@ -2,14 +2,12 @@
 import enum
 import json
 import pathlib
-import sys
 import textwrap
 from typing import Any, Dict, Iterable, List, Set, Tuple, Optional, TypeVar
 import subprocess
 
 import inflection
 import jinja2
-from ruamel import yaml
 from jinja2 import StrictUndefined
 import dataclasses
 
@@ -17,7 +15,7 @@ PROJECT_ROOT = pathlib.Path(__file__).parent.parent
 
 API_INPUT_FILE = PROJECT_ROOT / "protocol_generator" / "api_definition.json"
 CONSTANTS_INPUT_FILE = PROJECT_ROOT / "protocol_generator" / "constant_definition.json"
-TARGET_PATH = PROJECT_ROOT / "esque_wire" / "protocol"
+TARGET_PATH = PROJECT_ROOT / "esque_wire"
 TEMPLATE_PATH = PROJECT_ROOT / "protocol_generator" / "templates"
 T = TypeVar("T")
 

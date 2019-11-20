@@ -42,13 +42,13 @@ from ..structs.api.api_versions_response import ApiVersion
 {% endblock %}
 
 {% block content %}
-REQUEST_SERIALIZERS: Dict[ApiKey, Dict[int, BaseSerializer[RequestData]]] = {
+REQUEST_SERIALIZERS: Dict[ApiKey, Dict[int, ClassSerializer]] = {
 {%- for api in all_apis %}
     ApiKey.{{ api.api_name }}: {{ api.latest_schema_pair[Direction.REQUEST].schema.serializer_dict_name() }},
 {%- endfor %}
 }
 
-RESPONSE_SERIALIZERS: Dict[ApiKey, Dict[int, BaseSerializer[ResponseData]]] = {
+RESPONSE_SERIALIZERS: Dict[ApiKey, Dict[int, ClassSerializer]] = {
 {%- for api in all_apis %}
     ApiKey.{{ api.api_name }}: {{ api.latest_schema_pair[Direction.RESPONSE].schema.serializer_dict_name() }},
 {%- endfor %}
