@@ -4,12 +4,12 @@ import socket
 import warnings
 from typing import BinaryIO, Dict, List, Tuple
 
-from .request import Request
-from .structs.base import RequestData
-from .serializers import int32Serializer, SUPPORTED_API_VERSIONS
-from .constants import ApiKey
-from .structs.api import ApiVersionsRequestData
-from .structs.api.api_versions_response import ApiVersion
+from .protocol.request import Request
+from .protocol.structs.base import RequestData
+from .protocol.serializers import int32Serializer, SUPPORTED_API_VERSIONS
+from .protocol.constants import ApiKey
+from .protocol.structs.api import ApiVersionsRequestData
+from .protocol.structs.api.api_versions_response import ApiVersion
 
 
 class ApiNotSupportedWarning(UserWarning):

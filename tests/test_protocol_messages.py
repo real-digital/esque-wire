@@ -1,5 +1,5 @@
 from esque_wire.protocol.structs.api import ApiVersionsRequestData
-from esque_wire.protocol.connection import BrokerConnection
+from esque_wire.connection import BrokerConnection
 from esque_wire.protocol.structs.api import MetadataRequestData
 
 
