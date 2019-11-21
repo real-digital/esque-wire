@@ -29,7 +29,7 @@ class BrokerConnection(BaseBrokerConnection):
     def _query_api_versions(self) -> None:
         request = self.send(ApiVersionsRequestData())
         if request.response_data is None:
-            raise RuntimeError("")
+            raise RuntimeError("Something went wrong. This shouldn't happen!")
 
         all_server_supported_versions = {
             ApiKey(support_range.api_key): support_range for support_range in request.response_data.api_versions

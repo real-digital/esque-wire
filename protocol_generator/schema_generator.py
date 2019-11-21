@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
+import dataclasses
 import enum
 import json
 import pathlib
-import textwrap
-from typing import Any, Dict, Iterable, List, Set, Tuple, Optional, TypeVar
 import subprocess
+import textwrap
+from typing import Any, Dict, Iterable, List, Optional, Set, Tuple, TypeVar
 
 import inflection
 import jinja2
 from jinja2 import StrictUndefined
-import dataclasses
 
 PROJECT_ROOT = pathlib.Path(__file__).parent.parent
 
@@ -443,7 +443,9 @@ class Api:
         for version_pair in self.api_versions.values():
             schema = version_pair[direction]
             for field_type in schema.schema.traverse_types():
-                serializers.add(field_type.serializer_import_name)
+                name = field_type.serializer_import_name
+                if name is not None:
+                    serializers.add(name)
         return sorted(serializers - {None})
 
     def get_type_imports(self, direction: Direction) -> List[str]:
@@ -451,7 +453,9 @@ class Api:
         for version_pair in self.api_versions.values():
             schema = version_pair[direction]
             for field_type in schema.schema.traverse_types():
-                type_hints.add(field_type.type_import_name)
+                name = field_type.type_import_name
+                if name is not None:
+                    type_hints.add(name)
         return sorted(type_hints - {None})
 
     def get_constant_imports(self, direction: Direction) -> List[str]:
@@ -459,7 +463,9 @@ class Api:
         for version_pair in self.api_versions.values():
             schema = version_pair[direction]
             for field_type in schema.schema.traverse_types():
-                constants.add(field_type.constant_import_name)
+                name = field_type.constant_import_name
+                if name is not None:
+                    constants.add(name)
         return sorted(constants - {None})
 
 
@@ -530,6 +536,8 @@ class Templater:
         self._determine_target_path(current_api, direction)
         if not self._target_changed:
             return
+        if self.current_target_path is None:
+            raise RuntimeError("Need to determine target path first!")
         self._update_last_path()
         self.current_target_path.parent.mkdir(parents=True, exist_ok=True)
 

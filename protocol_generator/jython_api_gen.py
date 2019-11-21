@@ -4,13 +4,12 @@
 import json
 import os
 from collections import OrderedDict
-from org.apache.kafka.common.protocol import ApiKeys
-from org.apache.kafka.common.protocol.types import Type, Schema, ArrayOf
-from org.apache.kafka.common.protocol import Errors
-from org.apache.kafka.common.errors import RetriableException
-from org.apache.kafka.common.resource import ResourceType, PatternType
-from org.apache.kafka.common.acl import AclOperation, AclPermissionType
 
+from org.apache.kafka.common.acl import AclOperation, AclPermissionType
+from org.apache.kafka.common.errors import RetriableException
+from org.apache.kafka.common.protocol import ApiKeys, Errors
+from org.apache.kafka.common.protocol.types import ArrayOf, Schema, Type
+from org.apache.kafka.common.resource import PatternType, ResourceType
 
 FIELD_NAME_TO_ENUM_CLASS = {
     "api_key": "ApiKey",
@@ -107,7 +106,7 @@ def collect_constants():
 def get_api_key_constants():
     return {
         "enum": [{"name": str(api_key), "value": api_key.id} for api_key in ApiKeys.values()],
-        "primitive_type": "INT16"
+        "primitive_type": "INT16",
     }
 
 
@@ -131,7 +130,7 @@ def get_resource_type_constants():
 def get_enum_name_and_code(enum, primitive_type):
     return {
         "primitive_type": primitive_type,
-        "enum": [{"name": str(elem), "value": elem.code()} for elem in enum.values()]
+        "enum": [{"name": str(elem), "value": elem.code()} for elem in enum.values()],
     }
 
 

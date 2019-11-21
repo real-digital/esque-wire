@@ -23,9 +23,9 @@ KAFKA_LIB_PATH = PARENT_DIR / f"kafka_2.11-{KAFKA_VERSION}" / "libs"
 
 def main(argv: List[str]):
     log_level = logging.INFO
-    if '--log-level' in argv:
-        idx = argv.index('--log-level')
-        value = argv[idx+1].upper()
+    if "--log-level" in argv:
+        idx = argv.index("--log-level")
+        value = argv[idx + 1].upper()
         log_level = getattr(logging, value)
 
     logging.basicConfig(level=log_level)
@@ -38,18 +38,23 @@ def main(argv: List[str]):
         download_kafka()
 
     log.info("running Jython to generate api_definition.json")
-    subprocess.check_call([
-        "java",
-        "-cp", f"{JYTHON_PATH}:{KAFKA_LIB_PATH}/*",
-        "org.python.util.jython",
-        str(PARENT_DIR / "jython_api_gen.py")
-    ])
+    subprocess.check_call(
+        [
+            "java",
+            "-cp",
+            f"{JYTHON_PATH}:{KAFKA_LIB_PATH}/*",
+            "org.python.util.jython",
+            str(PARENT_DIR / "jython_api_gen.py"),
+        ]
+    )
     log.info("done")
 
 
 def download_jython():
-    url = ("http://search.maven.org/remotecontent?filepath=org/python/jython-standalone"
-           f"/{JYTHON_VERSION}/jython-standalone-{JYTHON_VERSION}.jar")
+    url = (
+        "http://search.maven.org/remotecontent?filepath=org/python/jython-standalone"
+        f"/{JYTHON_VERSION}/jython-standalone-{JYTHON_VERSION}.jar"
+    )
     local_file = JYTHON_PATH
     download_file(url, local_file)
 
@@ -60,13 +65,12 @@ def download_file(url, local_file: pathlib.Path):
 
 
 def download_kafka():
-    url = ("https://archive.apache.org/dist/kafka/"
-           f"{KAFKA_VERSION}/kafka_2.11-{KAFKA_VERSION}.tgz")
+    url = "https://archive.apache.org/dist/kafka/" f"{KAFKA_VERSION}/kafka_2.11-{KAFKA_VERSION}.tgz"
 
     def is_lib(member: tarfile.TarInfo) -> bool:
         return member.name.startswith(f"kafka_2.11-{KAFKA_VERSION}/libs/")
 
-    with tempfile.NamedTemporaryFile(suffix='.tgz') as tmpfile:
+    with tempfile.NamedTemporaryFile(suffix=".tgz") as tmpfile:
         download_file(url, pathlib.Path(tmpfile.name))
         tmpfile.file.seek(0)
         log.info("extracting jars")

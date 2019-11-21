@@ -59,7 +59,7 @@ class JoinGroupResponseData(ResponseData):
         :type leader: str
         :param member_id: The member ID assigned by the group coordinator.
         :type member_id: str
-        :param members: 
+        :param members:
         :type members: List[Member]
         """
         self.throttle_time_ms = throttle_time_ms

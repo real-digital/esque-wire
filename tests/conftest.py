@@ -1,7 +1,9 @@
-from typing import List
-import sys
 import pathlib
+import sys
+from typing import List
+
 import pytest
+
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
 
