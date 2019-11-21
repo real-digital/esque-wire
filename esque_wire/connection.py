@@ -5,8 +5,8 @@ import warnings
 from typing import BinaryIO, Dict, List, Tuple
 
 from ._base_connection import BaseBrokerConnection
+from .protocol.api_call import ApiCall
 from .protocol.constants import ApiKey
-from .protocol.request import Request
 from .protocol.serializers import SUPPORTED_API_VERSIONS, int32Serializer
 from .protocol.structs.api import ApiVersionsRequestData
 from .protocol.structs.api.api_versions_response import ApiVersion
@@ -27,12 +27,12 @@ class BrokerConnection(BaseBrokerConnection):
         self._query_api_versions()
 
     def _query_api_versions(self) -> None:
-        request = self.send(ApiVersionsRequestData())
-        if request.response_data is None:
+        api_call = self.send(ApiVersionsRequestData())
+        if api_call.response_data is None:
             raise RuntimeError("Something went wrong. This shouldn't happen!")
 
         all_server_supported_versions = {
-            ApiKey(support_range.api_key): support_range for support_range in request.response_data.api_versions
+            ApiKey(support_range.api_key): support_range for support_range in api_call.response_data.api_versions
         }
         server_api_keys = set(all_server_supported_versions)
         client_api_keys = set(SUPPORTED_API_VERSIONS)
@@ -81,13 +81,13 @@ class BrokerConnection(BaseBrokerConnection):
                     )
             self.api_versions[api_key] = effective_version
 
-    def send_(self, request_data: RequestData) -> Request:
+    def _send(self, request_data: RequestData) -> ApiCall:
         return self.send_many([request_data])[0]
 
-    def send_many(self, request_data_to_send: List[RequestData]) -> List[Request]:
+    def send_many(self, request_data_to_send: List[RequestData]) -> List[ApiCall]:
         requests_to_send = [self._request_from_data(data) for data in request_data_to_send]
 
-        answered_requests: List[Request] = []
+        answered_requests: List[ApiCall] = []
 
         len_ = len(request_data_to_send)
         if len_ == 0:
@@ -98,7 +98,7 @@ class BrokerConnection(BaseBrokerConnection):
             self._try_receive_and_append_to(answered_requests)
         return answered_requests
 
-    def _try_send_and_pop_from(self, requests_to_send: List[Request]) -> None:
+    def _try_send_and_pop_from(self, requests_to_send: List[ApiCall]) -> None:
         if len(requests_to_send) == 0:
             return
         try:
@@ -110,16 +110,16 @@ class BrokerConnection(BaseBrokerConnection):
         except queue.Full:  # make sure we flush so some messages can be read to make place for new ones
             self.kafka_io.flush()
 
-    def _try_receive_and_append_to(self, received_requests: List[Request]) -> None:
+    def _try_receive_and_append_to(self, received_requests: List[ApiCall]) -> None:
         try:
             received_requests.append(self.kafka_io.receive())
         except queue.Empty:
             pass
 
-    def _request_from_data(self, request_data: RequestData) -> Request:
+    def _request_from_data(self, request_data: RequestData) -> ApiCall:
         api_key = request_data.api_key
         api_version = self.api_versions[api_key]
-        return Request.from_request_data(request_data, api_version, next(self._correlation_id_counter), self.client_id)
+        return ApiCall.from_request_data(request_data, api_version, next(self._correlation_id_counter), self.client_id)
 
     def close(self):
         self.kafka_io.close()
@@ -133,30 +133,30 @@ class BrokerConnection(BaseBrokerConnection):
 
 class KafkaIO:
     def __init__(self, in_stream: BinaryIO, out_stream: BinaryIO):
-        self._in_flight: "queue.Queue[Request]" = queue.Queue(maxsize=10)  # TODO make this configurable
+        self._in_flight: "queue.Queue[ApiCall]" = queue.Queue(maxsize=10)  # TODO make this configurable
         self._in_stream: BinaryIO = in_stream
         self._out_stream: BinaryIO = out_stream
 
-    def send(self, request: Request) -> None:
-        data = request.encode_request()
-        self._send_req_data(request, data)
+    def send(self, api_call: ApiCall) -> None:
+        data = api_call.encode_request()
+        self._send_req_data(api_call, data)
 
-    def _send_req_data(self, request: Request, data: bytes) -> None:
-        self._in_flight.put(request, block=False)
+    def _send_req_data(self, api_call: ApiCall, data: bytes) -> None:
+        self._in_flight.put(api_call, block=False)
         self._out_stream.write(int32Serializer.encode(len(data)))
         self._out_stream.write(data)
 
-    def receive(self) -> Request:
+    def receive(self) -> ApiCall:
         request, data = self._receive_req_data()
         request.decode_response(data)
         self._in_flight.task_done()
         return request
 
-    def _receive_req_data(self) -> Tuple[Request, bytes]:
-        request = self._in_flight.get(block=False)
+    def _receive_req_data(self) -> Tuple[ApiCall, bytes]:
+        api_call = self._in_flight.get(block=False)
         len_ = int32Serializer.read(self._in_stream)
         data = self._in_stream.read(len_)
-        return request, data
+        return api_call, data
 
     def flush(self):
         self._out_stream.flush()

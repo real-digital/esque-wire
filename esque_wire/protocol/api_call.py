@@ -21,7 +21,7 @@ Req = TypeVar("Req", bound=RequestData)
 Res = TypeVar("Res", bound=ResponseData)
 
 
-class Request(Generic[Req, Res]):
+class ApiCall(Generic[Req, Res]):
     def __init__(self, request_data: Req, header: RequestHeader):
         self.api_version = header.api_version
         self.request_data = request_data
@@ -34,10 +34,10 @@ class Request(Generic[Req, Res]):
         data += self.request_serializer.encode(self.request_data)
         return data
 
-    def decode_response(self, data: bytes) -> "Request":
+    def decode_response(self, data: bytes) -> "ApiCall":
         return self.read_response(BytesIO(data))
 
-    def read_response(self, buffer: BinaryIO) -> "Request":
+    def read_response(self, buffer: BinaryIO) -> "ApiCall":
         self.response_header = responseHeaderSerializer.read(buffer)
         assert self.response_header.correlation_id == self.correlation_id, "Request and response order got messed up!"
         self.response_data = self.response_serializer.read(buffer)
@@ -61,14 +61,14 @@ class Request(Generic[Req, Res]):
 
     @classmethod
     def from_request_data(
-        cls: "Type[Request[Req, Res]]",
+        cls: "Type[ApiCall[Req, Res]]",
         request_data: Req,
         api_version: int,
         correlation_id: int,
         client_id: Optional[str],
-    ) -> "Request[Req, Res]":
+    ) -> "ApiCall[Req, Res]":
         request_data = request_data
         header = RequestHeader(
             api_key=request_data.api_key, api_version=api_version, correlation_id=correlation_id, client_id=client_id
         )
-        return Request(request_data, header)
+        return ApiCall(request_data, header)

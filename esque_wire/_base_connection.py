@@ -1,6 +1,6 @@
 from typing import overload
 
-from .protocol.request import Request
+from .protocol.api_call import ApiCall
 from .protocol.structs.api import (
     AddOffsetsToTxnRequestData,
     AddOffsetsToTxnResponseData,
@@ -98,247 +98,247 @@ from .protocol.structs.base import RequestData
 
 class BaseBrokerConnection:
     @overload
-    def send(self, request_data: ProduceRequestData) -> Request[ProduceRequestData, ProduceResponseData]:
+    def send(self, request_data: ProduceRequestData) -> ApiCall[ProduceRequestData, ProduceResponseData]:
         ...
 
     @overload
-    def send(self, request_data: FetchRequestData) -> Request[FetchRequestData, FetchResponseData]:
+    def send(self, request_data: FetchRequestData) -> ApiCall[FetchRequestData, FetchResponseData]:
         ...
 
     @overload
-    def send(self, request_data: ListOffsetsRequestData) -> Request[ListOffsetsRequestData, ListOffsetsResponseData]:
+    def send(self, request_data: ListOffsetsRequestData) -> ApiCall[ListOffsetsRequestData, ListOffsetsResponseData]:
         ...
 
     @overload
-    def send(self, request_data: MetadataRequestData) -> Request[MetadataRequestData, MetadataResponseData]:
+    def send(self, request_data: MetadataRequestData) -> ApiCall[MetadataRequestData, MetadataResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: LeaderAndIsrRequestData
-    ) -> Request[LeaderAndIsrRequestData, LeaderAndIsrResponseData]:
+    ) -> ApiCall[LeaderAndIsrRequestData, LeaderAndIsrResponseData]:
         ...
 
     @overload
-    def send(self, request_data: StopReplicaRequestData) -> Request[StopReplicaRequestData, StopReplicaResponseData]:
+    def send(self, request_data: StopReplicaRequestData) -> ApiCall[StopReplicaRequestData, StopReplicaResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: UpdateMetadataRequestData
-    ) -> Request[UpdateMetadataRequestData, UpdateMetadataResponseData]:
+    ) -> ApiCall[UpdateMetadataRequestData, UpdateMetadataResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: ControlledShutdownRequestData
-    ) -> Request[ControlledShutdownRequestData, ControlledShutdownResponseData]:
+    ) -> ApiCall[ControlledShutdownRequestData, ControlledShutdownResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: OffsetCommitRequestData
-    ) -> Request[OffsetCommitRequestData, OffsetCommitResponseData]:
+    ) -> ApiCall[OffsetCommitRequestData, OffsetCommitResponseData]:
         ...
 
     @overload
-    def send(self, request_data: OffsetFetchRequestData) -> Request[OffsetFetchRequestData, OffsetFetchResponseData]:
+    def send(self, request_data: OffsetFetchRequestData) -> ApiCall[OffsetFetchRequestData, OffsetFetchResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: FindCoordinatorRequestData
-    ) -> Request[FindCoordinatorRequestData, FindCoordinatorResponseData]:
+    ) -> ApiCall[FindCoordinatorRequestData, FindCoordinatorResponseData]:
         ...
 
     @overload
-    def send(self, request_data: JoinGroupRequestData) -> Request[JoinGroupRequestData, JoinGroupResponseData]:
+    def send(self, request_data: JoinGroupRequestData) -> ApiCall[JoinGroupRequestData, JoinGroupResponseData]:
         ...
 
     @overload
-    def send(self, request_data: HeartbeatRequestData) -> Request[HeartbeatRequestData, HeartbeatResponseData]:
+    def send(self, request_data: HeartbeatRequestData) -> ApiCall[HeartbeatRequestData, HeartbeatResponseData]:
         ...
 
     @overload
-    def send(self, request_data: LeaveGroupRequestData) -> Request[LeaveGroupRequestData, LeaveGroupResponseData]:
+    def send(self, request_data: LeaveGroupRequestData) -> ApiCall[LeaveGroupRequestData, LeaveGroupResponseData]:
         ...
 
     @overload
-    def send(self, request_data: SyncGroupRequestData) -> Request[SyncGroupRequestData, SyncGroupResponseData]:
+    def send(self, request_data: SyncGroupRequestData) -> ApiCall[SyncGroupRequestData, SyncGroupResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: DescribeGroupsRequestData
-    ) -> Request[DescribeGroupsRequestData, DescribeGroupsResponseData]:
+    ) -> ApiCall[DescribeGroupsRequestData, DescribeGroupsResponseData]:
         ...
 
     @overload
-    def send(self, request_data: ListGroupsRequestData) -> Request[ListGroupsRequestData, ListGroupsResponseData]:
+    def send(self, request_data: ListGroupsRequestData) -> ApiCall[ListGroupsRequestData, ListGroupsResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: SaslHandshakeRequestData
-    ) -> Request[SaslHandshakeRequestData, SaslHandshakeResponseData]:
+    ) -> ApiCall[SaslHandshakeRequestData, SaslHandshakeResponseData]:
         ...
 
     @overload
-    def send(self, request_data: ApiVersionsRequestData) -> Request[ApiVersionsRequestData, ApiVersionsResponseData]:
+    def send(self, request_data: ApiVersionsRequestData) -> ApiCall[ApiVersionsRequestData, ApiVersionsResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: CreateTopicsRequestData
-    ) -> Request[CreateTopicsRequestData, CreateTopicsResponseData]:
+    ) -> ApiCall[CreateTopicsRequestData, CreateTopicsResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: DeleteTopicsRequestData
-    ) -> Request[DeleteTopicsRequestData, DeleteTopicsResponseData]:
+    ) -> ApiCall[DeleteTopicsRequestData, DeleteTopicsResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: DeleteRecordsRequestData
-    ) -> Request[DeleteRecordsRequestData, DeleteRecordsResponseData]:
+    ) -> ApiCall[DeleteRecordsRequestData, DeleteRecordsResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: InitProducerIdRequestData
-    ) -> Request[InitProducerIdRequestData, InitProducerIdResponseData]:
+    ) -> ApiCall[InitProducerIdRequestData, InitProducerIdResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: OffsetForLeaderEpochRequestData
-    ) -> Request[OffsetForLeaderEpochRequestData, OffsetForLeaderEpochResponseData]:
+    ) -> ApiCall[OffsetForLeaderEpochRequestData, OffsetForLeaderEpochResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: AddPartitionsToTxnRequestData
-    ) -> Request[AddPartitionsToTxnRequestData, AddPartitionsToTxnResponseData]:
+    ) -> ApiCall[AddPartitionsToTxnRequestData, AddPartitionsToTxnResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: AddOffsetsToTxnRequestData
-    ) -> Request[AddOffsetsToTxnRequestData, AddOffsetsToTxnResponseData]:
+    ) -> ApiCall[AddOffsetsToTxnRequestData, AddOffsetsToTxnResponseData]:
         ...
 
     @overload
-    def send(self, request_data: EndTxnRequestData) -> Request[EndTxnRequestData, EndTxnResponseData]:
+    def send(self, request_data: EndTxnRequestData) -> ApiCall[EndTxnRequestData, EndTxnResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: WriteTxnMarkersRequestData
-    ) -> Request[WriteTxnMarkersRequestData, WriteTxnMarkersResponseData]:
+    ) -> ApiCall[WriteTxnMarkersRequestData, WriteTxnMarkersResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: TxnOffsetCommitRequestData
-    ) -> Request[TxnOffsetCommitRequestData, TxnOffsetCommitResponseData]:
+    ) -> ApiCall[TxnOffsetCommitRequestData, TxnOffsetCommitResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: DescribeAclsRequestData
-    ) -> Request[DescribeAclsRequestData, DescribeAclsResponseData]:
+    ) -> ApiCall[DescribeAclsRequestData, DescribeAclsResponseData]:
         ...
 
     @overload
-    def send(self, request_data: CreateAclsRequestData) -> Request[CreateAclsRequestData, CreateAclsResponseData]:
+    def send(self, request_data: CreateAclsRequestData) -> ApiCall[CreateAclsRequestData, CreateAclsResponseData]:
         ...
 
     @overload
-    def send(self, request_data: DeleteAclsRequestData) -> Request[DeleteAclsRequestData, DeleteAclsResponseData]:
+    def send(self, request_data: DeleteAclsRequestData) -> ApiCall[DeleteAclsRequestData, DeleteAclsResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: DescribeConfigsRequestData
-    ) -> Request[DescribeConfigsRequestData, DescribeConfigsResponseData]:
+    ) -> ApiCall[DescribeConfigsRequestData, DescribeConfigsResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: AlterConfigsRequestData
-    ) -> Request[AlterConfigsRequestData, AlterConfigsResponseData]:
+    ) -> ApiCall[AlterConfigsRequestData, AlterConfigsResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: AlterReplicaLogDirsRequestData
-    ) -> Request[AlterReplicaLogDirsRequestData, AlterReplicaLogDirsResponseData]:
+    ) -> ApiCall[AlterReplicaLogDirsRequestData, AlterReplicaLogDirsResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: DescribeLogDirsRequestData
-    ) -> Request[DescribeLogDirsRequestData, DescribeLogDirsResponseData]:
+    ) -> ApiCall[DescribeLogDirsRequestData, DescribeLogDirsResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: SaslAuthenticateRequestData
-    ) -> Request[SaslAuthenticateRequestData, SaslAuthenticateResponseData]:
+    ) -> ApiCall[SaslAuthenticateRequestData, SaslAuthenticateResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: CreatePartitionsRequestData
-    ) -> Request[CreatePartitionsRequestData, CreatePartitionsResponseData]:
+    ) -> ApiCall[CreatePartitionsRequestData, CreatePartitionsResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: CreateDelegationTokenRequestData
-    ) -> Request[CreateDelegationTokenRequestData, CreateDelegationTokenResponseData]:
+    ) -> ApiCall[CreateDelegationTokenRequestData, CreateDelegationTokenResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: RenewDelegationTokenRequestData
-    ) -> Request[RenewDelegationTokenRequestData, RenewDelegationTokenResponseData]:
+    ) -> ApiCall[RenewDelegationTokenRequestData, RenewDelegationTokenResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: ExpireDelegationTokenRequestData
-    ) -> Request[ExpireDelegationTokenRequestData, ExpireDelegationTokenResponseData]:
+    ) -> ApiCall[ExpireDelegationTokenRequestData, ExpireDelegationTokenResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: DescribeDelegationTokenRequestData
-    ) -> Request[DescribeDelegationTokenRequestData, DescribeDelegationTokenResponseData]:
+    ) -> ApiCall[DescribeDelegationTokenRequestData, DescribeDelegationTokenResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: DeleteGroupsRequestData
-    ) -> Request[DeleteGroupsRequestData, DeleteGroupsResponseData]:
+    ) -> ApiCall[DeleteGroupsRequestData, DeleteGroupsResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: ElectPreferredLeadersRequestData
-    ) -> Request[ElectPreferredLeadersRequestData, ElectPreferredLeadersResponseData]:
+    ) -> ApiCall[ElectPreferredLeadersRequestData, ElectPreferredLeadersResponseData]:
         ...
 
     @overload
     def send(
         self, request_data: IncrementalAlterConfigsRequestData
-    ) -> Request[IncrementalAlterConfigsRequestData, IncrementalAlterConfigsResponseData]:
+    ) -> ApiCall[IncrementalAlterConfigsRequestData, IncrementalAlterConfigsResponseData]:
         ...
 
-    def send(self, request_data: RequestData) -> Request:
+    def send(self, request_data: RequestData) -> ApiCall:
         return self._send(request_data)
 
-    def _send(self, request_data: RequestData) -> Request:
+    def _send(self, request_data: RequestData) -> ApiCall:
         raise NotImplementedError()
