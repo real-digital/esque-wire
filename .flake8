@@ -8,3 +8,5 @@ per-file-ignores =
     esque_wire/protocol/serializers/api/__init__.py:F401
     esque_wire/protocol/serializers/__init__.py:F401
     esque_wire/protocol/structs/api/__init__.py:F401
+    esque_wire/protocol/structs/__init__.py:F401
+    esque_wire/__init__.py:F401

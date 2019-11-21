@@ -6,13 +6,13 @@ def test_api_versions(kafka_server):
     with BrokerConnection(kafka_server, "esque_wire_integration_test") as connection:
         data = ApiVersionsRequestData()
 
-        api_call = connection.send(data)
-        assert len(api_call.response_data.api_versions) > 0
+        response = connection.send(data)
+        assert len(response.response_data.api_versions) > 0
 
 
 def test_metadata(kafka_server, bootstrap_servers):
     with BrokerConnection(kafka_server, "esque_wire_integration_test") as connection:
         data = MetadataRequestData([], False, True, True)
 
-        api_call = connection.send(data)
-        assert len(api_call.response_data.brokers) == len(bootstrap_servers)
+        response = connection.send(data)
+        assert len(response.response_data.brokers) == len(bootstrap_servers)
