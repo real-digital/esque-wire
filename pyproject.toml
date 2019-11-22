@@ -2,7 +2,7 @@
 name = "esque-wire"
 version = "0.1.0"
 description = "A complete implementation of the Kafka API"
-authors = ["real-digital <opensource@rea-digital.de>"]
+authors = ["real-digital <opensource@real-digital.de>"]
 license = "MIT"
 readme = "README.md"
 
