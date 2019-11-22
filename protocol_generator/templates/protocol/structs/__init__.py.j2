@@ -1,0 +1,10 @@
+{% extends "base_module.py.j2" %}
+{% block imports %}
+{%- for api in all_apis %}
+    {%- for direction in Direction %}
+from .api import {{ api.latest_schema_pair[direction].schema.name }}
+    {%- endfor %}
+{%- endfor %}
+from .base import RequestData, ResponseData
+from .header import RequestHeader, ResponseHeader
+{% endblock %}

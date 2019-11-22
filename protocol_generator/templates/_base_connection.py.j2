@@ -1,0 +1,29 @@
+{% extends "base_module.py.j2" %}
+{% block imports %}
+from typing import overload
+
+from .protocol.request import Response
+from .protocol.structs.api import (
+{%- for api in all_apis %}
+    {%- for direction in Direction %}
+    {{ api.latest_schema_pair[direction].schema.name }},
+    {%- endfor %}
+{%- endfor %}
+)
+from .protocol.structs.base import RequestData
+{% endblock %}
+{% block content %}
+class BaseBrokerConnection:
+
+    {% for api in all_apis -%}
+    {% set request_data_name = api.latest_schema_pair[Direction.REQUEST].schema.name -%}
+    {% set response_data_name = api.latest_schema_pair[Direction.RESPONSE].schema.name %}
+    @overload
+    def send(self, request_data: {{ request_data_name }}) -> Response[{{ request_data_name }}, {{ response_data_name }}]: ...
+    {% endfor %}
+    def send(self, request_data: RequestData) -> Response:
+        return self._send(request_data)
+
+    def _send(self, request_data: RequestData) -> Response:
+        raise NotImplementedError()
+{% endblock %}

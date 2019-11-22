@@ -1,0 +1,41 @@
+{% block imports %}
+{%- set type_imports = current_api.get_type_imports(direction) %}
+{%- if type_imports -%}
+from typing import {{ type_imports | join(", ") }}
+{%- endif %}
+
+from ...constants import {{ current_api.get_constant_imports(direction) | join(", ") }}
+from ..base import {{ direction.name.title() }}Data
+{% endblock %}
+
+{%- block content %}
+{%- for struct in latest_schema.structs_ordered %}
+
+{% if loop.last -%}
+class {{ struct.name }}({{ direction.name.title() }}Data):
+{%- else -%}
+class {{ struct.name }}:
+{%- endif %}
+    {% for field in struct.fields %}
+    {{ field.name }}: {{ field.type_hint }}
+    {%- endfor %}
+    {%- if loop.last %}
+    api_key: ClassVar[ApiKey] = ApiKey.{{ current_api.api_name }}
+    {%- endif %}
+
+    def __init__(self
+        {%- for field in struct.fields -%}
+        , {{ field.name }}: {{ field.type_hint }}
+        {%- endfor -%}
+    ):
+        """
+        {%- for field in struct.fields %}
+        :param {{ field.name }}: {{ ("" ~ field.doc) | wordwrap(119-17-len(field.name)) | indent(17+len(field.name)) }}
+        :type {{ field.name }}: {{ field.type_hint }}
+        {%- endfor %}
+        """
+        {%- for field in struct.fields %}
+        self.{{ field.name }} = {{ field.name }}
+        {%- endfor %}
+{% endfor %}
+{%- endblock %}

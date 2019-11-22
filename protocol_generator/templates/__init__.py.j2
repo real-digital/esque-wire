@@ -1,0 +1,22 @@
+{% extends "base_module.py.j2" %}
+{% block imports %}
+from pathlib import Path
+
+from .protocol.structs import (
+{%- for api in all_apis %}
+    {%- for direction in Direction %}
+{{ api.latest_schema_pair[direction].schema.name }},
+    {%- endfor %}
+{%- endfor %}
+)
+from .connection import BrokerConnection
+{% endblock %}
+{% block content %}
+pyproject = Path(__file__).parent.parent / "pyproject.toml"
+__version__ = None
+with pyproject.open('r') as o:
+    for line in o:
+        if line.startswith("version"):
+            __version__ = line.split("=", 1)[1].strip('" \n\r\t')
+            break
+{% endblock %}

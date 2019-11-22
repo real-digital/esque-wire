@@ -1,10 +1,10 @@
 import struct
-from abc import ABCMeta
 from enum import Enum
-from typing import Any, BinaryIO, Callable, Dict, Generic, List, Optional, Tuple, TypeVar
+from typing import Any, BinaryIO, Callable, Dict, Optional, TypeVar
+
+from .base import BaseSerializer
 
 T = TypeVar("T")
-Schema = List[Tuple[Optional[str], "BaseSerializer"]]
 
 
 class PrimitiveType(Enum):
@@ -23,19 +23,9 @@ class PrimitiveType(Enum):
     Records = 13
 
 
-class BaseSerializer(Generic[T], metaclass=ABCMeta):
-    def write(self, buffer: BinaryIO, value: T):
-        buffer.write(self.encode(value))
-
-    def encode(self, value: T) -> bytes:
-        raise NotImplementedError()
-
-    def read(self, buffer: BinaryIO) -> T:
-        raise NotImplementedError()
-
-
-class PrimitiveSerializer(BaseSerializer):
-    def __init__(self, format_: str):
+class PrimitiveSerializer(BaseSerializer[T]):
+    def __init__(self, format_: str, default: T):
+        self._default = default
         self._struct = struct.Struct(format_)
 
     def encode(self, value: T) -> bytes:
@@ -44,9 +34,14 @@ class PrimitiveSerializer(BaseSerializer):
     def read(self, buffer: BinaryIO) -> T:
         return self._struct.unpack(buffer.read(self._struct.size))[0]
 
+    @property
+    def default(self) -> T:
+        return self._default
 
-class GenericSerializer(BaseSerializer):
-    def __init__(self, encoder: Callable[[T], bytes], reader: Callable[[BinaryIO], T]):
+
+class GenericSerializer(BaseSerializer[T]):
+    def __init__(self, encoder: Callable[[T], bytes], reader: Callable[[BinaryIO], T], default: T):
+        self._default = default
         self._encoder: Callable[[Any], bytes] = encoder
         self._reader: Callable[[BinaryIO], Any] = reader
 
@@ -56,10 +51,18 @@ class GenericSerializer(BaseSerializer):
     def read(self, buffer: BinaryIO) -> T:
         return self._reader(buffer)
 
+    @property
+    def default(self) -> T:
+        return self._default
 
-class VarlenZigZagSerializer(BaseSerializer):
+
+class VarlenZigZagSerializer(BaseSerializer[int]):
     def __init__(self, bits: int):
         self.bits = bits - 1
+
+    @property
+    def default(self) -> int:
+        return 0
 
     def encode(self, value: int) -> bytes:
         assert (
@@ -177,26 +180,26 @@ def read_nullable_string(buffer: BinaryIO) -> Optional[str]:
     return buffer.read(len_).decode("utf-8")
 
 
-booleanSerializer: BaseSerializer[bool] = PrimitiveSerializer("?")
-int8Serializer: BaseSerializer[int] = PrimitiveSerializer(">b")
-int16Serializer: BaseSerializer[int] = PrimitiveSerializer(">h")
-int32Serializer: BaseSerializer[int] = PrimitiveSerializer(">i")
-int64Serializer: BaseSerializer[int] = PrimitiveSerializer(">q")
-uint32Serializer: BaseSerializer[int] = PrimitiveSerializer(">I")
+booleanSerializer: BaseSerializer[bool] = PrimitiveSerializer("?", False)
+int8Serializer: BaseSerializer[int] = PrimitiveSerializer(">b", 0)
+int16Serializer: BaseSerializer[int] = PrimitiveSerializer(">h", 0)
+int32Serializer: BaseSerializer[int] = PrimitiveSerializer(">i", 0)
+int64Serializer: BaseSerializer[int] = PrimitiveSerializer(">q", 0)
+uint32Serializer: BaseSerializer[int] = PrimitiveSerializer(">I", 0)
 varIntSerializer: BaseSerializer[int] = VarlenZigZagSerializer(32)
 varLongSerializer: BaseSerializer[int] = VarlenZigZagSerializer(64)
 nullableStringSerializer: BaseSerializer[Optional[str]] = GenericSerializer(
-    encode_nullable_string, read_nullable_string
+    encode_nullable_string, read_nullable_string, None
 )
-stringSerializer: BaseSerializer[str] = GenericSerializer(encode_string, read_string)
+stringSerializer: BaseSerializer[str] = GenericSerializer(encode_string, read_string, "")
 nullableBytesSerializer: BaseSerializer[Optional[bytes]] = GenericSerializer(
-    encode_nullable_bytes, read_nullable_bytes
+    encode_nullable_bytes, read_nullable_bytes, None
 )
-bytesSerializer: BaseSerializer[bytes] = GenericSerializer(encode_bytes, read_bytes)
+bytesSerializer: BaseSerializer[bytes] = GenericSerializer(encode_bytes, read_bytes, b"")
 
 # Represents a sequence of Kafka records as NULLABLE_BYTES. For a detailed description of records see
 # Message Sets.
-recordsSerializer: BaseSerializer[bytes] = nullableBytesSerializer
+recordsSerializer: BaseSerializer[Optional[bytes]] = nullableBytesSerializer
 
 SERIALIZER_MAP: Dict[PrimitiveType, BaseSerializer] = {
     PrimitiveType.Boolean: booleanSerializer,
@@ -214,4 +217,6 @@ SERIALIZER_MAP: Dict[PrimitiveType, BaseSerializer] = {
     PrimitiveType.Records: recordsSerializer,
 }
 
-get_serializer: Callable[[PrimitiveType], BaseSerializer] = SERIALIZER_MAP.get
+
+def get_serializer(primitive_type: PrimitiveType) -> BaseSerializer:
+    return SERIALIZER_MAP[primitive_type]

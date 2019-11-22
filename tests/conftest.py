@@ -1,15 +1,15 @@
-from typing import List
-import sys
-import pathlib
 import pytest
-sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
 
-@pytest.fixture
-def bootstrap_servers() -> List[str]:
-    return ["localhost:9092"]
+def pytest_addoption(parser):
+    parser.addoption("--integration", action="store_true", default=False, help="run integration tests")
 
 
-@pytest.fixture
-def kafka_server(bootstrap_servers) -> str:
-    return bootstrap_servers[0]
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--integration"):
+        # --integration given in cli: do not skip integration tests
+        return
+    integration = pytest.mark.skip(reason="need --integration option to run")
+    for item in items:
+        if "integration" in item.keywords:
+            item.add_marker(integration)

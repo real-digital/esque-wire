@@ -1,0 +1,72 @@
+name: Style, Unit And Integration Tests
+on: push
+
+jobs:
+  test-style:
+    name: Code style check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup python
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.6"
+          architecture: x64
+      - name: Install required packages
+        run: pip3 install pre-commit
+      - name: Install pre-commit hooks
+        run: pre-commit install --install-hooks
+      - name: Run pre-commit hooks
+        run: pre-commit run --all-files
+      - name: Check changelog change
+        if: "github.ref != 'master'"
+        run: |
+          (if cmp -s CHANGELOG.md <(git show origin/master:CHANGELOG.md); then
+            echo 'Need to edit the changelog file!'
+            echo 'Describe what you did, create new section "Next Release" if necessary.'
+            exit 1
+          fi)
+  test-unit-and-integration:
+    name: Unit and Integration tests with Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.6', '3.7', '3.8' ]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Fetch virtualenv cache
+        uses: actions/cache@v1
+        id: venv-cache
+        with:
+          path: .venv
+          key: venv-${{ matrix.python }}-${{ hashFiles('poetry.lock') }}
+      - name: Setup python and install packages
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+          architecture: x64
+      - name: Install and configure poetry
+        run: |
+          pip3 install "poetry==1.0.0b3"
+          poetry config virtualenvs.in-project true
+      - name: Install esque-wire requirements
+        run: |
+          poetry install -vvv
+      - name: Run kafka stack
+        run: |
+          docker-compose up -d
+          sleep 5
+      - name: Run tests
+        run: |
+          poetry run -- pytest --cov=esque_wire -v --integration tests
+      - name: Output logs
+        if: failure()
+        run: |
+          docker-compose logs kafka
+          docker-compose logs zookeeper
+      - name: Upload coverage
+        if: "matrix.python == '3.6'"
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: "poetry run -- coveralls"
