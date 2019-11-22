@@ -51,13 +51,14 @@ jobs:
           sleep 5
       - name: Run tests
         run: |
-          poetry run -- pytest --cov=esque_wire -v --integration --local tests
+          poetry run -- pytest --cov=esque_wire -v --integration tests
       - name: Output logs
         if: failure()
         run: |
           docker-compose logs kafka
           docker-compose logs zookeeper
       - name: Upload coverage
+        if: matrix.python == "3.6"
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: "poetry run -- coveralls"
