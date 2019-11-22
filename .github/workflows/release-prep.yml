@@ -26,8 +26,8 @@ jobs:
             echo 'Need to bump version, please run `poetry version <major|minor|patch|whatever..>`'
             exit 1
           fi)
-  publish-to-devpi:
-    name: Publish to devpi
+  test-publish:
+    name: Publish to devpi and testpi
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -48,7 +48,6 @@ jobs:
           devpi login root --password=
           devpi index -c root/stable bases=root/pypi volatile=True
           devpi user -m root password="root"
-          mkdir -p ${HOME}/.esque
           poetry config repositories.devpi http://localhost:3141/root/stable/
           poetry config repositories.testpypi https://test.pypi.org/legacy/
       - name: Publish to devpi
@@ -59,12 +58,11 @@ jobs:
       - name: Test devpi release
         if: success()
         run: |
-          ! which esque
+          ! python -m "import esque_wire"
           VERSION=$(sed -n -E "s/^version = \"(.+)\"/\1/p" pyproject.toml)
           pushd /tmp
-          pip install -i http://localhost:3141/root/stable/ --timeout 60 esque
-          esque --help
-          CURRENT_VERSION=$(esque --version | awk '{print $3}')
+          pip install -i http://localhost:3141/root/stable/ --timeout 60 esque-wire
+          CURRENT_VERSION=$(python -c "import esque_wire; print(esque_wire.__version__)")
           [[ ${CURRENT_VERSION} == ${VERSION} ]]
           popd
       - name: Publish to testpypi
