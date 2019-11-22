@@ -1,3 +1,5 @@
+{% extends "base_module.py.j2" %}
+{% block imports %}
 from typing import overload
 
 from .protocol.request import Response
@@ -9,7 +11,8 @@ from .protocol.structs.api import (
 {%- endfor %}
 )
 from .protocol.structs.base import RequestData
-
+{% endblock %}
+{% block content %}
 class BaseBrokerConnection:
 
     {% for api in all_apis -%}
@@ -23,3 +26,4 @@ class BaseBrokerConnection:
 
     def _send(self, request_data: RequestData) -> Response:
         raise NotImplementedError()
+{% endblock %}

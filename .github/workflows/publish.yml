@@ -1,0 +1,30 @@
+name: Publish esque
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  publish-to-pypi:
+    name: Publish to pypi
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v1
+      - name: Setup python and install packages
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.6'
+          architecture: x64
+      - name: Publish to pypi
+        if: success()
+        run: |
+          pip install "poetry==1.0.0b3"
+          poetry build
+          poetry publish --username "${{ secrets.PYPI_USER }}" --password "${{ secrets.PYPI_PASSWORD }}"
+      - name: Delete release-prep branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        run: |
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          git push origin --delete release-prep

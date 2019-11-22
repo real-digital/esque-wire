@@ -18,6 +18,14 @@ jobs:
         run: pre-commit install --install-hooks
       - name: Run pre-commit hooks
         run: pre-commit run --all-files
+      - name: Check changelog change
+        if: "github.ref != master"
+        run: |
+          (if cmp -s CHANGELOG.md <(git show origin/master:CHANGELOG.md); then
+            echo 'Need to edit the changelog file!"
+            echo 'Describe what you did, create new section "Next Release" if necessary.'
+            exit 1
+          fi)
   test-unit-and-integration:
     name: Unit and Integration tests with Python ${{ matrix.python }}
     runs-on: ubuntu-latest
