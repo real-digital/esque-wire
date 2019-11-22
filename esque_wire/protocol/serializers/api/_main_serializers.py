@@ -1,5 +1,5 @@
 # We need this so api serializers can import from here
-# They cannot import from esque.serializers since that one itself imports the api serializers,
+# They cannot import from ..serializers since that one itself imports the api serializers,
 # which would create a circular dependency.
 
 from ..constants import (

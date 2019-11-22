@@ -1,4 +1,4 @@
-name: Publish esque
+name: Publish esque-wire
 on:
   release:
     types:
