@@ -1,8 +1,10 @@
 import pathlib
 import sys
-from typing import List
+from typing import Iterable, List
 
 import pytest
+
+from esque_wire import BrokerConnection
 
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
@@ -15,3 +17,9 @@ def bootstrap_servers() -> List[str]:
 @pytest.fixture
 def kafka_server(bootstrap_servers) -> str:
     return bootstrap_servers[0]
+
+
+@pytest.fixture
+def connection(kafka_server) -> Iterable[BrokerConnection]:
+    with BrokerConnection(kafka_server, "esque_wire_integration_test") as connection:
+        yield connection

@@ -1,5 +1,9 @@
 # esque-wire
-
+[![pypi Version](https://img.shields.io/pypi/v/esque-wire.svg)](https://pypi.org/project/esque-wire/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/esque-wire.svg)](https://pypi.org/project/esque-wire/)
+![Build Status](https://github.com/real-digital/esque-wire/workflows/Style,%20Unit%20And%20Integration%20Tests/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/real-digital/esque-wire/badge.svg)](https://coveralls.io/github/real-digital/esque-wire)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 A complete and user oriented implementation of the kafka wire protocol.
 
 # Features
@@ -10,7 +14,8 @@ from Kafka source code if there is one.
 
 ## Type annotations
 Everything is annotated! Enjoy autocomplete all the way to the last field.
-```
+
+```python
 # run with mypy
 from esque_wire import BrokerConnection, ApiVersionsRequestData
 

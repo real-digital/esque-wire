@@ -16,6 +16,8 @@ dataclasses = { version = "^0.7", python = ">=3.6, <3.7"}
 isort = {version = "^4.3", extras = ["pyproject"]}
 black = "19.3b0"
 mypy = "0.740"
+pytest-cov = "^2.8.1"
+coveralls = "^1.8.2"
 
 [tool.black]
 line-length = 119
