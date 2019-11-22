@@ -26,8 +26,8 @@ jobs:
             echo 'Need to bump version, please run `poetry version <major|minor|patch|whatever..>`'
             exit 1
           fi)
-  publish-to-devpi:
-    name: Publish to devpi
+  test-publish:
+    name: Publish to devpi and testpi
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
