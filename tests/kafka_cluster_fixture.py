@@ -12,7 +12,7 @@ from asyncio import BaseTransport, BaseProtocol
 from contextlib import closing
 from pathlib import Path
 from subprocess import Popen
-from typing import List, Optional, NewType, Generic, TypeVar, Type, Generator, Any, Tuple
+from typing import List, Optional, NewType, Generic, TypeVar, Type, Generator, Any, Tuple, Awaitable, Coroutine
 from urllib.request import urlretrieve
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
@@ -69,6 +69,20 @@ def netcat(hostname: str, port: int, content: str) -> str:
     return b"".join(data).decode()
 
 
+async def netcat_async(loop: asyncio.AbstractEventLoop, hostname: str, port: int, content: str) -> str:
+    with closing(socket.socket(type=socket.SOCK_STREAM)) as sock:
+        sock.setblocking(False)
+        await loop.sock_connect(sock, (hostname, port))
+        await loop.sock_sendall(sock, content.encode())
+        sock.shutdown(socket.SHUT_WR)
+        data = []
+        while 1:
+            data.append(await loop.sock_recv(sock, 1024))
+            if data[-1] == b"":
+                break
+    return b"".join(data).decode()
+
+
 def probe_port(hostname: str, port: int) -> None:
     with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
         sock.settimeout(5)
@@ -114,7 +128,7 @@ def download_kafka(kafka_version: KafkaVersion, destination: Path):
             tar.extractall(members=members, path=str(destination))
 
 
-P = TypeVar("P", bound="JavaProtocol")
+P = TypeVar("P", bound=Type["JavaProtocol"])
 
 
 class JavaProtocol(asyncio.SubprocessProtocol):
@@ -122,7 +136,8 @@ class JavaProtocol(asyncio.SubprocessProtocol):
         super().__init__()
         self.loop = loop
         self.startup_complete = loop.create_future()
-        self.terminated = loop.create_future()
+        self.disconnected = loop.create_future()
+        self.exited = loop.create_future()
         self._logger = logger
 
     def pipe_data_received(self, fd: int, data: bytes):
@@ -156,15 +171,20 @@ class JavaProtocol(asyncio.SubprocessProtocol):
 
     def connection_lost(self, exc: Optional[Exception]):
         if exc is None:
-            self.terminated.set_result(True)
+            self.disconnected.set_result(True)
+            self._logger.info("Connection closed")
         else:
             if not self.startup_complete.done():
                 self.startup_complete.set_exception(exc)
-            self.terminated.set_exception(exc)
-        self._logger.info("Connection lost.")
+            self.disconnected.set_exception(exc)
+            self._logger.info("Connection lost")
 
     def get_self(self: P) -> P:
         return self
+
+    def process_exited(self) -> None:
+        self._logger.info("Process exited")
+        self.exited.set_result(True)
 
 
 class Component(Generic[P], ABC):
@@ -198,12 +218,15 @@ class Component(Generic[P], ABC):
         return get_kafka_dir(self._kafka_version) / "bin"
 
     def start(self):
+        self._loop.run_until_complete(self.async_start())
+
+    async def async_start(self):
         while True:
             try:
                 self._check_ports()
                 self._render_config()
-                self._spawn_process()
-                self._wait_until_ready()
+                await self._spawn_process()
+                await self._wait_until_ready()
             except PortAlreadyInUse:
                 self._increment_ports()
             else:
@@ -223,34 +246,44 @@ class Component(Generic[P], ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def _subprocess_exec(self) -> Generator[Any, None, Tuple[BaseTransport, BaseProtocol]]:
+    def _subprocess_exec(self) -> Coroutine[Tuple[BaseTransport, BaseProtocol]]:
         raise NotImplementedError
 
-    def _spawn_process(self) -> None:
-        self.close()
+    async def _spawn_process(self) -> None:
+        if hasattr(self, "_process") and not self._proto.disconnected.done():
+            await self._close_async()
+
         self._proto = self._proto_cls(self._loop, self._logger)
-        transport, protocol = self._loop.run_until_complete(self._subprocess_exec())
+        transport, protocol = await self._subprocess_exec()
         self._process: Popen = transport.get_extra_info("subprocess")
 
-    def _wait_until_ready(self):
-        self._loop.run_until_complete(self._proto.startup_complete)
+    async def _wait_until_ready(self):
+        await self._proto.startup_complete
 
     @abstractmethod
     def _increment_ports(self):
         raise NotImplementedError
 
     def close(self):
-        if not hasattr(self, "_process") or self._proto.terminated.done():
+        if not hasattr(self, "_process") or self._proto.disconnected.done():
             return
+        self._loop.run_until_complete(self._close_async())
+
+    async def _close_async(self):
         self._logger.info("Terminating process")
         self._process.terminate()
         self._logger.info("Waiting for process to finish")
-        self._loop.run_until_complete(asyncio.sleep(10))
-        if not self._proto.terminated.done():
+
+        for _ in range(20):
+            if self._proto.disconnected.done():
+                break
+            await asyncio.sleep(0.5)
+        else:
             self._logger.info("Grace period ended, sending sigkill")
             self._process.kill()
-        self._loop.run_until_complete(self._proto.terminated)
-        self._process.wait()
+
+        await self._proto.disconnected
+        await self._proto.exited
 
 
 class ZKProtocol(JavaProtocol):
@@ -314,7 +347,7 @@ class ZookeeperInstance(Component[ZKProtocol]):
         template = env.get_template("zookeeper.properties.j2")
         self.config_file.write_text(template.render(zk=self))
 
-    def _subprocess_exec(self) -> Generator[Any, None, Tuple[BaseTransport, BaseProtocol]]:
+    def _subprocess_exec(self) -> Coroutine[Tuple[BaseTransport, BaseProtocol]]:
         return self._loop.subprocess_exec(
             self._proto.get_self,
             str(self.bin_dir / "zookeeper-server-start.sh"),
@@ -323,19 +356,22 @@ class ZookeeperInstance(Component[ZKProtocol]):
             preexec_fn=set_ignore_sigint,
         )
 
-    def _wait_until_ready(self) -> None:
-        super()._wait_until_ready()
+    async def _wait_until_ready(self) -> None:
+        await super()._wait_until_ready()
+        exc: Optional[Exception] = None
         for _ in range(10):
-            self._loop.run_until_complete(asyncio.sleep(0.1))
+            await asyncio.sleep(0.1)
             try:
-                reponse = netcat("localhost", self.port, "ruok")
-            except OSError:
+                response = await netcat_async(self._loop, "localhost", self.port, "ruok")
+            except OSError as e:
+                exc = e
+                self._logger.info(f"Netcat raised exception: {e}")
                 continue
-            self._logger.debug(f"Req: ruok\nResp: {reponse}")
-            if reponse == "imok":
+            self._logger.debug(f"Req: ruok\nResp: {response}")
+            if response == "imok":
                 break
         else:
-            raise TimeoutError("Zookeeper didn't start up in time!")
+            raise TimeoutError(f"Zookeeper didn't start up in time! Last exception caught: {exc}")
 
 
 class Endpoint(ABC):
@@ -460,7 +496,7 @@ class KafkaInstance(Component[KafkaProtocol]):
         self.config_file.write_text(server_conf_template.render(broker=self))
         self.sasl_config_file.write_text(sasl_conf_template.render(broker=self))
 
-    def _subprocess_exec(self) -> Generator[Any, None, Tuple[BaseTransport, BaseProtocol]]:
+    def _subprocess_exec(self) -> Coroutine[Tuple[BaseTransport, BaseProtocol]]:
         return self._loop.subprocess_exec(
             self._proto.get_self,
             str(self.bin_dir / "kafka-server-start.sh"),
