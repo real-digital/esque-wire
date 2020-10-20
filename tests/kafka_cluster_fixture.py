@@ -1,4 +1,5 @@
 import asyncio
+import concurrent.futures
 import logging
 import os
 import re
@@ -7,15 +8,23 @@ import socket
 import sys
 import tarfile
 import tempfile
+import threading
+import time
 from abc import ABC, abstractmethod
 from asyncio import BaseTransport, BaseProtocol
 from contextlib import closing
 from pathlib import Path
 from subprocess import Popen
-from typing import List, Optional, NewType, Generic, TypeVar, Type, Generator, Any, Tuple, Awaitable, Coroutine
+from typing import List, Optional, NewType, Generic, TypeVar, Type, Tuple, Awaitable
 from urllib.request import urlretrieve
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
+
+# ThreadedChildWatcher was introduced in 3.8
+if sys.version_info < (3, 8):
+    from watcher import ThreadedChildWatcher
+else:
+    from asyncio import ThreadedChildWatcher
 
 logger = logging.getLogger(__name__)
 
@@ -100,7 +109,7 @@ def assert_kafka_present(kafka_version: KafkaVersion):
         logger.info(f"Kafka {kafka_version} not present, downloading now")
         download_kafka(kafka_version, KAFKA_DISTRIBUTION_CACHE_DIR)
     else:
-        logger.info("Kafka already present")
+        logger.debug("Kafka binaries already present")
 
 
 def download_file(url: str, local_file: Path):
@@ -201,9 +210,9 @@ class Component(Generic[P], ABC):
         self._logger = logging.getLogger(f"{__name__}.{self.component_name}")
 
         if working_directory is None:
-            self._working_directory = Path(tempfile.mkdtemp())
-        else:
-            self._working_directory = working_directory
+            working_directory = Path(tempfile.mkdtemp())
+        self._working_directory = working_directory
+        working_directory.mkdir(parents=True)
 
         if loop is None:
             self._loop = get_loop()
@@ -212,15 +221,21 @@ class Component(Generic[P], ABC):
 
         assert_kafka_present(kafka_version)
         self._kafka_version = kafka_version
+        self.startup_complete: Optional[asyncio.Task] = None
 
     @property
     def bin_dir(self) -> Path:
         return get_kafka_dir(self._kafka_version) / "bin"
 
-    def start(self):
-        self._loop.run_until_complete(self.async_start())
+    def async_start(self) -> asyncio.Future:
+        self.startup_complete = self._loop.create_task(self._async_start())
+        return self.startup_complete
 
-    async def async_start(self):
+    def start(self):
+        self.async_start()
+        self._loop.run_until_complete(self.startup_complete)
+
+    async def _async_start(self):
         while True:
             try:
                 self._check_ports()
@@ -246,12 +261,12 @@ class Component(Generic[P], ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def _subprocess_exec(self) -> Coroutine[Tuple[BaseTransport, BaseProtocol]]:
+    def _subprocess_exec(self) -> Awaitable[Tuple[BaseTransport, BaseProtocol]]:
         raise NotImplementedError
 
     async def _spawn_process(self) -> None:
         if hasattr(self, "_process") and not self._proto.disconnected.done():
-            await self._close_async()
+            await self.close_async()
 
         self._proto = self._proto_cls(self._loop, self._logger)
         transport, protocol = await self._subprocess_exec()
@@ -267,9 +282,12 @@ class Component(Generic[P], ABC):
     def close(self):
         if not hasattr(self, "_process") or self._proto.disconnected.done():
             return
-        self._loop.run_until_complete(self._close_async())
+        self._loop.run_until_complete(self.close_async())
 
-    async def _close_async(self):
+    async def close_async(self):
+        if not hasattr(self, "_proto") or self._proto.exited.done():
+            return
+
         self._logger.info("Terminating process")
         self._process.terminate()
         self._logger.info("Waiting for process to finish")
@@ -285,11 +303,16 @@ class Component(Generic[P], ABC):
         await self._proto.disconnected
         await self._proto.exited
 
+    @property
+    def exited(self) -> asyncio.Future:
+        return self._proto.exited
+
 
 class ZKProtocol(JavaProtocol):
     def __init__(self, loop: asyncio.AbstractEventLoop, logger: logging.Logger):
         super().__init__(loop, logger)
         self._binding_line_seen = False
+        self._check_task: Optional[asyncio.Task] = None
 
     def check_startup_complete(self, line: str):
         if self.startup_complete.done():
@@ -319,6 +342,10 @@ class ZookeeperInstance(Component[ZKProtocol]):
     ):
         super().__init__(kafka_version, working_directory, loop)
         self._port = 2181
+        self._kafka_instances: List["KafkaInstance"] = []
+
+    def register_broker(self, kafka_instance: "KafkaInstance"):
+        self._kafka_instances.append(kafka_instance)
 
     @property
     def data_dir(self) -> Path:
@@ -347,7 +374,7 @@ class ZookeeperInstance(Component[ZKProtocol]):
         template = env.get_template("zookeeper.properties.j2")
         self.config_file.write_text(template.render(zk=self))
 
-    def _subprocess_exec(self) -> Coroutine[Tuple[BaseTransport, BaseProtocol]]:
+    def _subprocess_exec(self) -> Awaitable[Tuple[BaseTransport, BaseProtocol]]:
         return self._loop.subprocess_exec(
             self._proto.get_self,
             str(self.bin_dir / "zookeeper-server-start.sh"),
@@ -372,6 +399,13 @@ class ZookeeperInstance(Component[ZKProtocol]):
                 break
         else:
             raise TimeoutError(f"Zookeeper didn't start up in time! Last exception caught: {exc}")
+
+    async def close_async(self):
+        for kafka_instance in self._kafka_instances:
+            self._logger.info(f"Waiting for broker {kafka_instance.broker_id} to exit")
+            if hasattr(kafka_instance, "_proto"):
+                await kafka_instance.exited
+        await super().close_async()
 
 
 class Endpoint(ABC):
@@ -452,6 +486,12 @@ class KafkaInstance(Component[KafkaProtocol]):
 
         self._cluster_size = cluster_size
         self._zk_instance = zookeeper_instance
+        self._zk_instance.register_broker(self)
+
+    async def _async_start(self):
+        self._logger.info("Waiting for zookeeper to complete startup")
+        await self._zk_instance.startup_complete
+        await super()._async_start()
 
     @property
     def component_name(self) -> str:
@@ -496,7 +536,7 @@ class KafkaInstance(Component[KafkaProtocol]):
         self.config_file.write_text(server_conf_template.render(broker=self))
         self.sasl_config_file.write_text(sasl_conf_template.render(broker=self))
 
-    def _subprocess_exec(self) -> Coroutine[Tuple[BaseTransport, BaseProtocol]]:
+    def _subprocess_exec(self) -> Awaitable[Tuple[BaseTransport, BaseProtocol]]:
         return self._loop.subprocess_exec(
             self._proto.get_self,
             str(self.bin_dir / "kafka-server-start.sh"),
@@ -510,44 +550,108 @@ def get_loop() -> asyncio.AbstractEventLoop:
         loop = asyncio.ProactorEventLoop()  # for subprocess' pipes on Windows
         asyncio.set_event_loop(loop)
     else:
-        loop = asyncio.get_event_loop()
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+    asyncio.set_child_watcher(ThreadedChildWatcher(loop))
     return loop
+
+
+class Cluster(threading.Thread):
+    def __init__(
+        self,
+        cluster_id: int = 1,
+        cluster_size: int = 1,
+        kafka_version: KafkaVersion = "2.5.0",
+        working_directory: Optional[Path] = None,
+        endpoints: Optional[List[Endpoint]] = None,
+        sasl_mechanisms: Optional[List[str]] = None,
+    ):
+        super().__init__(name=f"Cluster{cluster_id:02}EventLoop", daemon=True)
+
+        if working_directory is None:
+            working_directory = Path(tempfile.mkdtemp()) / f"cluster{cluster_id:02}"
+        self._working_directory = working_directory
+        self.cluster_id = cluster_id
+        self.startup_complete = threading.Event()
+        self._shutdown = threading.Event()
+        self._cluster_size = cluster_size
+        self._kafka_version = kafka_version
+        self._endpoints = endpoints
+        self._sasl_mechanisms = sasl_mechanisms
+
+    def start(self):
+        super().start()
+        self.startup_complete.wait()
+
+    def run(self):
+        self._loop = get_loop()
+
+        self._zk_instance = ZookeeperInstance(
+            kafka_version=self._kafka_version, working_directory=self._working_directory / "zookeeper", loop=self._loop
+        )
+
+        self._brokers = [
+            KafkaInstance(
+                broker_id=broker_id,
+                zookeeper_instance=self._zk_instance,
+                cluster_size=self._cluster_size,
+                kafka_version=self._kafka_version,
+                working_directory=self._working_directory / f"broker{broker_id:02}",
+                loop=self._loop,
+                endpoints=self._endpoints,
+                sasl_mechanisms=self._sasl_mechanisms,
+            )
+            for broker_id in range(self._cluster_size)
+        ]
+        self._components: List[Component] = self._brokers.copy()
+        self._components.append(self._zk_instance)
+
+        all_done = asyncio.gather(*(comp.async_start() for comp in self._components))
+        self._loop.run_until_complete(all_done)
+        self.startup_complete.set()
+        self._loop.run_until_complete(self.check_shutdown())
+
+    async def check_shutdown(self):
+        while not self._shutdown.is_set():
+            await asyncio.sleep(0.1)
+
+        all_done = asyncio.gather(*(comp.close_async() for comp in self._components))
+        await all_done
+
+    def stop(self) -> List[concurrent.futures.Future]:
+        if not self._loop.is_running():
+            self._loop.close()
+            return []
+        futures: List[concurrent.futures.Future] = [
+            asyncio.run_coroutine_threadsafe(comp.close_async(), loop=self._loop) for comp in self._components
+        ]
+        self._shutdown.set()
+        return futures
+
+    def close(self):
+        if self._loop.is_closed():
+            return
+        for f in self.stop():
+            f.result()
+        while self._loop.is_running():
+            time.sleep(0.1)
+        self._loop.close()
 
 
 def main():
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-    loop = get_loop()
-    # loop.set_debug(True)
-    zk_instance = ZookeeperInstance(loop=loop)
-    # zk_instance._logger.setLevel(logging.WARNING)
-    kafka_instance = KafkaInstance(0, zk_instance, loop=loop)
-    kafka_instance2 = KafkaInstance(1, zk_instance, loop=loop)
-
-    try:
-        zk_instance.start()
-        logger.info(f"\n\n--> Zookeeper ready at port {zk_instance.port} <--\n")
-        kafka_instance.start()
-        logger.info(f"\n\n--> Kafka ready at {kafka_instance.get_endpoint_url('PLAINTEXT')} <--\n")
-        kafka_instance2.start()
-        logger.info(f"\n\n--> Kafka2 ready at {kafka_instance2.get_endpoint_url('PLAINTEXT')} <--\n")
-        loop.run_until_complete(asyncio.sleep(3600))
-        # kafka_instance.close()
-
-        # while True:
-        #     loop.run_until_complete(asyncio.sleep(1))
-        #     if zk_instance._proto.terminated.done():
-        #         zk_instance._proto.terminated.result()
-        #         break
-        #     if kafka_instance._proto.terminated.done():
-        #         kafka_instance._proto.terminated.result()
-        #         break
-    except KeyboardInterrupt:
-        pass
-    finally:
-        kafka_instance.close()
-        kafka_instance2.close()
-        zk_instance.close()
-        loop.close()
+    with closing(Cluster(cluster_size=2)) as cluster:
+        try:
+            cluster.start()
+            logger.info(f"--> Zookeeper ready at port {cluster._zk_instance.port} <--")
+            logger.info(f"--> Kafka ready at {cluster._brokers[0].get_endpoint_url('PLAINTEXT')} <--")
+            logger.info(f"--> Kafka2 ready at {cluster._brokers[1].get_endpoint_url('PLAINTEXT')} <--")
+            time.sleep(10)
+        except KeyboardInterrupt:
+            pass
 
 
 if __name__ == "__main__":
