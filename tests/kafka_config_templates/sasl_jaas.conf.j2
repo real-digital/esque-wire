@@ -1,0 +1,19 @@
+{% macro sasl_login_module(mechanism) -%}
+org.apache.kafka.common.security.{{ mechanism.name | split("-") | first | lower }}.{{ mechanism.name | split("-") | first | capitalize }}LoginModule
+{%- endmacro -%}
+
+KafkaServer {
+    {% for endpoint in broker.endpoints %}
+        {% for mechanism in broker.sasl_mechanisms %}
+        listener.name.{{ endpoint.listener_name | lower }}.{{ mechanism.name | lower}}.sasl.jaas.config={{ sasl_login_module(mechanism) }} required \
+            username="broker" \
+            password="broker-secret"
+            {% if (mechanism.name | lower) == "plain" -%}\
+            user_broker="broker-secret" \
+            user_admin="admin-secret" \
+            user_alice="alice-secret"
+            {%- endif %};
+        {% endfor %}
+    {% endfor %}
+};
+Client {};

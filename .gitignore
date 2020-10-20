@@ -1,3 +1,5 @@
+/tests/kafka_distributions
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
