@@ -18,7 +18,7 @@ JYTHON_JAR = f"jython-standalone-{JYTHON_VERSION}.jar"
 JYTHON_PATH = PARENT_DIR / JYTHON_JAR
 
 KAFKA_VERSION = "2.3.1"
-KAFKA_LIB_PATH = PARENT_DIR / f"kafka_2.11-{KAFKA_VERSION}" / "libs"
+KAFKA_LIB_PATH = PARENT_DIR / f"kafka_2.12-{KAFKA_VERSION}" / "libs"
 
 
 def main(argv: List[str]):
@@ -65,10 +65,10 @@ def download_file(url, local_file: pathlib.Path):
 
 
 def download_kafka():
-    url = "https://archive.apache.org/dist/kafka/" f"{KAFKA_VERSION}/kafka_2.11-{KAFKA_VERSION}.tgz"
+    url = f"https://archive.apache.org/dist/kafka/{KAFKA_VERSION}/kafka_2.12-{KAFKA_VERSION}.tgz"
 
     def is_lib(member: tarfile.TarInfo) -> bool:
-        return member.name.startswith(f"kafka_2.11-{KAFKA_VERSION}/libs/")
+        return member.name.startswith(f"kafka_2.12-{KAFKA_VERSION}/libs/")
 
     with tempfile.NamedTemporaryFile(suffix=".tgz") as tmpfile:
         download_file(url, pathlib.Path(tmpfile.name))
