@@ -1,8 +1,8 @@
 # Taken from https://github.com/python/cpython/blob/4649202ea75d48e1496e99911709824ca2d3170e/Lib/asyncio/unix_events.py#L1326
 # See also: https://bugs.python.org/issue35621
 import itertools
-import os
 import logging
+import os
 import threading
 import warnings
 from asyncio import AbstractChildWatcher, AbstractEventLoop
@@ -33,8 +33,7 @@ class ThreadedChildWatcher(AbstractChildWatcher):
 
     def _join_threads(self):
         """Internal: Join all non-daemon threads"""
-        threads = [thread for thread in list(self._threads.values())
-                   if thread.is_alive() and not thread.daemon]
+        threads = [thread for thread in list(self._threads.values()) if thread.is_alive() and not thread.daemon]
         for thread in threads:
             thread.join()
 
@@ -45,18 +44,17 @@ class ThreadedChildWatcher(AbstractChildWatcher):
         pass
 
     def __del__(self, _warn=warnings.warn):
-        threads = [thread for thread in list(self._threads.values())
-                   if thread.is_alive()]
+        threads = [thread for thread in list(self._threads.values()) if thread.is_alive()]
         if threads:
-            _warn(f"{self.__class__} has registered but not finished child processes",
-                  ResourceWarning,
-                  source=self)
+            _warn(f"{self.__class__} has registered but not finished child processes", ResourceWarning, source=self)
 
     def add_child_handler(self, pid, callback, *args):
-        thread = threading.Thread(target=self._do_waitpid,
-                                  name=f"waitpid-{next(self._pid_counter)}",
-                                  args=(self._loop, pid, callback, args),
-                                  daemon=True)
+        thread = threading.Thread(
+            target=self._do_waitpid,
+            name=f"waitpid-{next(self._pid_counter)}",
+            args=(self._loop, pid, callback, args),
+            daemon=True,
+        )
         self._threads[pid] = thread
         thread.start()
 
@@ -79,14 +77,11 @@ class ThreadedChildWatcher(AbstractChildWatcher):
             # (may happen if waitpid() is called elsewhere).
             pid = expected_pid
             returncode = 255
-            logger.warning(
-                "Unknown child process pid %d, will report returncode 255",
-                pid)
+            logger.warning("Unknown child process pid %d, will report returncode 255", pid)
         else:
             returncode = _compute_returncode(status)
             if loop.get_debug():
-                logger.debug('process %s exited with returncode %s',
-                             expected_pid, returncode)
+                logger.debug("process %s exited with returncode %s", expected_pid, returncode)
 
         if loop.is_closed():
             logger.warning("Loop %r that handles pid %r is closed", loop, pid)
@@ -94,6 +89,7 @@ class ThreadedChildWatcher(AbstractChildWatcher):
             loop.call_soon_threadsafe(callback, pid, returncode, *args)
 
         self._threads.pop(expected_pid)
+
 
 def _compute_returncode(status):
     if os.WIFSIGNALED(status):

@@ -11,11 +11,11 @@ import tempfile
 import threading
 import time
 from abc import ABC, abstractmethod
-from asyncio import BaseTransport, BaseProtocol
+from asyncio import BaseProtocol, BaseTransport
 from contextlib import closing
 from pathlib import Path
 from subprocess import Popen
-from typing import List, Optional, NewType, Generic, TypeVar, Type, Tuple, Awaitable
+from typing import Awaitable, Generic, List, NewType, Optional, Tuple, Type, TypeVar
 from urllib.request import urlretrieve
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
@@ -227,15 +227,15 @@ class Component(Generic[P], ABC):
     def bin_dir(self) -> Path:
         return get_kafka_dir(self._kafka_version) / "bin"
 
-    def async_start(self) -> asyncio.Future:
-        self.startup_complete = self._loop.create_task(self._async_start())
+    def start_async(self) -> asyncio.Future:
+        self.startup_complete = self._loop.create_task(self._start_async())
         return self.startup_complete
 
     def start(self):
-        self.async_start()
+        self.start_async()
         self._loop.run_until_complete(self.startup_complete)
 
-    async def _async_start(self):
+    async def _start_async(self):
         while True:
             try:
                 self._check_ports()
@@ -488,10 +488,10 @@ class KafkaInstance(Component[KafkaProtocol]):
         self._zk_instance = zookeeper_instance
         self._zk_instance.register_broker(self)
 
-    async def _async_start(self):
+    async def _start_async(self):
         self._logger.info("Waiting for zookeeper to complete startup")
         await self._zk_instance.startup_complete
-        await super()._async_start()
+        await super()._start_async()
 
     @property
     def component_name(self) -> str:
@@ -609,7 +609,7 @@ class Cluster(threading.Thread):
         self._components: List[Component] = self._brokers.copy()
         self._components.append(self._zk_instance)
 
-        all_done = asyncio.gather(*(comp.async_start() for comp in self._components))
+        all_done = asyncio.gather(*(comp.start_async() for comp in self._components))
         self._loop.run_until_complete(all_done)
         self.startup_complete.set()
         self._loop.run_until_complete(self.check_shutdown())
