@@ -15,11 +15,11 @@ def bootstrap_servers() -> List[str]:
 
 
 @pytest.fixture
-def kafka_server(bootstrap_servers) -> str:
+def kafka_server(bootstrap_servers: List[str]) -> str:
     return bootstrap_servers[0]
 
 
 @pytest.fixture
-def connection(kafka_server) -> Iterable[BrokerConnection]:
+def connection(kafka_server: str) -> Iterable[BrokerConnection]:
     with BrokerConnection(kafka_server, "esque_wire_integration_test") as connection:
         yield connection

@@ -21,7 +21,7 @@ Req = TypeVar("Req", bound=RequestData)
 Res = TypeVar("Res", bound=ResponseData)
 
 
-class Request(Generic[Req]):
+class Request(Generic[Req, Res]):
     def __init__(self, request_data: Req, request_header: RequestHeader):
         self.api_version = request_header.api_version
         self.request_data = request_data
@@ -50,8 +50,12 @@ class Request(Generic[Req]):
 
     @classmethod
     def from_request_data(
-        cls: "Type[Request[Req]]", request_data: Req, api_version: int, correlation_id: int, client_id: Optional[str]
-    ) -> "Request[Req]":
+        cls: "Type[Request[Req, Res]]",
+        request_data: Req,
+        api_version: int,
+        correlation_id: int,
+        client_id: Optional[str],
+    ) -> "Request[Req, Res]":
         request_data = request_data
         header = RequestHeader(
             api_key=request_data.api_key, api_version=api_version, correlation_id=correlation_id, client_id=client_id
@@ -66,16 +70,16 @@ class Request(Generic[Req]):
         if response_header.correlation_id != self.correlation_id:
             # TODO: create proper exception type
             raise RuntimeError("Request and response order got messed up!")
-        response_data: Res = self.response_serializer.read(buffer)
+        response_data = self.response_serializer.read(buffer)
         return Response(self, response_data, response_header)
 
 
 class Response(Generic[Req, Res]):
-    request: Request[Req]
+    request: Request[Req, Res]
     response_data: Res
     response_header: ResponseHeader
 
-    def __init__(self, request: Request[Req], response_data: Res, response_header: ResponseHeader):
+    def __init__(self, request: Request[Req, Res], response_data: Res, response_header: ResponseHeader):
         self.request = request
         self.response_data = response_data
         self.response_header = response_header

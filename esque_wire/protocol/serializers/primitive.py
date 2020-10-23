@@ -105,7 +105,7 @@ class VarlenZigZagSerializer(BaseSerializer[int]):
         return bytes(arr)
 
     @staticmethod
-    def varlen_decode(buffer) -> int:
+    def varlen_decode(buffer: BinaryIO) -> int:
         value = 0
         while True:
             # shift the value we've computed so far by 7 bits to make space for the next 7

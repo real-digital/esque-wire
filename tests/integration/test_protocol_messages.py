@@ -7,7 +7,7 @@ from esque_wire.protocol.structs.api import ApiVersionsRequestData, MetadataRequ
 
 
 @pytest.mark.integration
-def test_api_versions(connection: BrokerConnection):
+def test_api_versions(connection: BrokerConnection) -> None:
     data = ApiVersionsRequestData()
 
     response = connection.send(data)
@@ -15,7 +15,7 @@ def test_api_versions(connection: BrokerConnection):
 
 
 @pytest.mark.integration
-def test_metadata(connection: BrokerConnection, bootstrap_servers: List[str]):
+def test_metadata(connection: BrokerConnection, bootstrap_servers: List[str]) -> None:
     data = MetadataRequestData([], False, True, True)
 
     response = connection.send(data)

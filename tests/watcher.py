@@ -1,4 +1,5 @@
 # Taken from https://github.com/python/cpython/blob/4649202ea75d48e1496e99911709824ca2d3170e/Lib/asyncio/unix_events.py#L1326
+# With additional type hints and minor refactoring to match project style
 # See also: https://bugs.python.org/issue35621
 import itertools
 import logging
@@ -6,6 +7,7 @@ import os
 import threading
 import warnings
 from asyncio import AbstractChildWatcher, AbstractEventLoop
+from typing import Dict
 
 logger = logging.getLogger("asyncio")
 
@@ -22,7 +24,7 @@ class ThreadedChildWatcher(AbstractChildWatcher):
 
     def __init__(self, loop: AbstractEventLoop):
         self._pid_counter = itertools.count(0)
-        self._threads = {}
+        self._threads: Dict[int, threading.Thread] = {}
         self._loop = loop
 
     def is_active(self):
