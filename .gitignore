@@ -1,4 +1,4 @@
-/tests/kafka_distributions
+kafka_distributions
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
