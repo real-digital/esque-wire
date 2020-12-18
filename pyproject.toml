@@ -58,5 +58,5 @@ default_section = "THIRDPARTY"
 known_first_party = ["esque_wire", "tests"]
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry>=1.1.4"]
 build-backend = "poetry.masonry.api"
