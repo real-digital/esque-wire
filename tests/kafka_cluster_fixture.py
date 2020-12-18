@@ -1,5 +1,4 @@
 import asyncio
-import concurrent.futures
 import logging
 import os
 import re
@@ -13,6 +12,7 @@ import time
 from abc import ABC, abstractmethod
 from asyncio import BaseProtocol, BaseTransport
 from contextlib import closing
+from dataclasses import dataclass
 from pathlib import Path
 from subprocess import Popen
 from typing import Awaitable, Generic, List, NewType, Optional, Tuple, Type, TypeVar, Union
@@ -46,6 +46,8 @@ def get_jinja_env() -> Environment:
     if _JINJA_ENV is None:
         _JINJA_ENV = Environment(loader=FileSystemLoader(str(KAFKA_CONFIG_TEMPLATE_DIR)), undefined=StrictUndefined)
         _JINJA_ENV.filters["split"] = split
+        _JINJA_ENV.filters["any"] = any
+        _JINJA_ENV.filters["all"] = all
     return _JINJA_ENV
 
 
@@ -179,6 +181,10 @@ class JavaProtocol(asyncio.SubprocessProtocol):
             i += 1
 
     def connection_lost(self, exc: Optional[Exception]) -> None:
+        if not self.startup_complete.done():
+            if exc is None:
+                exc = RuntimeError("Connection lost before startup completion!")
+
         if exc is None:
             self.disconnected.set_result(True)
             self._logger.info("Connection closed")
@@ -186,7 +192,7 @@ class JavaProtocol(asyncio.SubprocessProtocol):
             if not self.startup_complete.done():
                 self.startup_complete.set_exception(exc)
             self.disconnected.set_exception(exc)
-            self._logger.info("Connection lost")
+            self._logger.info(f"Connection lost: {exc}")
 
     def get_self(self: P) -> P:
         return self
@@ -212,7 +218,7 @@ class Component(Generic[P], ABC):
         if working_directory is None:
             working_directory = Path(tempfile.mkdtemp())
         self._working_directory = working_directory
-        working_directory.mkdir(parents=True)
+        working_directory.mkdir(parents=True, exist_ok=True)
 
         if loop is None:
             self._loop = get_loop()
@@ -227,7 +233,7 @@ class Component(Generic[P], ABC):
     def bin_dir(self) -> Path:
         return get_kafka_dir(self._kafka_version) / "bin"
 
-    def start_async(self) -> asyncio.Future:
+    def start_async(self) -> asyncio.Task:
         self.startup_complete = self._loop.create_task(self._start_async())
         return self.startup_complete
 
@@ -361,6 +367,10 @@ class ZookeeperInstance(Component[ZKProtocol]):
         return self._port
 
     @property
+    def url(self) -> str:
+        return f"localhost:{self.port}"
+
+    @property
     def component_name(self) -> str:
         return "zookeeper"
 
@@ -398,6 +408,7 @@ class ZookeeperInstance(Component[ZKProtocol]):
             self._logger.debug(f"Req: ruok\nResp: {response}")
             if response == "imok":
                 break
+            assert not self._proto.exited.done()
         else:
             raise TimeoutError(f"Zookeeper didn't start up in time! Last exception caught: {exc}")
 
@@ -422,8 +433,16 @@ class Endpoint(ABC):
     def security_protocol(self) -> str:
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def is_secure(self) -> bool:
+        raise NotImplementedError
+
     def with_incremented_port(self, offset: int) -> "Endpoint":
-        return type(self)(self.listener_name, self.port + offset)
+        return self.with_port(self.port + offset)
+
+    def with_port(self, port: int) -> "Endpoint":
+        return type(self)(self.listener_name, port)
 
     @property
     def url(self) -> str:
@@ -432,11 +451,19 @@ class Endpoint(ABC):
 
 class PlaintextEndpoint(Endpoint):
     @property
+    def is_secure(self):
+        return False
+
+    @property
     def security_protocol(self) -> str:
         return "PLAINTEXT"
 
 
 class SaslEndpoint(Endpoint):
+    @property
+    def is_secure(self):
+        return True
+
     @property
     def security_protocol(self) -> str:
         return "SASL_PLAINTEXT"
@@ -458,6 +485,11 @@ class KafkaProtocol(JavaProtocol):
             self.startup_complete.set_result(True)
 
 
+@dataclass
+class SaslMechanism:
+    name: str
+
+
 class KafkaInstance(Component[KafkaProtocol]):
     _proto_cls = KafkaProtocol
 
@@ -470,7 +502,7 @@ class KafkaInstance(Component[KafkaProtocol]):
         working_directory: Optional[Path] = None,
         loop: Optional[asyncio.AbstractEventLoop] = None,
         endpoints: Optional[List[Endpoint]] = None,
-        sasl_mechanisms: Optional[List[str]] = None,
+        sasl_mechanisms: Optional[List[SaslMechanism]] = None,
     ):
         # set broker_id first so self.component_name can use it
         self.broker_id = broker_id
@@ -481,7 +513,10 @@ class KafkaInstance(Component[KafkaProtocol]):
         self.endpoints: List[Endpoint] = [e.with_incremented_port(broker_id * len(endpoints)) for e in endpoints]
 
         if sasl_mechanisms is None:
-            self.sasl_mechanisms = []
+            if any(endpoint.is_secure for endpoint in self.endpoints):
+                self.sasl_mechanisms = [SaslMechanism("PLAIN")]
+            else:
+                self.sasl_mechanisms = []
         else:
             self.sasl_mechanisms = sasl_mechanisms
 
@@ -562,7 +597,7 @@ def get_loop() -> asyncio.AbstractEventLoop:
     return loop
 
 
-class Cluster(threading.Thread):
+class Cluster:
     def __init__(
         self,
         cluster_id: int = 1,
@@ -570,97 +605,154 @@ class Cluster(threading.Thread):
         kafka_version: KafkaVersion = DEFAULT_KAFKA_VERSION,
         working_directory: Optional[Path] = None,
         endpoints: Optional[List[Endpoint]] = None,
-        sasl_mechanisms: Optional[List[str]] = None,
+        sasl_mechanisms: Optional[List[SaslMechanism]] = None,
     ):
-        super().__init__(name=f"Cluster{cluster_id:02}EventLoop", daemon=True)
-
         if working_directory is None:
             working_directory = Path(tempfile.mkdtemp()) / f"cluster{cluster_id:02}"
         self._working_directory = working_directory
         self.cluster_id = cluster_id
         self.startup_complete = threading.Event()
+        self.shutdown_complete = threading.Event()
         self._shutdown = threading.Event()
         self._cluster_size = cluster_size
         self._kafka_version = kafka_version
-        self._endpoints = endpoints
         self._sasl_mechanisms = sasl_mechanisms
-        self._loop: Optional[asyncio.AbstractEventLoop] = None
+        self._thread: Optional[threading.Thread] = None
         self._zk_instance: Optional[ZookeeperInstance] = None
         self._brokers: List[KafkaInstance] = []
         self._components: List[Union[ZookeeperInstance, KafkaInstance]] = []
+        self._exception: Optional[Exception] = None
+
+        if endpoints is None:
+            endpoints = [PlaintextEndpoint()]
+
+        self._endpoints: List[Endpoint] = endpoints
+        # make sure endpoints don't use same ports
+        if len({ep.port for ep in self._endpoints}) != len(self._endpoints):
+            first_port = self._endpoints[0].port
+            self._endpoints = [ep.with_port(first_port + i) for i, ep in enumerate(self._endpoints)]
 
     def start(self) -> None:
-        super().start()
+        self.start_nowait()
         self.startup_complete.wait()
+        if self._exception:
+            raise self._exception
+
+    def start_nowait(self) -> None:
+        if self._thread is not None:
+            raise RuntimeError("Cluster already running or not properly closed!")
+        self.startup_complete.clear()
+        self.shutdown_complete.clear()
+        self._shutdown.clear()
+        self._components.clear()
+        self._brokers.clear()
+        self._zk_instance = None
+        self._exception = None
+        self._thread = threading.Thread(name=f"Cluster{self.cluster_id:02}EventLoop", target=self.run)
+        self._thread.start()
 
     def run(self) -> None:
-        self._loop = get_loop()
-
-        self._zk_instance = ZookeeperInstance(
-            kafka_version=self._kafka_version, working_directory=self._working_directory / "zookeeper", loop=self._loop
-        )
-
-        self._brokers.extend(
-            KafkaInstance(
-                broker_id=broker_id,
-                zookeeper_instance=self._zk_instance,
-                cluster_size=self._cluster_size,
-                kafka_version=self._kafka_version,
-                working_directory=self._working_directory / f"broker{broker_id:02}",
-                loop=self._loop,
-                endpoints=self._endpoints,
-                sasl_mechanisms=self._sasl_mechanisms,
+        with closing(get_loop()) as loop:
+            self._zk_instance = ZookeeperInstance(
+                kafka_version=self._kafka_version, working_directory=self._working_directory / "zookeeper", loop=loop
             )
-            for broker_id in range(self._cluster_size)
-        )
-        self._components.extend(self._brokers)
-        self._components.append(self._zk_instance)
 
-        all_done = asyncio.gather(*(comp.start_async() for comp in self._components))
-        self._loop.run_until_complete(all_done)
-        self.startup_complete.set()
-        self._loop.run_until_complete(self.check_shutdown())
+            self._brokers.extend(
+                KafkaInstance(
+                    broker_id=broker_id,
+                    zookeeper_instance=self._zk_instance,
+                    cluster_size=self._cluster_size,
+                    kafka_version=self._kafka_version,
+                    working_directory=self._working_directory / f"broker{broker_id:02}",
+                    loop=loop,
+                    endpoints=self._endpoints,
+                    sasl_mechanisms=self._sasl_mechanisms,
+                )
+                for broker_id in range(self._cluster_size)
+            )
+            self._components.extend(self._brokers)
+            self._components.append(self._zk_instance)
+
+            all_done = asyncio.gather(*(comp.start_async() for comp in self._components), return_exceptions=True)
+            results = loop.run_until_complete(all_done)
+            for result in results:
+                if isinstance(result, Exception):
+                    self._exception = result
+                    self._shutdown.set()
+                    break
+            self.startup_complete.set()
+            loop.run_until_complete(self.check_shutdown())
 
     async def check_shutdown(self) -> None:
         while not self._shutdown.is_set():
             await asyncio.sleep(0.1)
 
         all_done = asyncio.gather(*(comp.close_async() for comp in self._components))
-        await all_done
+        try:
+            await all_done
+        except Exception as e:
+            self._exception = e
+        self.shutdown_complete.set()
 
-    def stop(self) -> List[concurrent.futures.Future]:
-        if self._loop is None:
-            return []
-
-        if not self._loop.is_running():
-            self._loop.close()
-            return []
-        futures: List[concurrent.futures.Future] = [
-            asyncio.run_coroutine_threadsafe(comp.close_async(), loop=self._loop) for comp in self._components
-        ]
+    def stop(self) -> None:
         self._shutdown.set()
-        return futures
 
     def close(self) -> None:
-        if self._loop is None or self._loop.is_closed():
+        if self._thread is None:
+            # got closed before it even started, nothing to do
             return
-        for f in self.stop():
-            f.result()
-        while self._loop.is_running():
-            time.sleep(0.1)
-        self._loop.close()
+        self.stop()
+        self._thread.join()
+        if self._exception:
+            raise self._exception
+        self._thread = None
+
+    def restart(self) -> None:
+        self.close()
+        self.start()
+
+    def boostrap_servers(self, listener_name: str = "PLAINTEXT") -> List[str]:
+        self.assert_running()
+        return [broker.get_endpoint_url(listener_name) for broker in self._brokers[:3]]
+
+    @property
+    def zookeeper_url(self) -> str:
+        self.assert_running()
+        assert self._zk_instance is not None
+        return self._zk_instance.url
+
+    def assert_running(self) -> None:
+        if self._thread is None:
+            raise RuntimeError("Cluster hasn't been started yet!")
+        if not self.startup_complete.is_set():
+            raise RuntimeError("Cluster startup is not complete!")
+        if self.shutdown_complete.is_set():
+            raise RuntimeError("Cluster is shut down!")
+        if not self._thread.is_alive():
+            raise RuntimeError("Cluster thread has died!")
+
+    def __enter__(self) -> "Cluster":
+        self.start()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
 
 
 def main() -> None:
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-    with closing(Cluster(cluster_size=2)) as cluster:
+    sasl_mechanisms = [SaslMechanism("PLAIN"), SaslMechanism("SCRAM-SHA-512")]
+    endpoints = [PlaintextEndpoint(), SaslEndpoint(), SaslEndpoint(name="ASDF")]
+    with Cluster(cluster_size=2, endpoints=endpoints, sasl_mechanisms=sasl_mechanisms) as cluster:
         try:
-            cluster.start()
-            assert cluster._zk_instance is not None
-            assert len(cluster._brokers) > 1
-            logger.info(f"--> Zookeeper ready at port {cluster._zk_instance.port} <--")
-            logger.info(f"--> Kafka ready at {cluster._brokers[0].get_endpoint_url('PLAINTEXT')} <--")
-            logger.info(f"--> Kafka2 ready at {cluster._brokers[1].get_endpoint_url('PLAINTEXT')} <--")
+            logger.info(f"--> Zookeeper ready at {cluster.zookeeper_url} <--")
+            logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('SASL_PLAINTEXT')} <--")
+            logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('PLAINTEXT')} <--")
+            logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('ASDF')} <--")
+            time.sleep(10)
+            cluster.restart()
+            logger.info(f"--> Zookeeper ready at {cluster.zookeeper_url} <--")
+            logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('PLAINTEXT')} <--")
             time.sleep(10)
         except KeyboardInterrupt:
             pass
