@@ -606,10 +606,8 @@ class Cluster:
         working_directory: Optional[Path] = None,
         endpoints: Optional[List[Endpoint]] = None,
         sasl_mechanisms: Optional[List[SaslMechanism]] = None,
+        keep_temporary_files: bool = False,
     ):
-        if working_directory is None:
-            working_directory = Path(tempfile.mkdtemp()) / f"cluster{cluster_id:02}"
-        self._working_directory = working_directory
         self.cluster_id = cluster_id
         self.startup_complete = threading.Event()
         self.shutdown_complete = threading.Event()
@@ -622,6 +620,11 @@ class Cluster:
         self._brokers: List[KafkaInstance] = []
         self._components: List[Union[ZookeeperInstance, KafkaInstance]] = []
         self._exception: Optional[Exception] = None
+        self._keep_temporary_files = keep_temporary_files
+
+        if working_directory is None:
+            working_directory = Path(tempfile.mkdtemp(prefix="kafka_fixture_")) / f"cluster{cluster_id:02}"
+        self._working_directory = working_directory
 
         if endpoints is None:
             endpoints = [PlaintextEndpoint()]
@@ -706,10 +709,15 @@ class Cluster:
         if self._exception:
             raise self._exception
         self._thread = None
+        if not self._keep_temporary_files:
+            self._working_directory.rmdir()
 
     def restart(self) -> None:
+        tmp = self._keep_temporary_files
+        self._keep_temporary_files = True
         self.close()
         self.start()
+        self._keep_temporary_files = tmp
 
     def boostrap_servers(self, listener_name: str = "PLAINTEXT") -> List[str]:
         self.assert_running()
