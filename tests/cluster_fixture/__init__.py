@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import shutil
 import sys
 import tempfile
 import threading
@@ -128,7 +129,7 @@ class Cluster:
             raise self._exception
         self._thread = None
         if not self._keep_temporary_files:
-            self._working_directory.rmdir()
+            shutil.rmtree(self._working_directory)
 
     def restart(self) -> None:
         tmp = self._keep_temporary_files
@@ -169,16 +170,15 @@ def main() -> None:
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     sasl_mechanisms = [SaslMechanism("PLAIN"), SaslMechanism("SCRAM-SHA-512")]
     endpoints = [PlaintextEndpoint(), SaslEndpoint(), SaslEndpoint(name="ASDF")]
-    with Cluster(cluster_size=2, endpoints=endpoints, sasl_mechanisms=sasl_mechanisms) as cluster:
+    kafka_version = KafkaVersion("1.1.1")
+    with Cluster(
+        cluster_size=1, endpoints=endpoints, sasl_mechanisms=sasl_mechanisms, kafka_version=kafka_version
+    ) as cluster:
         try:
             logger.info(f"--> Zookeeper ready at {cluster.zookeeper_url} <--")
             logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('SASL_PLAINTEXT')} <--")
             logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('PLAINTEXT')} <--")
             logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('ASDF')} <--")
-            time.sleep(10)
-            cluster.restart()
-            logger.info(f"--> Zookeeper ready at {cluster.zookeeper_url} <--")
-            logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('PLAINTEXT')} <--")
             time.sleep(10)
         except KeyboardInterrupt:
             pass

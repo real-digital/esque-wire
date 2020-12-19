@@ -13,19 +13,18 @@ from asyncio.transports import BaseTransport
 from contextlib import closing
 from pathlib import Path
 from subprocess import Popen
-from typing import Awaitable, Generic, List, NewType, Optional, Tuple, Type, TypeVar
+from typing import Awaitable, Callable, List, NewType, Optional, Tuple
 from urllib.request import urlretrieve
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 # ThreadedChildWatcher was introduced in 3.8
 if sys.version_info < (3, 8):
-    from watcher import ThreadedChildWatcher
+    from cluster_fixture.watcher import ThreadedChildWatcher
 else:
     from asyncio import ThreadedChildWatcher
 
 KafkaVersion = NewType("KafkaVersion", str)
-P = TypeVar("P", bound="JavaProtocol")
 
 KAFKA_DISTRIBUTION_CACHE_DIR: Path = Path(
     os.getenv("ESQUE_WIRE_KAFKA_DISTRIBUTION_CACHE_DIR", Path(__file__).parent / "kafka_distributions")
@@ -39,10 +38,9 @@ JAVA_LOG_PARSER = re.compile(r"^\[(?P<ts>[^]]+)\] (?P<level>\w+) (?P<msg>.*)", r
 logger = logging.getLogger(__name__)
 
 
-class Component(Generic[P], ABC):
+class Component(ABC):
     _process: Popen
-    _proto: P
-    _proto_cls: Type[P]
+    _proto: "JavaProtocol"
 
     def __init__(
         self,
@@ -85,7 +83,7 @@ class Component(Generic[P], ABC):
                 self._check_ports()
                 self._render_config()
                 await self._spawn_process()
-                await self._wait_until_ready()
+                await self._proto.wait_until_ready()
             except PortAlreadyInUse:
                 self._increment_ports()
             else:
@@ -112,12 +110,13 @@ class Component(Generic[P], ABC):
         if hasattr(self, "_process") and not self._proto.disconnected.done():
             await self.close_async()
 
-        self._proto = self._proto_cls(self._loop, self._logger)
+        self._proto = JavaProtocol(self._loop, self._logger, self.probe_service)
         transport, protocol = await self._subprocess_exec()
         self._process: Popen = transport.get_extra_info("subprocess")
 
-    async def _wait_until_ready(self) -> None:
-        await self._proto.startup_complete
+    @abstractmethod
+    async def probe_service(self) -> bool:
+        raise NotImplementedError
 
     @abstractmethod
     def _increment_ports(self) -> None:
@@ -153,13 +152,19 @@ class Component(Generic[P], ABC):
 
 
 class JavaProtocol(asyncio.SubprocessProtocol):
-    def __init__(self, loop: asyncio.AbstractEventLoop, logger: logging.Logger):
+    STARTUP_TIMEOUT_SECS = 10
+    PROBE_INTERVAL = 0.1
+
+    def __init__(
+        self, loop: asyncio.AbstractEventLoop, logger: logging.Logger, probe_routine: Callable[[], Awaitable[bool]]
+    ):
         super().__init__()
         self.loop = loop
         self.startup_complete = loop.create_future()
         self.disconnected = loop.create_future()
         self.exited = loop.create_future()
         self._logger = logger
+        self._probe = probe_routine
 
     def pipe_data_received(self, fd: int, data: bytes) -> None:
         if fd == 1:  # got stdout data (bytes)
@@ -167,6 +172,14 @@ class JavaProtocol(asyncio.SubprocessProtocol):
             self.merge_lines_in_place(lines)
             for line in lines:
                 self.process_log_line(line)
+
+    @staticmethod
+    def merge_lines_in_place(lines: List[str]) -> None:
+        i = 0
+        while i < len(lines):
+            while i + 1 < len(lines) and lines[i + 1][0] != "[":
+                lines[i] += "\n" + lines.pop(i + 1)
+            i += 1
 
     def process_log_line(self, line: str) -> None:
         if not line.strip():
@@ -177,18 +190,44 @@ class JavaProtocol(asyncio.SubprocessProtocol):
             self._logger.log(level=logging.getLevelName(matched_line["level"]), msg=matched_line["msg"])
         else:
             self._logger.warning(f"Log line couldn't be parsed:\n{line}")
-        self.check_startup_complete(line)
+        self.check_for_bind_exception(line)
 
-    def check_startup_complete(self, line: str) -> None:
-        raise NotImplementedError
+    def check_for_bind_exception(self, line: str) -> None:
+        if self.startup_complete.done():
+            return
 
-    @staticmethod
-    def merge_lines_in_place(lines: List[str]) -> None:
-        i = 0
-        while i < len(lines):
-            while i + 1 < len(lines) and lines[i + 1][0] != "[":
-                lines[i] += "\n" + lines.pop(i + 1)
-            i += 1
+        if "java.net.BindException" in line:
+            self._logger.debug("BindException line seen.")
+            self.startup_complete.set_exception(PortAlreadyInUse())
+
+    async def wait_until_ready(self) -> None:
+        exc: Optional[BaseException] = None
+        for _ in range(int(self.STARTUP_TIMEOUT_SECS / self.PROBE_INTERVAL)):
+            # give the service time to start
+            await asyncio.sleep(self.PROBE_INTERVAL)
+
+            # check if we got any exceptions derived from logs or lost connection
+            if self.startup_complete.done():
+                exc = self.startup_complete.exception()
+                if exc is not None:
+                    raise exc
+                else:
+                    # in this case startup has successfully completed
+                    # and we can return right away
+                    return
+
+            try:
+                success = await self._probe()
+            except OSError as e:
+                exc = e
+                self._logger.debug(f"Probe raised exception: {e}")
+                continue
+
+            if success:
+                self.startup_complete.set_result(True)
+                break
+        else:
+            raise TimeoutError(f"Service didn't start up in time! Last exception caught: {exc}")
 
     def connection_lost(self, exc: Optional[Exception]) -> None:
         if not self.startup_complete.done():
@@ -204,7 +243,7 @@ class JavaProtocol(asyncio.SubprocessProtocol):
             self.disconnected.set_exception(exc)
             self._logger.info(f"Connection lost: {exc}")
 
-    def get_self(self: P) -> P:
+    def get_self(self) -> "JavaProtocol":
         return self
 
     def process_exited(self) -> None:
@@ -295,3 +334,22 @@ def download_kafka(kafka_version: KafkaVersion, destination: Path) -> None:
         with tarfile.open(tmpfile.name) as tar:
             members = [mem for mem in tar.getmembers() if should_extract(mem)]
             tar.extractall(members=members, path=str(destination))
+
+
+async def netcat_async_string(loop: asyncio.AbstractEventLoop, hostname: str, port: int, content: str) -> str:
+    response = await netcat_async_bytes(loop, hostname, port, content.encode())
+    return response.decode()
+
+
+async def netcat_async_bytes(loop: asyncio.AbstractEventLoop, hostname: str, port: int, content: bytes) -> bytes:
+    with closing(socket.socket(type=socket.SOCK_STREAM)) as sock:
+        sock.setblocking(False)
+        await loop.sock_connect(sock, (hostname, port))
+        await loop.sock_sendall(sock, content)
+        sock.shutdown(socket.SHUT_WR)
+        data = []
+        while 1:
+            data.append(await loop.sock_recv(sock, 1024))
+            if data[-1] == b"":
+                break
+    return b"".join(data)

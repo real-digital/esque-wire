@@ -1,25 +1,20 @@
 import asyncio
-import logging
 import re
+import socket
+import struct
 from abc import ABC, abstractmethod
 from asyncio.protocols import BaseProtocol
 from asyncio.transports import BaseTransport
+from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Awaitable, List, Optional, Tuple
 
-from cluster_fixture.base import (
-    DEFAULT_KAFKA_VERSION,
-    Component,
-    JavaProtocol,
-    KafkaVersion,
-    PortAlreadyInUse,
-    get_jinja_env,
-    probe_port,
-)
+from cluster_fixture.base import DEFAULT_KAFKA_VERSION, Component, KafkaVersion, get_jinja_env, probe_port
 from cluster_fixture.zookeeper import ZookeeperInstance
 
 KAFKA_STARTUP_PATTERN = re.compile(r"\[KafkaServer id=\d+\] started \(kafka\.server\.KafkaServer\)")
+KAFKA_GENERIC_API_VERSION_REQUEST = b"\x00\x00\x00\x16\x00\x12\x00\x00\x00\x00\x00\x01\x00\x0cprobe_client"
 
 
 class Endpoint(ABC):
@@ -71,30 +66,12 @@ class SaslEndpoint(Endpoint):
         return "SASL_PLAINTEXT"
 
 
-class KafkaProtocol(JavaProtocol):
-    def __init__(self, loop: asyncio.AbstractEventLoop, logger: logging.Logger):
-        super().__init__(loop, logger)
-
-    def check_startup_complete(self, line: str) -> None:
-        if self.startup_complete.done():
-            return
-
-        if "java.net.BindException" in line:
-            self.startup_complete.set_exception(PortAlreadyInUse())
-            return
-
-        if KAFKA_STARTUP_PATTERN.search(line):
-            self.startup_complete.set_result(True)
-
-
 @dataclass
 class SaslMechanism:
     name: str
 
 
-class KafkaInstance(Component[KafkaProtocol]):
-    _proto_cls = KafkaProtocol
-
+class KafkaInstance(Component):
     def __init__(
         self,
         broker_id: int,
@@ -112,6 +89,9 @@ class KafkaInstance(Component[KafkaProtocol]):
 
         if endpoints is None:
             endpoints = [PlaintextEndpoint()]
+        if len(endpoints) == 0:
+            raise ValueError("Cannot start without endpoints!")
+
         self.endpoints: List[Endpoint] = [e.with_incremented_port(broker_id * len(endpoints)) for e in endpoints]
 
         if sasl_mechanisms is None:
@@ -120,6 +100,8 @@ class KafkaInstance(Component[KafkaProtocol]):
             else:
                 self.sasl_mechanisms = []
         else:
+            if any(endpoint.is_secure for endpoint in self.endpoints) and len(sasl_mechanisms) == 0:
+                raise ValueError("Need to define at least one sasl mechanism if secure endpoint is available!")
             self.sasl_mechanisms = sasl_mechanisms
 
         self._cluster_size = cluster_size
@@ -182,3 +164,21 @@ class KafkaInstance(Component[KafkaProtocol]):
             str(self.config_file),
             env={"KAFKA_OPTS": f"-Djava.security.auth.login.config={self.sasl_config_file}"},
         )
+
+    async def probe_service(self) -> bool:
+        port = self.endpoints[0].port
+
+        with closing(socket.socket(type=socket.SOCK_STREAM)) as sock:
+            sock.setblocking(False)
+            await self._loop.sock_connect(sock, ("localhost", port))
+            await self._loop.sock_sendall(sock, KAFKA_GENERIC_API_VERSION_REQUEST)
+            datalen = struct.unpack(">i", await self._loop.sock_recv(sock, 4))[0]
+            received = 0
+            data = []
+            while received < datalen:
+                data.append(await self._loop.sock_recv(sock, 1024))
+                received += len(data[-1])
+            sock.shutdown(socket.SHUT_WR)
+        response = b"".join(data)
+        self._logger.debug(f"Requested api versions\nResponse length: {len(response)}")
+        return len(response) > 0
