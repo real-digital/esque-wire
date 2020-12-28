@@ -2,7 +2,7 @@ import logging
 import sys
 import time
 
-from tests.cluster_fixture import Cluster
+from tests.cluster_fixture.cluster import Cluster
 from tests.cluster_fixture.kafka import KafkaVersion, PlaintextEndpoint, SaslEndpoint, SaslMechanism
 
 logger = logging.getLogger(__name__)

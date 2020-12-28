@@ -6,7 +6,8 @@ from typing import Iterable, List
 import pytest
 
 from esque_wire import BrokerConnection
-from tests.cluster_fixture import Cluster, KafkaVersion
+from tests.cluster_fixture import KafkaVersion
+from tests.cluster_fixture.cluster import Cluster
 
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
