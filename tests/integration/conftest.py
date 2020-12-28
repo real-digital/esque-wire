@@ -1,25 +1,35 @@
 import pathlib
 import sys
+import urllib.parse
 from typing import Iterable, List
 
 import pytest
 
 from esque_wire import BrokerConnection
+from tests.cluster_fixture import Cluster, KafkaVersion
 
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
 
-@pytest.fixture
-def bootstrap_servers() -> List[str]:
-    return ["localhost:9092"]
+@pytest.fixture()
+def cluster(kafka_version: KafkaVersion) -> Iterable[Cluster]:
+    with Cluster(kafka_version=kafka_version) as kafka_cluster:
+        yield kafka_cluster
 
 
 @pytest.fixture
-def kafka_server(bootstrap_servers: List[str]) -> str:
-    return bootstrap_servers[0]
+def bootstrap_servers(cluster: Cluster) -> List[str]:
+    return cluster.boostrap_servers("PLAINTEXT")
 
 
 @pytest.fixture
-def connection(kafka_server: str) -> Iterable[BrokerConnection]:
-    with BrokerConnection(kafka_server, "esque_wire_integration_test") as connection:
+def kafka_endpoint(bootstrap_servers: List[str]) -> str:
+    full_url = bootstrap_servers[0]
+    parsed_url = urllib.parse.urlparse(full_url)
+    return f"{parsed_url.hostname}:{parsed_url.port}"
+
+
+@pytest.fixture
+def connection(kafka_endpoint: str) -> Iterable[BrokerConnection]:
+    with BrokerConnection(kafka_endpoint, "esque_wire_integration_test") as connection:
         yield connection
