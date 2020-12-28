@@ -20,7 +20,7 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 # ThreadedChildWatcher was introduced in 3.8
 if sys.version_info < (3, 8):
-    from cluster_fixture.watcher import ThreadedChildWatcher
+    from tests.cluster_fixture.watcher import ThreadedChildWatcher
 else:
     from asyncio import ThreadedChildWatcher
 

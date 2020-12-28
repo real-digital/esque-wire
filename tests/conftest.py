@@ -6,7 +6,8 @@ import pytest
 from _pytest.config import Config
 from _pytest.config.argparsing import Parser
 from _pytest.nodes import Item
-from cluster_fixture import DEFAULT_KAFKA_VERSION, KafkaVersion
+
+from tests.cluster_fixture import DEFAULT_KAFKA_VERSION, KafkaVersion
 
 
 def pytest_addoption(parser: Parser) -> None:

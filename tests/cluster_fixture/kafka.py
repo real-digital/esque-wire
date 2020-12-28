@@ -10,8 +10,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Awaitable, List, Optional, Tuple
 
-from cluster_fixture.base import DEFAULT_KAFKA_VERSION, Component, KafkaVersion, get_jinja_env, probe_port
-from cluster_fixture.zookeeper import ZookeeperInstance
+from tests.cluster_fixture.base import DEFAULT_KAFKA_VERSION, Component, KafkaVersion, get_jinja_env, probe_port
+from tests.cluster_fixture.zookeeper import ZookeeperInstance
 
 KAFKA_STARTUP_PATTERN = re.compile(r"\[KafkaServer id=\d+\] started \(kafka\.server\.KafkaServer\)")
 CORR_ID = struct.pack(">i", 1337)

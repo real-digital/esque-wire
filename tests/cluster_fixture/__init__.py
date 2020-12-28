@@ -9,9 +9,9 @@ from contextlib import closing
 from pathlib import Path
 from typing import List, Optional, Union
 
-from cluster_fixture.base import DEFAULT_KAFKA_VERSION, KafkaVersion, get_loop
-from cluster_fixture.kafka import Endpoint, KafkaInstance, PlaintextEndpoint, SaslEndpoint, SaslMechanism
-from cluster_fixture.zookeeper import ZookeeperInstance
+from tests.cluster_fixture.base import DEFAULT_KAFKA_VERSION, KafkaVersion, get_loop
+from tests.cluster_fixture.kafka import Endpoint, KafkaInstance, PlaintextEndpoint, SaslEndpoint, SaslMechanism
+from tests.cluster_fixture.zookeeper import ZookeeperInstance
 
 logger = logging.getLogger(__name__)
 

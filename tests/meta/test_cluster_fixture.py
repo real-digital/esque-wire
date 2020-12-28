@@ -1,4 +1,4 @@
-from cluster_fixture import Cluster
+from tests.cluster_fixture import Cluster
 
 
 def test_simple_startup(kafka_version):

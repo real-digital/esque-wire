@@ -5,7 +5,7 @@ from asyncio.transports import BaseTransport
 from pathlib import Path
 from typing import TYPE_CHECKING, Awaitable, List, Optional, Tuple
 
-from cluster_fixture.base import (
+from tests.cluster_fixture.base import (
     DEFAULT_KAFKA_VERSION,
     Component,
     KafkaVersion,
@@ -16,7 +16,7 @@ from cluster_fixture.base import (
 )
 
 if TYPE_CHECKING:
-    from cluster_fixture.kafka import KafkaInstance
+    from tests.cluster_fixture.kafka import KafkaInstance
 
 logger = logging.getLogger(__name__)
 
