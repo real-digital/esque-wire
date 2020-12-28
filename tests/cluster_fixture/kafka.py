@@ -8,7 +8,7 @@ from asyncio.transports import BaseTransport
 from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Awaitable, List, Optional, Tuple
+from typing import Awaitable, List, Optional, Tuple, TypeVar
 
 from tests.cluster_fixture.base import DEFAULT_KAFKA_VERSION, Component, KafkaVersion, get_jinja_env, probe_port
 from tests.cluster_fixture.zookeeper import ZookeeperInstance
@@ -21,6 +21,8 @@ KAFKA_GENERIC_API_VERSION_REQUEST = (
     b"\x00\x00" + CORR_ID + b"\x00\x0c"  # api_version 0  # correlation ID  # length of client_id
     b"probe_client"  # client_id
 )
+
+E = TypeVar("E", bound="Endpoint")
 
 
 class Endpoint(ABC):
@@ -41,15 +43,18 @@ class Endpoint(ABC):
     def is_secure(self) -> bool:
         raise NotImplementedError
 
-    def with_incremented_port(self, offset: int) -> "Endpoint":
+    def with_incremented_port(self: E, offset: int) -> E:
         return self.with_port(self.port + offset)
 
-    def with_port(self, port: int) -> "Endpoint":
+    def with_port(self: E, port: int) -> E:
         return type(self)(self.listener_name, port)
 
     @property
     def url(self) -> str:
         return f"{self.security_protocol}://localhost:{self.port}"
+
+    def copy(self: E) -> E:
+        return type(self)(self.listener_name, self.port)
 
 
 class PlaintextEndpoint(Endpoint):
@@ -147,6 +152,14 @@ class KafkaInstance(Component):
         else:
             raise KeyError(listener_name)
         return e.url
+
+    def get_endpoint(self, listener_name: str) -> Endpoint:
+        for e in self.endpoints:
+            if e.listener_name == listener_name:
+                break
+        else:
+            raise KeyError(listener_name)
+        return e.copy()
 
     def _check_ports(self) -> None:
         for endpoint in self.endpoints:
