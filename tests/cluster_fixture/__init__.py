@@ -35,8 +35,8 @@ class Cluster:
         self._kafka_version = kafka_version
         self._sasl_mechanisms = sasl_mechanisms
         self._thread: Optional[threading.Thread] = None
-        self._zk_instance: Optional[ZookeeperInstance] = None
-        self._brokers: List[KafkaInstance] = []
+        self.zk_instance: Optional[ZookeeperInstance] = None
+        self.brokers: List[KafkaInstance] = []
         self._components: List[Union[ZookeeperInstance, KafkaInstance]] = []
         self._exception: Optional[Exception] = None
         self._keep_temporary_files = keep_temporary_files
@@ -67,22 +67,22 @@ class Cluster:
         self.shutdown_complete.clear()
         self._shutdown.clear()
         self._components.clear()
-        self._brokers.clear()
-        self._zk_instance = None
+        self.brokers.clear()
+        self.zk_instance = None
         self._exception = None
         self._thread = threading.Thread(name=f"Cluster{self.cluster_id:02}EventLoop", target=self.run)
         self._thread.start()
 
     def run(self) -> None:
         with closing(get_loop()) as loop:
-            self._zk_instance = ZookeeperInstance(
+            self.zk_instance = ZookeeperInstance(
                 kafka_version=self._kafka_version, working_directory=self._working_directory / "zookeeper", loop=loop
             )
 
-            self._brokers.extend(
+            self.brokers.extend(
                 KafkaInstance(
                     broker_id=broker_id,
-                    zookeeper_instance=self._zk_instance,
+                    zookeeper_instance=self.zk_instance,
                     cluster_size=self._cluster_size,
                     kafka_version=self._kafka_version,
                     working_directory=self._working_directory / f"broker{broker_id:02}",
@@ -92,8 +92,8 @@ class Cluster:
                 )
                 for broker_id in range(self._cluster_size)
             )
-            self._components.extend(self._brokers)
-            self._components.append(self._zk_instance)
+            self._components.extend(self.brokers)
+            self._components.append(self.zk_instance)
 
             all_done = asyncio.gather(*(comp.start_async() for comp in self._components), return_exceptions=True)
             results = loop.run_until_complete(all_done)
@@ -140,13 +140,13 @@ class Cluster:
 
     def boostrap_servers(self, listener_name: str = "PLAINTEXT") -> List[str]:
         self.assert_running()
-        return [broker.get_endpoint_url(listener_name) for broker in self._brokers[:3]]
+        return [broker.get_endpoint_url(listener_name) for broker in self.brokers[:3]]
 
     @property
     def zookeeper_url(self) -> str:
         self.assert_running()
-        assert self._zk_instance is not None
-        return self._zk_instance.url
+        assert self.zk_instance is not None
+        return self.zk_instance.url
 
     def assert_running(self) -> None:
         if self._thread is None:
