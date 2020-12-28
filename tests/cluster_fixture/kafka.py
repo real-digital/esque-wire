@@ -14,7 +14,13 @@ from cluster_fixture.base import DEFAULT_KAFKA_VERSION, Component, KafkaVersion,
 from cluster_fixture.zookeeper import ZookeeperInstance
 
 KAFKA_STARTUP_PATTERN = re.compile(r"\[KafkaServer id=\d+\] started \(kafka\.server\.KafkaServer\)")
-KAFKA_GENERIC_API_VERSION_REQUEST = b"\x00\x00\x00\x16\x00\x12\x00\x00\x00\x00\x00\x01\x00\x0cprobe_client"
+CORR_ID = struct.pack(">i", 1337)
+KAFKA_GENERIC_API_VERSION_REQUEST = (
+    b"\x00\x00\x00\x16"  # message size
+    b"\x00\x12"  # api_key 18 = api_versin request
+    b"\x00\x00" + CORR_ID + b"\x00\x0c"  # api_version 0  # correlation ID  # length of client_id
+    b"probe_client"  # client_id
+)
 
 
 class Endpoint(ABC):
@@ -43,7 +49,7 @@ class Endpoint(ABC):
 
     @property
     def url(self) -> str:
-        return f"{self.security_protocol}//localhost:{self.port}"
+        return f"{self.security_protocol}://localhost:{self.port}"
 
 
 class PlaintextEndpoint(Endpoint):
@@ -180,5 +186,8 @@ class KafkaInstance(Component):
                 received += len(data[-1])
             sock.shutdown(socket.SHUT_WR)
         response = b"".join(data)
-        self._logger.debug(f"Requested api versions\nResponse length: {len(response)}")
-        return len(response) > 0
+        self._logger.debug(
+            f"Requested api versions\nResponse length: {len(response)}\nResponse[:16]: {response[:16]!r}"
+        )
+        corr_id = struct.unpack(">i", response[:4])[0]
+        return corr_id == CORR_ID
