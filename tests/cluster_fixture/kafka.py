@@ -14,7 +14,7 @@ from tests.cluster_fixture.base import DEFAULT_KAFKA_VERSION, Component, KafkaVe
 from tests.cluster_fixture.zookeeper import ZookeeperInstance
 
 KAFKA_STARTUP_PATTERN = re.compile(r"\[KafkaServer id=\d+\] started \(kafka\.server\.KafkaServer\)")
-CORR_ID = struct.pack(">i", 1337)
+CORR_ID: bytes = struct.pack(">i", 1337)
 KAFKA_GENERIC_API_VERSION_REQUEST = (
     b"\x00\x00\x00\x16"  # message size
     b"\x00\x12"  # api_key 18 = api_versin request
@@ -189,5 +189,5 @@ class KafkaInstance(Component):
         self._logger.debug(
             f"Requested api versions\nResponse length: {len(response)}\nResponse[:16]: {response[:16]!r}"
         )
-        corr_id = struct.unpack(">i", response[:4])[0]
+        corr_id: bytes = response[:4]
         return corr_id == CORR_ID
