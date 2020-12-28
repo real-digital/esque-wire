@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Awaitable, List, Optional, Tuple, TypeVar
 
-from tests.cluster_fixture.base import DEFAULT_KAFKA_VERSION, Component, KafkaVersion, get_jinja_env, probe_port
+from tests.cluster_fixture.base import DEFAULT_KAFKA_VERSION, Component, KafkaVersion, get_jinja_env
 from tests.cluster_fixture.zookeeper import ZookeeperInstance
 
 KAFKA_STARTUP_PATTERN = re.compile(r"\[KafkaServer id=\d+\] started \(kafka\.server\.KafkaServer\)")
@@ -27,6 +27,17 @@ E = TypeVar("E", bound="Endpoint")
 
 class Endpoint(ABC):
     def __init__(self, name: Optional[str] = None, port: int = 9092):
+        """
+        Abstract endpoint that designates a port where kafka listens for connections.
+        The endpoint's security protocol is determined by the subclass, the endpoint's name can be given when creating
+        it.
+
+        It is possible to have multiple get_endpoints providing the same access type (i.e. security protocol) under
+        different ports if they use different names.
+
+        :param name: Name for this endpoint, defaults to security protocol if not given.
+        :param port: Desired port to start looking for free ports.
+        """
         if name is None:
             self.listener_name = self.security_protocol
         else:
@@ -36,28 +47,64 @@ class Endpoint(ABC):
     @property
     @abstractmethod
     def security_protocol(self) -> str:
+        """
+        Security protocol this endpoint serves.
+        """
         raise NotImplementedError
 
     @property
     @abstractmethod
     def is_secure(self) -> bool:
+        """
+        Whether this endpoint is secured with SASL or not.
+        """
         raise NotImplementedError
 
     def with_incremented_port(self: E, offset: int) -> E:
+        """
+        Return a copy of this endpoint where the port is incremented by `offset`.
+
+        :param offset: The offset to add to this endpoint's port to get the new endpoint.
+        :returns: Copy of this endpoint with the port incremented by `offset`.
+        """
         return self.with_port(self.port + offset)
 
     def with_port(self: E, port: int) -> E:
+        """
+        Return a copy of this endpoint where the port is set to `port`.
+
+        :param port: The port number the new endpoint should have.
+        :returns: Copy of this endpoint with the port set to `port`.
+        """
         return type(self)(self.listener_name, port)
 
     @property
     def url(self) -> str:
+        """
+        The full url of this endpoint in the form `security_protocol://host:port`, e.g. `"PLAINTEXT://localhost:9092"`
+        :returns: Url of this endpoint, e.g `"PLAINTEXT://localhost:9092"`.
+        """
         return f"{self.security_protocol}://localhost:{self.port}"
 
     def copy(self: E) -> E:
+        """
+        Retrieve a copy of this object.
+
+        :returns: Copy of this object.
+        """
         return type(self)(self.listener_name, self.port)
 
 
 class PlaintextEndpoint(Endpoint):
+    """
+    An endpoint that provides PLAINTEXT access to kafka.
+
+        >>> from tests.cluster_fixture import Cluster, PlaintextEndpoint
+        >>> with Cluster(endpoints=[PlaintextEndpoint("TEST")]) as cluster:
+        ...    print(cluster.get_bootstrap_servers("TEST"))
+        ['PLAINTEXT://localhost:9092']
+    """
+
     @property
     def is_secure(self):
         return False
@@ -68,6 +115,15 @@ class PlaintextEndpoint(Endpoint):
 
 
 class SaslEndpoint(Endpoint):
+    """
+    An endpoint that provides SASL secured PLAINTEXT access to kafka.
+
+        >>> from tests.cluster_fixture import Cluster, SaslEndpoint
+        >>> with Cluster(endpoints=[SaslEndpoint("TEST")]) as cluster:
+        ...    print(cluster.get_bootstrap_servers("TEST"))
+        ['SASL_PLAINTEXT://localhost:9092']
+    """
+
     @property
     def is_secure(self):
         return True
@@ -79,6 +135,11 @@ class SaslEndpoint(Endpoint):
 
 @dataclass
 class SaslMechanism:
+    """
+    Holds the name of a SASL mechanism.
+    For example `"PLAIN"` or `"SCRAM-SHA-512"`.
+    """
+
     name: str
 
 
@@ -94,6 +155,21 @@ class KafkaInstance(Component):
         endpoints: Optional[List[Endpoint]] = None,
         sasl_mechanisms: Optional[List[SaslMechanism]] = None,
     ):
+        """
+        The broker component of a Kafka cluster. For more information see :class:`Component`.
+
+        :param broker_id: The cluster-unique id of this broker.
+        :param zookeeper_instance: The zookeeper instance that belongs to the cluster.
+        :param cluster_size: The overall size of the cluster. Used to determine increments for port discovery.
+        :param kafka_version: The kafka version the component should use.
+        :param working_directory: The working directory containing all configuration files for this broker.
+                                  Defaults to a temporary directory if `None`.
+        :param loop: The asyncio event loop to use for communicating with the broker.
+                     If `None` then the running loop within the active thread will be used or a new one will be created
+                     if there is no running loop.
+        :param endpoints: The list of get_endpoints this broker should provide.
+        :param sasl_mechanisms: The list of sasl mechnisms this broker should support.
+        """
         # set broker_id first so self.component_name can use it
         self.broker_id = broker_id
         super().__init__(kafka_version, working_directory, loop)
@@ -101,7 +177,7 @@ class KafkaInstance(Component):
         if endpoints is None:
             endpoints = [PlaintextEndpoint()]
         if len(endpoints) == 0:
-            raise ValueError("Cannot start without endpoints!")
+            raise ValueError("Cannot start without get_endpoints!")
 
         self.endpoints: List[Endpoint] = [e.with_incremented_port(broker_id * len(endpoints)) for e in endpoints]
 
@@ -131,21 +207,45 @@ class KafkaInstance(Component):
 
     @property
     def zk_address(self) -> str:
-        return f"localhost:{self._zk_instance.port}"
+        """
+        Used within the config template to determine the zookeeper address to connect this broker to.
+        """
+        return self._zk_instance.url
 
     @property
     def data_dir(self) -> Path:
+        """
+        Used within the config template to determine the directory where the topic data is stored.
+        """
+
         return self._working_directory / "data"
 
     @property
     def config_file(self) -> Path:
+        """
+        Path to this broker's main configuration file.
+        """
         return self._working_directory / "server.properties"
 
     @property
     def sasl_config_file(self) -> Path:
+        """
+        Path to this broker's SASL configuration file. It holds all users and passwords for the PLAIN mechanism.
+        """
         return self._working_directory / "sasl_jaas.conf"
 
     def get_endpoint_url(self, listener_name: str) -> str:
+        """
+        Retrieve the endpoint url for the given `listener_name`.
+
+        Keep in mind that this is not necessarily the same as the security protocol.
+        For more information about `security_protocol` vs `listener_name` see :class:`Endpoint`.
+
+        :param listener_name: The name of the endpoint whose url shall be retrieved.
+        :return: The url of the endpoint in the form `security_protocol://host:port`
+                 e.g. `["PLAINTEXT://localhost:9092"]`.
+        :raises KeyError: If there is no listener with the given name.
+        """
         for e in self.endpoints:
             if e.listener_name == listener_name:
                 break
@@ -154,6 +254,16 @@ class KafkaInstance(Component):
         return e.url
 
     def get_endpoint(self, listener_name: str) -> Endpoint:
+        """
+        Retrieve all brokers' :class:`Endpoint` objects for the given `listener_name`.
+
+        Keep in mind that the `listener_name` is not necessarily the same as the security protocol.
+        For more information about `security_protocol` vs `listener_name` see :class:`Endpoint`.
+
+        :param listener_name: The name of the get_endpoints which shall be retrieved.
+        :return: A list of :class:`Endpoint` with the given `listener_name`.
+        :raises KeyError: If there is no listener with the given name.
+        """
         for e in self.endpoints:
             if e.listener_name == listener_name:
                 break
@@ -161,9 +271,8 @@ class KafkaInstance(Component):
             raise KeyError(listener_name)
         return e.copy()
 
-    def _check_ports(self) -> None:
-        for endpoint in self.endpoints:
-            probe_port("localhost", endpoint.port)
+    def _get_ports(self) -> List[int]:
+        return [e.port for e in self.endpoints]
 
     def _increment_ports(self) -> None:
         for endpoint in self.endpoints:

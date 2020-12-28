@@ -11,7 +11,6 @@ from tests.cluster_fixture.base import (
     KafkaVersion,
     get_jinja_env,
     netcat_async_string,
-    probe_port,
     set_ignore_sigint,
 )
 
@@ -28,35 +27,64 @@ class ZookeeperInstance(Component):
         working_directory: Optional[Path] = None,
         loop: Optional[asyncio.AbstractEventLoop] = None,
     ):
+        """
+        The zookeeper component of a Kafka cluster. For more information see :class:`Component`.
+
+        :param kafka_version: The kafka version the component should use.
+        :param working_directory: The working directory containing all configuration files for this broker.
+                                  Defaults to a temporary directory if `None`.
+        :param loop: The asyncio event loop to use for communicating with the broker.
+                     If `None` then the running loop within the active thread will be used or a new one will be created
+                     if there is no running loop.
+        """
         super().__init__(kafka_version, working_directory, loop)
         self._port = 2181
         self._kafka_instances: List["KafkaInstance"] = []
 
     def register_broker(self, kafka_instance: "KafkaInstance") -> None:
+        """
+        Register a broker that is connected to this zookeeper instance. Required to make sure the zookeeper instance
+        doesn't shut down before the broker does. This is necessary since the broker is not able to shutdown gracefully
+        when zookeeper connection is lost.
+
+        :param kafka_instance: The kafka instance to add.
+        """
         self._kafka_instances.append(kafka_instance)
 
     @property
     def data_dir(self) -> Path:
+        """
+        Used within the config template to determine the directory where the key-value data is stored.
+        """
         return self._working_directory / "data"
 
     @property
     def config_file(self) -> Path:
+        """
+        Path to this zookeeper node's main configuration file.
+        """
         return self._working_directory / "zookeeper.properties"
 
     @property
     def port(self) -> int:
+        """
+        Port this zookeeper node is supposed to bind to.
+        """
         return self._port
 
     @property
     def url(self) -> str:
+        """
+        Url where this zookeeper node is reachable at. It's in the form `host:port`, e.g `"localhost:8081"`.
+        """
         return f"localhost:{self.port}"
 
     @property
     def component_name(self) -> str:
         return "zookeeper"
 
-    def _check_ports(self) -> None:
-        probe_port("localhost", self._port)
+    def _get_ports(self) -> List[int]:
+        return [self._port]
 
     def _increment_ports(self) -> None:
         self._port += 1

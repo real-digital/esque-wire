@@ -38,7 +38,7 @@ class LiveBroker:
         """
         :param id: The broker id
         :type id: int
-        :param end_points: The endpoints
+        :param end_points: The get_endpoints
         :type end_points: List[EndPoint]
         :param rack: The rack
         :type rack: Optional[str]
