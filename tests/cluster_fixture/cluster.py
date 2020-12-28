@@ -133,7 +133,7 @@ class Cluster:
         self.start()
         self._keep_temporary_files = tmp
 
-    def boostrap_servers(self, listener_name: str = "PLAINTEXT") -> List[str]:
+    def bootstrap_servers(self, listener_name: str = "PLAINTEXT") -> List[str]:
         self.assert_running()
         return [broker.get_endpoint_url(listener_name) for broker in self.brokers[:3]]
 

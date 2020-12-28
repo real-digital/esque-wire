@@ -20,7 +20,7 @@ def cluster(kafka_version: KafkaVersion) -> Iterable[Cluster]:
 
 @pytest.fixture
 def bootstrap_servers(cluster: Cluster) -> List[str]:
-    return cluster.boostrap_servers("PLAINTEXT")
+    return cluster.bootstrap_servers("PLAINTEXT")
 
 
 @pytest.fixture

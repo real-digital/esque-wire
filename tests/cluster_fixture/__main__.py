@@ -17,9 +17,9 @@ def main() -> None:
     ) as cluster:
         try:
             logger.info(f"--> Zookeeper ready at {cluster.zookeeper_url} <--")
-            logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('SASL_PLAINTEXT')} <--")
-            logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('PLAINTEXT')} <--")
-            logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('ASDF')} <--")
+            logger.info(f"--> Bootstrap Servers {cluster.bootstrap_servers('SASL_PLAINTEXT')} <--")
+            logger.info(f"--> Bootstrap Servers {cluster.bootstrap_servers('PLAINTEXT')} <--")
+            logger.info(f"--> Bootstrap Servers {cluster.bootstrap_servers('ASDF')} <--")
             time.sleep(10)
         except KeyboardInterrupt:
             pass
