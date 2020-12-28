@@ -1,16 +1,14 @@
 import asyncio
 import logging
 import shutil
-import sys
 import tempfile
 import threading
-import time
 from contextlib import closing
 from pathlib import Path
 from typing import List, Optional, Union
 
 from tests.cluster_fixture.base import DEFAULT_KAFKA_VERSION, KafkaVersion, get_loop
-from tests.cluster_fixture.kafka import Endpoint, KafkaInstance, PlaintextEndpoint, SaslEndpoint, SaslMechanism
+from tests.cluster_fixture.kafka import Endpoint, KafkaInstance, PlaintextEndpoint, SaslMechanism
 from tests.cluster_fixture.zookeeper import ZookeeperInstance
 
 logger = logging.getLogger(__name__)
@@ -164,25 +162,3 @@ class Cluster:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
-
-
-def main() -> None:
-    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-    sasl_mechanisms = [SaslMechanism("PLAIN"), SaslMechanism("SCRAM-SHA-512")]
-    endpoints = [PlaintextEndpoint(), SaslEndpoint(), SaslEndpoint(name="ASDF")]
-    kafka_version = KafkaVersion("1.1.1")
-    with Cluster(
-        cluster_size=1, endpoints=endpoints, sasl_mechanisms=sasl_mechanisms, kafka_version=kafka_version
-    ) as cluster:
-        try:
-            logger.info(f"--> Zookeeper ready at {cluster.zookeeper_url} <--")
-            logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('SASL_PLAINTEXT')} <--")
-            logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('PLAINTEXT')} <--")
-            logger.info(f"--> Bootstrap Servers {cluster.boostrap_servers('ASDF')} <--")
-            time.sleep(10)
-        except KeyboardInterrupt:
-            pass
-
-
-if __name__ == "__main__":
-    main()
