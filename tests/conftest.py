@@ -1,12 +1,12 @@
+import os
+import re
 from typing import List
 
 import pytest
 from _pytest.config import Config
 from _pytest.config.argparsing import Parser
-from _pytest.fixtures import SubRequest
 from _pytest.nodes import Item
-
-SUPPORTED_KAFKA_VERSIONS = ["1.1.1", "2.0.0", "2.1.0", "2.2.0", "2.3.0", "2.4.0"]
+from cluster_fixture import DEFAULT_KAFKA_VERSION, KafkaVersion
 
 
 def pytest_addoption(parser: Parser) -> None:
@@ -23,6 +23,8 @@ def pytest_collection_modifyitems(config: Config, items: List[Item]) -> None:
             item.add_marker(integration)
 
 
-@pytest.fixture(params=SUPPORTED_KAFKA_VERSIONS, ids=[f"kafka-{v.replace('.','_')}" for v in SUPPORTED_KAFKA_VERSIONS])
-def kafka_version(request: SubRequest) -> str:
-    return request.param
+@pytest.fixture(scope="session")
+def kafka_version() -> KafkaVersion:
+    version = os.getenv("KAFKA_VERSION", DEFAULT_KAFKA_VERSION)
+    assert re.match(r"\d+(.\d+){2}", version), f"Version {version!r} is not a valid semver!"
+    return KafkaVersion(version)
