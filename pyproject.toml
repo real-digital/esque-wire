@@ -44,6 +44,7 @@ mypy = "^0.790"
 pytest-cov = "^2.8.1"
 coveralls = "^1.8.2"
 pre-commit = "^2.7.1"
+pyOpenSSL = "^20.0.1"
 
 [tool.black]
 line-length = 119

@@ -1,6 +1,7 @@
 import asyncio
 import re
 import socket
+import ssl
 import struct
 from abc import ABC, abstractmethod
 from asyncio.protocols import BaseProtocol
@@ -8,10 +9,13 @@ from asyncio.transports import BaseTransport
 from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Awaitable, List, Optional, Tuple, TypeVar
+from typing import TYPE_CHECKING, Awaitable, List, Optional, Tuple, TypeVar
 
 from tests.cluster_fixture.base import DEFAULT_KAFKA_VERSION, Component, KafkaVersion, get_jinja_env
 from tests.cluster_fixture.zookeeper import ZookeeperInstance
+
+if TYPE_CHECKING:
+    from tests.cluster_fixture.cluster import Cluster
 
 KAFKA_STARTUP_PATTERN = re.compile(r"\[KafkaServer id=\d+\] started \(kafka\.server\.KafkaServer\)")
 CORR_ID: bytes = struct.pack(">i", 1337)
@@ -54,7 +58,15 @@ class Endpoint(ABC):
 
     @property
     @abstractmethod
-    def is_secure(self) -> bool:
+    def sasl_enabled(self) -> bool:
+        """
+        Whether this endpoint is secured with SASL or not.
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def ssl_enabled(self) -> bool:
         """
         Whether this endpoint is secured with SASL or not.
         """
@@ -106,7 +118,11 @@ class PlaintextEndpoint(Endpoint):
     """
 
     @property
-    def is_secure(self):
+    def sasl_enabled(self):
+        return False
+
+    @property
+    def ssl_enabled(self):
         return False
 
     @property
@@ -125,12 +141,66 @@ class SaslEndpoint(Endpoint):
     """
 
     @property
-    def is_secure(self):
+    def sasl_enabled(self):
         return True
+
+    @property
+    def ssl_enabled(self):
+        return False
 
     @property
     def security_protocol(self) -> str:
         return "SASL_PLAINTEXT"
+
+
+class SslEndpoint(Endpoint):
+    """
+    An endpoint that provides TLS secured access to kafka.
+
+        >>> from tests.cluster_fixture import Cluster, SslEndpoint
+        >>> with Cluster(endpoints=[SslEndpoint("TEST")]) as cluster:
+        ...     print(cluster.get_bootstrap_servers("TEST"))
+        ['SSL://localhost:9092']
+    """
+
+    @property
+    def sasl_enabled(self) -> bool:
+        return False
+
+    @property
+    def ssl_enabled(self):
+        return True
+
+    @property
+    def security_protocol(self) -> str:
+        return "SSL"
+
+
+class SaslSslEndpoint(Endpoint):
+    """
+    An endpoint that provides TLS secured access to kafka.
+
+    Note: SASL authentication takes precedence over SSL authentication.
+    If you have `ssl.client.auth=required`, this endpoint will still require
+    SASL authentication!
+
+        >>> from tests.cluster_fixture import Cluster, SaslSslEndpoint
+        >>> with Cluster(endpoints=[SaslSslEndpoint("TEST")]) as cluster:
+        ...     print(cluster.get_bootstrap_servers("TEST"))
+        ['SASL_SSL://localhost:9092']
+    """
+
+    @property
+    def sasl_enabled(self) -> bool:
+        return True
+
+    @property
+    def ssl_enabled(self):
+        return True
+
+    @property
+    def security_protocol(self) -> str:
+        return "SASL_SSL"
 
 
 @dataclass
@@ -146,6 +216,7 @@ class SaslMechanism:
 class KafkaInstance(Component):
     def __init__(
         self,
+        cluster: "Cluster",
         broker_id: int,
         zookeeper_instance: ZookeeperInstance,
         cluster_size: int = 1,
@@ -158,6 +229,7 @@ class KafkaInstance(Component):
         """
         The broker component of a Kafka cluster. For more information see :class:`Component`.
 
+        :param cluster: The cluster this broker belongs to.
         :param broker_id: The cluster-unique id of this broker.
         :param zookeeper_instance: The zookeeper instance that belongs to the cluster.
         :param cluster_size: The overall size of the cluster. Used to determine increments for port discovery.
@@ -172,6 +244,7 @@ class KafkaInstance(Component):
         """
         # set broker_id first so self.component_name can use it
         self.broker_id = broker_id
+        self._cluster: "Cluster" = cluster
         super().__init__(kafka_version, working_directory, loop)
 
         if endpoints is None:
@@ -182,12 +255,12 @@ class KafkaInstance(Component):
         self.endpoints: List[Endpoint] = [e.with_incremented_port(broker_id * len(endpoints)) for e in endpoints]
 
         if sasl_mechanisms is None:
-            if any(endpoint.is_secure for endpoint in self.endpoints):
+            if any(endpoint.sasl_enabled for endpoint in self.endpoints):
                 self.sasl_mechanisms = [SaslMechanism("PLAIN")]
             else:
                 self.sasl_mechanisms = []
         else:
-            if any(endpoint.is_secure for endpoint in self.endpoints) and len(sasl_mechanisms) == 0:
+            if any(endpoint.sasl_enabled for endpoint in self.endpoints) and len(sasl_mechanisms) == 0:
                 raise ValueError("Need to define at least one sasl mechanism if secure endpoint is available!")
             self.sasl_mechanisms = sasl_mechanisms
 
@@ -282,8 +355,8 @@ class KafkaInstance(Component):
         env = get_jinja_env()
         server_conf_template = env.get_template("server.properties.j2")
         sasl_conf_template = env.get_template("sasl_jaas.conf.j2")
-        self.config_file.write_text(server_conf_template.render(broker=self))
-        self.sasl_config_file.write_text(sasl_conf_template.render(broker=self))
+        self.config_file.write_text(server_conf_template.render(broker=self, cluster=self._cluster))
+        self.sasl_config_file.write_text(sasl_conf_template.render(broker=self, cluster=self._cluster))
 
     def _subprocess_exec(self) -> Awaitable[Tuple[BaseTransport, BaseProtocol]]:
         return self._loop.subprocess_exec(
@@ -294,22 +367,56 @@ class KafkaInstance(Component):
         )
 
     async def probe_service(self) -> bool:
-        port = self.endpoints[0].port
+        # see if we can find an endpoint without ssl, since they're slightly faster to query
+        for ep in self.endpoints:
+            if not ep.ssl_enabled:
+                response = await self._send_api_version_request_plain(ep.port)
+                break
+        else:
+            # none found, so ssl it is...
+            response = await self._send_api_version_request_ssl(self.endpoints[0].port)
 
-        with closing(socket.socket(type=socket.SOCK_STREAM)) as sock:
-            sock.setblocking(False)
-            await self._loop.sock_connect(sock, ("localhost", port))
-            await self._loop.sock_sendall(sock, KAFKA_GENERIC_API_VERSION_REQUEST)
-            datalen = struct.unpack(">i", await self._loop.sock_recv(sock, 4))[0]
-            received = 0
-            data = []
-            while received < datalen:
-                data.append(await self._loop.sock_recv(sock, 1024))
-                received += len(data[-1])
-            sock.shutdown(socket.SHUT_WR)
-        response = b"".join(data)
         self._logger.debug(
             f"Requested api versions\nResponse length: {len(response)}\nResponse[:16]: {response[:16]!r}"
         )
         corr_id: bytes = response[:4]
         return corr_id == CORR_ID
+
+    async def _send_api_version_request_plain(self, port: int) -> bytes:
+        with closing(socket.socket(type=socket.SOCK_STREAM)) as sock:
+            sock.setblocking(False)
+            await self._loop.sock_connect(sock, ("localhost", port))
+            await self._loop.sock_sendall(sock, KAFKA_GENERIC_API_VERSION_REQUEST)
+            expected_bytes = struct.unpack(">i", await self._loop.sock_recv(sock, 4))[0]
+            received_bytes = 0
+            data = []
+            while received_bytes < expected_bytes:
+                data.append(await self._loop.sock_recv(sock, 1024))
+                received_bytes += len(data[-1])
+            sock.shutdown(socket.SHUT_RDWR)
+
+        return b"".join(data)
+
+    async def _send_api_version_request_ssl(self, port: int) -> bytes:
+        ssl_ctx = ssl.create_default_context(
+            ssl.Purpose.SERVER_AUTH, cafile=str(self._cluster.ssl_server_cert_location)
+        )
+        if self._cluster.ssl_client_auth_enabled:
+            ssl_ctx.load_cert_chain(
+                certfile=self._cluster.ssl_client_cert_location, keyfile=self._cluster.ssl_client_key_location
+            )
+
+        # The event loop's sock_recv function doesn't support ssl sockets.
+        # See: https://stackoverflow.com/a/56775511/2677943
+        # So we use asyncio.open_connection
+        reader, writer = await asyncio.open_connection(host="localhost", port=port, ssl=ssl_ctx)
+        with closing(writer):
+            writer.write(KAFKA_GENERIC_API_VERSION_REQUEST)
+            await writer.drain()
+            expected_bytes = struct.unpack(">i", await reader.read(4))[0]
+            received_bytes = 0
+            data = []
+            while received_bytes < expected_bytes:
+                data.append(await reader.read(1024))
+                received_bytes += len(data[-1])
+        return b"".join(data)

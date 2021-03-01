@@ -12,6 +12,8 @@ from tests.cluster_fixture.kafka import (
     PlaintextEndpoint,
     SaslEndpoint,
     SaslMechanism,
+    SaslSslEndpoint,
+    SslEndpoint,
 )
 from tests.cluster_fixture.zookeeper import ZookeeperInstance
 
@@ -24,4 +26,6 @@ __all__ = [
     "SaslEndpoint",
     "SaslMechanism",
     "ZookeeperInstance",
+    "SslEndpoint",
+    "SaslSslEndpoint",
 ]

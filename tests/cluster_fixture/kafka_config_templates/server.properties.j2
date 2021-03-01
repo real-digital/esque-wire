@@ -28,15 +28,31 @@ listener.security.protocol.map={% for endpoint in broker.endpoints -%}
 {% endfor %}
 
 inter.broker.listener.name={{ broker.endpoints[0].listener_name }}
-security.inter.broker.protocol{{ broker.endpoints[0].security_protocol }}
 
-{% if broker.endpoints[0].is_secure -%}
+{% if broker.endpoints[0].sasl_enabled -%}
 sasl.mechanism.inter.broker.protocol={{ broker.sasl_mechanisms[0].name }}
+{%- endif %}
+{%  if broker.endpoints[0].ssl_enabled %}
+ssl.ca.location={{ cluster.ssl_server_cert_location }}
 {%- endif %}
 
 {% if broker.sasl_mechanisms -%}
 sasl.enabled.mechanisms={{ broker.sasl_mechanisms | map(attribute="name") | join(",") }}
 {%- endif %}
+
+{% if cluster.ssl_enabled %}
+# SSL
+{% if cluster.ssl_client_auth_enabled %}
+ssl.client.auth=required
+{% endif %}
+ssl.truststore.location={{ cluster.ssl_server_keystore_location }}
+ssl.truststore.password={{ cluster.ssl_store_passphrase }}
+ssl.truststore.type=PKCS12
+ssl.keystore.location={{ cluster.ssl_server_keystore_location }}
+ssl.keystore.password={{ cluster.ssl_store_passphrase }}
+ssl.keystore.type=PKCS12
+ssl.secure.random.implementation=SHA1PRNG
+{% endif %}
 
 # The number of threads that the server uses for receiving requests from the network and sending responses to the network
 num.network.threads=1
