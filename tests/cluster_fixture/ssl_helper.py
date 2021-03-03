@@ -42,4 +42,4 @@ def dump_cert_data(key_file: pathlib.Path, cert_file: pathlib.Path, keystore: cr
 
 def dump_keystore(pkcs12_file: pathlib.Path, keystore: crypto.PKCS12, passphrase: str) -> None:
     with pkcs12_file.open("wb") as f:
-        f.write(keystore.export(passphrase=passphrase))
+        f.write(keystore.export(passphrase=passphrase.encode()))
