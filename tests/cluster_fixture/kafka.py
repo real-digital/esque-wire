@@ -93,10 +93,20 @@ class Endpoint(ABC):
     @property
     def url(self) -> str:
         """
-        The full url of this endpoint in the form `security_protocol://host:port`, e.g. `"PLAINTEXT://localhost:9092"`
+        The full url of this endpoint in the form `<security_protocol>://<host>:<port>`,
+        e.g. `"PLAINTEXT://localhost:9092"`
         :returns: Url of this endpoint, e.g `"PLAINTEXT://localhost:9092"`.
         """
-        return f"{self.security_protocol}://localhost:{self.port}"
+        return f"{self.security_protocol}://{self.address}"
+
+    @property
+    def address(self) -> str:
+        """
+        The address of this endpoint in the form `<host>:<port>`,
+        e.g. `"localhost:9092"`
+        :returns: Address of this endpoint, e.g `"localhost:9092"`.
+        """
+        return f"localhost:{self.port}"
 
     def copy(self: E) -> E:
         """
