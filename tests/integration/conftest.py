@@ -1,15 +1,22 @@
+import os
 import pathlib
+import re
 import sys
-import urllib.parse
 from typing import Iterable, List
 
 import pytest
 
 from esque_wire import BrokerConnection
-from tests.cluster_fixture import KafkaVersion
-from tests.cluster_fixture.cluster import Cluster
+from tests.cluster_fixture import DEFAULT_KAFKA_VERSION, Cluster, Endpoint, KafkaVersion
 
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
+
+
+@pytest.fixture(scope="session")
+def kafka_version() -> KafkaVersion:
+    version = os.getenv("KAFKA_VERSION", DEFAULT_KAFKA_VERSION)
+    assert re.match(r"\d+(.\d+){2}", version), f"Version {version!r} is not a valid semver!"
+    return KafkaVersion(version)
 
 
 @pytest.fixture()
@@ -24,13 +31,12 @@ def bootstrap_servers(cluster: Cluster) -> List[str]:
 
 
 @pytest.fixture
-def kafka_endpoint(bootstrap_servers: List[str]) -> str:
-    full_url = bootstrap_servers[0]
-    parsed_url = urllib.parse.urlparse(full_url)
-    return f"{parsed_url.hostname}:{parsed_url.port}"
+def all_endpoints(cluster: Cluster) -> List[Endpoint]:
+    return cluster.get_endpoints("PLAINTEXT")
 
 
 @pytest.fixture
-def connection(kafka_endpoint: str) -> Iterable[BrokerConnection]:
-    with BrokerConnection(kafka_endpoint, "esque_wire_integration_test") as connection:
+def connection(cluster: Cluster) -> Iterable[BrokerConnection]:
+    endpoint = cluster.get_endpoints(listener_name="PLAINTEXT")[0]
+    with BrokerConnection(endpoint.address, "esque_wire_integration_test") as connection:
         yield connection
