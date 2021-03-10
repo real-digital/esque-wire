@@ -43,6 +43,7 @@ jobs:
         kafka:
          - '2.1.1'
         include:
+          # set the coverage variable to generate the coverage report for this specific combination
           - python: '3.6'
             kafka: '2.1.1'
             coverage: true
@@ -76,18 +77,14 @@ jobs:
         env:
           KAFKA_VERSION: ${{ matrix.kafka }}
         run: |
-          if [[ -n "${{ matrix.coverage }}" ]]; then
-            poetry run -- pytest --cov=esque_wire -v tests
-          else
-            poetry run -- pytest -v tests
-          fi
+          poetry run pytest --cov=esque_wire -v tests
       - name: Upload coverage
         if: matrix.coverage
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: |
           export BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-          poetry run -- coveralls
+          poetry run coveralls
 
   test-complete-unit-and-integration:
     if: "github.ref == 'refs/heads/release-prep' || github.ref == 'refs/heads/master'"
@@ -107,6 +104,7 @@ jobs:
          - '2.4.1'
          - '2.5.0'
         include:
+          # set the coverage variable to generate the coverage report for this specific combination
           - python: '3.6'
             kafka: '2.1.1'
             coverage: true
@@ -140,15 +138,11 @@ jobs:
         env:
           KAFKA_VERSION: ${{ matrix.kafka }}
         run: |
-          if [[ -n "${{ matrix.coverage }}" ]]; then
-            poetry run -- pytest --cov=esque_wire -v tests
-          else
-            poetry run -- pytest -v tests
-          fi
+          poetry run pytest --cov=esque_wire -v tests
       - name: Upload coverage
         if: matrix.coverage
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: |
           export BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-          poetry run -- coveralls
+          poetry run coveralls
