@@ -5,9 +5,9 @@ import sys
 from typing import Iterable, List
 
 import pytest
+from cluster_fixture import DEFAULT_KAFKA_VERSION, Cluster, Endpoint, KafkaVersion
 
 from esque_wire import BrokerConnection
-from tests.cluster_fixture import DEFAULT_KAFKA_VERSION, Cluster, Endpoint, KafkaVersion
 
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 

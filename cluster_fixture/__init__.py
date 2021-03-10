@@ -3,9 +3,8 @@ Package containing code to run kafka mini clusters for testing. These clusters h
 configurable amount of kafka instances.
 Check :class:`Cluster` for more information about how to use and configure it.
 """
-
-from tests.cluster_fixture.cluster import Cluster
-from tests.cluster_fixture.kafka import (
+from cluster_fixture.cluster import Cluster
+from cluster_fixture.kafka import (
     DEFAULT_KAFKA_VERSION,
     Endpoint,
     KafkaInstance,
@@ -16,7 +15,7 @@ from tests.cluster_fixture.kafka import (
     SaslSslEndpoint,
     SslEndpoint,
 )
-from tests.cluster_fixture.zookeeper import ZookeeperInstance
+from cluster_fixture.zookeeper import ZookeeperInstance
 
 __all__ = [
     "Cluster",
@@ -27,7 +26,7 @@ __all__ = [
     "PlaintextEndpoint",
     "SaslEndpoint",
     "SaslMechanism",
-    "ZookeeperInstance",
-    "SslEndpoint",
     "SaslSslEndpoint",
+    "SslEndpoint",
+    "ZookeeperInstance",
 ]

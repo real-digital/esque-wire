@@ -8,10 +8,10 @@ from contextlib import closing
 from pathlib import Path
 from typing import List, Optional, Union
 
-from tests.cluster_fixture import ssl_helper
-from tests.cluster_fixture.base import DEFAULT_KAFKA_VERSION, KafkaVersion, get_loop
-from tests.cluster_fixture.kafka import Endpoint, KafkaInstance, PlaintextEndpoint, SaslMechanism
-from tests.cluster_fixture.zookeeper import ZookeeperInstance
+from cluster_fixture import ssl_helper
+from cluster_fixture.base import DEFAULT_KAFKA_VERSION, KafkaVersion, get_loop
+from cluster_fixture.kafka import Endpoint, KafkaInstance, PlaintextEndpoint, SaslMechanism
+from cluster_fixture.zookeeper import ZookeeperInstance
 
 
 class ConfigurationWarning(UserWarning):
@@ -33,7 +33,7 @@ class Cluster:
         """
         This class will create and manage all resources required to start up and monitor a Kafka cluster.
 
-            >>> from tests.cluster_fixture import Cluster
+            >>> from cluster_fixture import Cluster
             >>> with Cluster() as cluster:
             ...    print(cluster.get_bootstrap_servers("PLAINTEXT"))
             ['PLAINTEXT://localhost:9092']

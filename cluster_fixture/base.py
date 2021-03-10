@@ -20,7 +20,7 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 # ThreadedChildWatcher was introduced in 3.8, use custom implementation for older versions
 if sys.version_info < (3, 8):
-    from tests.cluster_fixture.watcher import ThreadedChildWatcher
+    from cluster_fixture.watcher import ThreadedChildWatcher
 else:
     from asyncio import ThreadedChildWatcher
 
@@ -347,9 +347,8 @@ class JavaProtocol(asyncio.SubprocessProtocol):
 
         :param exc: Any exception that may have occurred, `None` for regular EOF.
         """
-        if not self.startup_complete.done():
-            if exc is None:
-                exc = RuntimeError("Connection lost before startup completion!")
+        if not self.startup_complete.done() and exc is None:
+            exc = RuntimeError("Connection lost before startup completion!")
 
         if exc is None:
             self.disconnected.set_result(True)

@@ -43,6 +43,7 @@ class ThreadedChildWatcher(AbstractChildWatcher):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        # no cleanup required
         pass
 
     def __del__(self, _warn=warnings.warn):
@@ -67,6 +68,7 @@ class ThreadedChildWatcher(AbstractChildWatcher):
         return True
 
     def attach_loop(self, loop):
+        # no attaching required
         pass
 
     def _do_waitpid(self, loop, expected_pid, callback, args):

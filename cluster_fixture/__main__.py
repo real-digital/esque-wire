@@ -7,8 +7,7 @@ import sys
 import time
 from typing import List
 
-from tests.cluster_fixture import Cluster, KafkaVersion, SaslMechanism, SslEndpoint
-from tests.cluster_fixture.kafka import Endpoint
+from cluster_fixture import Cluster, Endpoint, KafkaVersion, SaslMechanism, SslEndpoint
 
 logger = logging.getLogger(__name__)
 
