@@ -42,11 +42,11 @@ jobs:
          - '3.6'
         kafka:
          - '2.1.1'
-        include: &coverage_flag
+        include:
           - python: '3.6'
             kafka: '2.1.1'
             coverage: true
-    steps: &test_steps
+    steps:
       - uses: actions/checkout@v1
       - name: Fetch virtualenv cache
         uses: actions/cache@v1
@@ -106,5 +106,49 @@ jobs:
          - '2.1.1'
          - '2.4.1'
          - '2.5.0'
-        include: *coverage_flag
-    steps: *test_steps
+        include:
+          - python: '3.6'
+            kafka: '2.1.1'
+            coverage: true
+    steps:
+      - uses: actions/checkout@v1
+      - name: Fetch virtualenv cache
+        uses: actions/cache@v1
+        id: venv-cache
+        with:
+          path: .venv
+          key: venv-${{ matrix.python }}-${{ hashFiles('poetry.lock') }}
+      - name: Fetch kafka cache
+        uses: actions/cache@v1
+        id: kafka-cache
+        with:
+          path: tests/cluster_fixture/kafka_distributions
+          key: kafka-${{ matrix.kafka }}
+      - name: Setup python and install packages
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+          architecture: x64
+      - name: Install and configure poetry
+        run: |
+          pip3 install poetry
+          poetry config virtualenvs.in-project true
+      - name: Install esque-wire requirements
+        run: |
+          poetry install -vvv
+      - name: Run tests
+        env:
+          KAFKA_VERSION: ${{ matrix.kafka }}
+        run: |
+          if [[ -n "${{ matrix.coverage }}" ]]; then
+            poetry run -- pytest --cov=esque_wire -v tests
+          else
+            poetry run -- pytest -v tests
+          fi
+      - name: Upload coverage
+        if: matrix.coverage
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: |
+          export BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          poetry run -- coveralls
