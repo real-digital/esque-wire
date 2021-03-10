@@ -19,7 +19,7 @@ jobs:
       - name: Publish to pypi
         if: success()
         run: |
-          pip install "poetry==1.0.0b3"
+          pip install poetry
           poetry build
           poetry publish --username "${{ secrets.PYPI_USER }}" --password "${{ secrets.PYPI_PASSWORD }}"
       - name: Delete release-prep branch

@@ -1,6 +1,9 @@
 # Note: This file is meant to be run with Jython2.7
 # Use generate_api_definition.py to do that for you
 
+# Unless we want to add shims for all Java classes that are used here, we won't be able to type check this file
+# type: ignore
+
 import json
 import os
 from collections import OrderedDict

@@ -1,0 +1,17 @@
+{% macro sasl_login_module(mechanism) -%}
+org.apache.kafka.common.security.{{ mechanism.name | split("-") | first | lower }}.{{ mechanism.name | split("-") | first | capitalize }}LoginModule
+{%- endmacro -%}
+
+KafkaServer {
+    {%- for mechanism in broker.sasl_mechanisms %}
+    {{ sasl_login_module(mechanism) }} required
+        username="broker"
+        password="broker-secret"
+        {%- if (mechanism.name | lower) == "plain" %}
+        user_broker="broker-secret"
+        user_admin="admin-secret"
+        user_alice="alice-secret"
+        {%- endif %};
+    {% endfor -%}
+};
+Client {};

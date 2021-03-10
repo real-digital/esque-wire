@@ -8,8 +8,8 @@
 A complete and user oriented implementation of the kafka wire protocol.
 
 # Features
-## Supports all Api endpoints
-Since the code for the API endpoints is automatically generated, this library supports *all* of them.
+## Supports all Api get_endpoints
+Since the code for the API get_endpoints is automatically generated, this library supports *all* of them.
 If a new one comes along, its implementation is just one code execution away. Also the field documentation is extracted
 from Kafka source code if there is one.
 

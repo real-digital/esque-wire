@@ -18,10 +18,10 @@ JYTHON_JAR = f"jython-standalone-{JYTHON_VERSION}.jar"
 JYTHON_PATH = PARENT_DIR / JYTHON_JAR
 
 KAFKA_VERSION = "2.3.1"
-KAFKA_LIB_PATH = PARENT_DIR / f"kafka_2.11-{KAFKA_VERSION}" / "libs"
+KAFKA_LIB_PATH = PARENT_DIR / f"kafka_2.12-{KAFKA_VERSION}" / "libs"
 
 
-def main(argv: List[str]):
+def main(argv: List[str]) -> None:
     log_level = logging.INFO
     if "--log-level" in argv:
         idx = argv.index("--log-level")
@@ -50,7 +50,7 @@ def main(argv: List[str]):
     log.info("done")
 
 
-def download_jython():
+def download_jython() -> None:
     url = (
         "http://search.maven.org/remotecontent?filepath=org/python/jython-standalone"
         f"/{JYTHON_VERSION}/jython-standalone-{JYTHON_VERSION}.jar"
@@ -59,20 +59,19 @@ def download_jython():
     download_file(url, local_file)
 
 
-def download_file(url, local_file: pathlib.Path):
+def download_file(url: str, local_file: pathlib.Path) -> None:
     log.info(f"Downloading from {url} to {local_file}.")
     urlretrieve(url, local_file)
 
 
-def download_kafka():
-    url = "https://archive.apache.org/dist/kafka/" f"{KAFKA_VERSION}/kafka_2.11-{KAFKA_VERSION}.tgz"
+def download_kafka() -> None:
+    url = f"https://archive.apache.org/dist/kafka/{KAFKA_VERSION}/kafka_2.12-{KAFKA_VERSION}.tgz"
 
     def is_lib(member: tarfile.TarInfo) -> bool:
-        return member.name.startswith(f"kafka_2.11-{KAFKA_VERSION}/libs/")
+        return member.name.startswith(f"kafka_2.12-{KAFKA_VERSION}/libs/")
 
     with tempfile.NamedTemporaryFile(suffix=".tgz") as tmpfile:
         download_file(url, pathlib.Path(tmpfile.name))
-        tmpfile.file.seek(0)
         log.info("extracting jars")
         with tarfile.open(tmpfile.name) as tar:
             members = [mem for mem in tar.getmembers() if is_lib(mem)]

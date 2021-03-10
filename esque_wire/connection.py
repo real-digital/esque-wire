@@ -50,7 +50,7 @@ class BrokerConnection(BaseBrokerConnection):
                     warnings.warn(
                         ApiNotSupportedWarning(
                             f"Client supports API {api_key.name} up to version {client_supported_version.max_version}, "
-                            + f"but server does not support the API at all. You cannot use this API."
+                            + "but server does not support the API at all. You cannot use this API."
                         )
                     )
                 else:
@@ -66,7 +66,7 @@ class BrokerConnection(BaseBrokerConnection):
                     warnings.warn(
                         ApiNotSupportedWarning(
                             f"Server supports api {api_key.name} up to version {server_supported_version.max_version}, "
-                            + f"but client does not support the API at all. You cannot use this API."
+                            + "but client does not support the API at all. You cannot use this API."
                         )
                     )
                 else:

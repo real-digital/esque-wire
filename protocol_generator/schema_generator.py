@@ -214,29 +214,29 @@ class StructTypeDef(TypeDef):
     def type_hint(self) -> str:
         return self.name
 
-    def schema_dict_name(self, include_type=False) -> str:
+    def schema_dict_name(self, include_type: bool = False) -> str:
         name = f"{lower_first(self.name)}Schemas"
         if include_type:
             name += ": Dict[int, Schema]"
         return name
 
-    def schema_variable_name(self, version=0) -> str:
+    def schema_variable_name(self, version: int = 0) -> str:
         return f"{self.schema_dict_name()}[{version}]"
 
-    def serializer_dict_name(self, include_type=False) -> str:
+    def serializer_dict_name(self, include_type: bool = False) -> str:
         name = f"{ lower_first(self.name) }Serializers"
         if include_type:
             name += f": Dict[int, ClassSerializer[{self.name}]]"
         return name
 
-    def serializer_variable_name(self, version=0) -> str:
+    def serializer_variable_name(self, version: int = 0) -> str:
         return f"{self.serializer_dict_name()}[{version}]"
 
     @property
     def serializer_import_name(self) -> str:
         return "ClassSerializer"
 
-    def serializer_definition(self, version=0, schema=None) -> str:
+    def serializer_definition(self, version: int = 0, schema: Optional[str] = None) -> str:
         if schema is None:
             schema = self.schema_variable_name(version)
         return f"ClassSerializer({self.name}, {schema})"
@@ -573,11 +573,11 @@ def without(seq: Iterable[T], *excluded_elems: T) -> Iterable[T]:
             yield elem
 
 
-def is_string(value) -> bool:
+def is_string(value: Any) -> bool:
     return isinstance(value, str)
 
 
-def render_long_text(text, wrap_at=100, **kwargs) -> str:
+def render_long_text(text: str, wrap_at: int = 100, **kwargs: Any) -> str:
     text = text.strip()
     if text == "":
         return '""'

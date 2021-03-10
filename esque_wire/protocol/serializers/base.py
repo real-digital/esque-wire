@@ -5,7 +5,7 @@ T = TypeVar("T")
 
 
 class BaseSerializer(Generic[T], metaclass=ABCMeta):
-    def write(self, buffer: BinaryIO, value: T):
+    def write(self, buffer: BinaryIO, value: T) -> None:
         buffer.write(self.encode(value))
 
     def encode(self, value: T) -> bytes:
