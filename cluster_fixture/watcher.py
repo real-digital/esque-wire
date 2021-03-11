@@ -6,7 +6,7 @@ import logging
 import os
 import threading
 import warnings
-from asyncio import AbstractChildWatcher, AbstractEventLoop
+from asyncio import AbstractChildWatcher, events
 from typing import Dict
 
 logger = logging.getLogger("asyncio")
@@ -22,10 +22,9 @@ class ThreadedChildWatcher(AbstractChildWatcher):
     on amount of spawn processes.
     """
 
-    def __init__(self, loop: AbstractEventLoop):
+    def __init__(self):
         self._pid_counter = itertools.count(0)
         self._threads: Dict[int, threading.Thread] = {}
-        self._loop = loop
 
     def is_active(self):
         return True
@@ -52,10 +51,11 @@ class ThreadedChildWatcher(AbstractChildWatcher):
             _warn(f"{self.__class__} has registered but not finished child processes", ResourceWarning, source=self)
 
     def add_child_handler(self, pid, callback, *args):
+        loop = events.get_event_loop()
         thread = threading.Thread(
             target=self._do_waitpid,
             name=f"waitpid-{next(self._pid_counter)}",
-            args=(self._loop, pid, callback, args),
+            args=(loop, pid, callback, args),
             daemon=True,
         )
         self._threads[pid] = thread

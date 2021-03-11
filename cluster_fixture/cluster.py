@@ -3,8 +3,8 @@ import shutil
 import tempfile
 import threading
 import warnings
+from asyncio import AbstractEventLoop
 from collections import Counter
-from contextlib import closing
 from pathlib import Path
 from typing import List, Optional, Union
 
@@ -187,7 +187,7 @@ class Cluster:
         :raises RuntimeError: When called on a cluster that is running.
         """
         self.start_nowait()
-        self.startup_complete.wait()
+        self.startup_complete.wait(timeout=300)
         if self._exception:
             raise self._exception
 
@@ -209,7 +209,9 @@ class Cluster:
         self._thread.start()
 
     def _run(self) -> None:
-        with closing(get_loop()) as loop:
+        loop: Optional[AbstractEventLoop] = None
+        try:
+            loop = get_loop()
             self.zk_instance = ZookeeperInstance(
                 kafka_version=self._kafka_version, working_directory=self._working_directory / "zookeeper", loop=loop
             )
@@ -240,6 +242,13 @@ class Cluster:
                     break
             self.startup_complete.set()
             loop.run_until_complete(self._check_shutdown())
+        except Exception as e:
+            self._exception = e
+            self._shutdown.set()
+            self.startup_complete.set()
+        finally:
+            if loop is not None:
+                loop.close()
 
     async def _check_shutdown(self) -> None:
         while not self._shutdown.is_set():

@@ -389,7 +389,7 @@ def get_loop() -> asyncio.AbstractEventLoop:
         except RuntimeError:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-    asyncio.set_child_watcher(ThreadedChildWatcher(loop))
+    asyncio.set_child_watcher(ThreadedChildWatcher())
     return loop
 
 
