@@ -11,10 +11,10 @@ from esque_wire.protocol.constants import (
     ResourcePatternType,
     ResourceType,
 )
-from esque_wire.protocol.serializers.generic import EnumSerializer
+from esque_wire.protocol.serializers.generic import EnumSerializer, OptionalEnumSerializer
 from esque_wire.protocol.serializers.primitive import int8Serializer, int16Serializer
 
-apiKeySerializer = EnumSerializer(ApiKey, int16Serializer)
+apiKeySerializer = OptionalEnumSerializer(ApiKey, int16Serializer)
 aclOperationSerializer = EnumSerializer(AclOperation, int8Serializer)
 resourceTypeSerializer = EnumSerializer(ResourceType, int8Serializer)
 aclPermissionTypeSerializer = EnumSerializer(AclPermissionType, int8Serializer)

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, BinaryIO, Dict, List, Optional, Tuple, Type, TypeVar
+from typing import Any, BinaryIO, Dict, List, NamedTuple, Optional, Tuple, Type, TypeVar, Union
 
 from .base import BaseSerializer
 from .primitive import int32Serializer
@@ -81,6 +81,10 @@ class ClassSerializer(BaseSerializer[T]):
 E = TypeVar("E", bound=Enum)
 
 
+class Unknown(NamedTuple):
+    value: Any
+
+
 class EnumSerializer(BaseSerializer[E]):
     def __init__(self, enum_class: Type[E], serializer: BaseSerializer):
         self.enum_class = enum_class
@@ -96,7 +100,16 @@ class EnumSerializer(BaseSerializer[E]):
     def default(self) -> E:
         for member in self.enum_class:
             return member
-        raise RuntimeError(f"Cannot dermine default, Enum {self.enum_class.__name__} is empty!")
+        raise RuntimeError(f"Cannot determine default, Enum {self.enum_class.__name__} is empty!")
+
+
+class OptionalEnumSerializer(EnumSerializer):
+    def read(self, buffer: BinaryIO) -> Union[E, Unknown]:
+        value = self.serializer.read(buffer)
+        try:
+            return self.enum_class(value)
+        except ValueError:
+            return Unknown(value)
 
 
 class DummySerializer(BaseSerializer[T]):
