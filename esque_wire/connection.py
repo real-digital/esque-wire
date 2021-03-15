@@ -1,4 +1,5 @@
 import itertools as it
+import logging
 import queue
 import socket
 import warnings
@@ -8,9 +9,12 @@ from ._base_connection import BaseBrokerConnection
 from .protocol.constants import ApiKey
 from .protocol.request import Request, Response
 from .protocol.serializers import SUPPORTED_API_VERSIONS, int32Serializer
+from .protocol.serializers.generic import Unknown
 from .protocol.structs.api import ApiVersionsRequestData
 from .protocol.structs.api.api_versions_response import ApiVersion
 from .protocol.structs.base import RequestData
+
+logger = logging.getLogger(__name__)
 
 
 class ApiNotSupportedWarning(UserWarning):
@@ -29,9 +33,16 @@ class BrokerConnection(BaseBrokerConnection):
     def _query_api_versions(self) -> None:
         api_call = self.send(ApiVersionsRequestData())
 
-        all_server_supported_versions = {
-            ApiKey(support_range.api_key): support_range for support_range in api_call.response_data.api_versions
-        }
+        all_server_supported_versions: Dict[ApiKey, ApiVersion] = {}
+        for api_version in api_call.response_data.api_versions:
+            if isinstance(api_version.api_key, Unknown):
+                logger.debug(
+                    f"Found unknown api key: {api_version.api_key.value}, if you need to use this api, "
+                    f"check if a new version of esque_wire is available that supports this api."
+                )
+            else:
+                all_server_supported_versions[api_version.api_key] = api_version
+
         server_api_keys = set(all_server_supported_versions)
         client_api_keys = set(SUPPORTED_API_VERSIONS)
         for api_key in server_api_keys | client_api_keys:
